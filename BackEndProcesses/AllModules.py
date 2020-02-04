@@ -43,13 +43,13 @@ ResultTrackFileNameAfterRunNumberSlow = '_CMSTiming_SlowTriggerStream_converted.
 ResultTrackFileNameAfterRunNumberFast = '_CMSTiming_FastTriggerStream_converted.root'
 
 ############## For timingdaq02 ############
-BaseTestbeamDir = '/home/daq/2020_02_CMSTiming/' 
+BaseTestbeamDir = '/data/TestBeam/2020_02_February_cmstiming/' 
 BaseTrackDirLocal = '%sTracks/' % BaseTestbeamDir
 LocalSSH = 'daq@timingdaq02.dhcp.fnal.gov'
 EnvSetupPath = '/home/daq/setup.sh' ############### Remember to change ProcessExec accordingly
 #EnvSetupPath2 = '/home/daq/otsdaq/setup_ots.sh' ############### Remember to change ProcessExec accordingly
 #TimingDAQDir = '/home/daq/CMS-MTD/TimingDAQ/'
-TimingDAQDir = '/home/daq/CMS-MTD/TimingDAQ_20190619/'
+TimingDAQDir = '/home/cmstiming/CMS-MTD/TimingDAQ_20190619/'
 TOFHIRRecoDir = '/home/daq/sw_daq_tofhir_v1/build/'
 TOFHIRConfigDir = '/home/daq/2019_04_April_CMSTiming/TOFHIR/ConfigArchive/'
 TOFHIRRecoDir2 = '/home/daq/sw_daq_tofhir_v1/DAQReco/'
@@ -69,9 +69,9 @@ TOFHIRConfigFileBasePath = '/home/daq/2019_04_April_CMSTiming/TOFHIR/ConfigArchi
 
 
 ############# OTSDAQ Information ################
-ip_address = "192.168.133.46"
+ip_address = "192.168.133.48"
 use_socket = 17000
-runFileName ="/data-08/TestBeam/Users/RunNumber/OtherRuns0NextRunNumber.txt"
+runFileName ="/data/TestBeam/Users/RunNumber/OtherRuns0NextRunNumber.txt"
 localRunFileName = "../AutoPilot/otsdaq_runNumber.txt"
 TClockFilePath = "../AutoPilot/TClock"
 

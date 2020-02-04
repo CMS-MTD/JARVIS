@@ -20,6 +20,9 @@ def start_ots(RunNumber, Delay=False):
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     MESSAGE = "OtherRuns0,Start, %d" % (RunNumber)#(GetRunNumber()+1)
     sock.sendto(MESSAGE, (am.ip_address, am.use_socket))
+    print "MESSAGE: " + MESSAGE
+    print am.ip_address
+    print am.use_socket
     #data, addr = sock.recvfrom(1024) # buffer size is 1024 bytes                                                                                                                                                                              
     print "Start: received message"
     return 
@@ -57,13 +60,13 @@ def UpdateRunNumber(nextRunNum):
     incrementRunFile.close()
 
 def GetRunFile():
-    CMD = 'scp otsdaq@ftbf-daq-08.fnal.gov:' + am.runFileName + ' ' + am.localRunFileName
+    CMD = 'scp otsdaq@ftbf-daq-06.fnal.gov:' + am.runFileName + ' ' + am.localRunFileName
     print CMD
     session = am.subprocess.Popen('%s' % CMD,stdout=am.PIPE, stderr=am.subprocess.PIPE, shell=True)       
     stdout = session.communicate()
     print stdout
 def SendRunFile():
-    CMD = 'scp ' + am.localRunFileName +' otsdaq@ftbf-daq-08.fnal.gov:' + am.runFileName
+    CMD = 'scp ' + am.localRunFileName +' otsdaq@ftbf-daq-06.fnal.gov:' + am.runFileName
     session = am.subprocess.Popen('%s' % CMD,stdout=am.PIPE, stderr=am.subprocess.PIPE, shell=True) 
     stdout = session.communicate()
     print stdout    
