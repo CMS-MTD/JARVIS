@@ -49,7 +49,7 @@ LocalSSH = 'daq@timingdaq02.dhcp.fnal.gov'
 EnvSetupPath = '/home/daq/setup.sh' ############### Remember to change ProcessExec accordingly
 #EnvSetupPath2 = '/home/daq/otsdaq/setup_ots.sh' ############### Remember to change ProcessExec accordingly
 #TimingDAQDir = '/home/daq/CMS-MTD/TimingDAQ/'
-TimingDAQDir = '/home/daq/2020_02_cmstiming_BTL/TimingDAQ_2020_02/'
+<TimingDAQDir = '/home/daq/2020_02_cmstiming_BTL/TimingDAQ_2020_02/'
 TOFHIRRecoDir = '/home/daq/2020_02_cmstiming_BTL/sw_daq_tofpet2_2020_02_February/build/'
 TOFHIRConfigDir = '/home/daq/2020_02_cmstiming_BTL/TOFHIR/ConfigArchive/'
 TOFHIRRecoDir2 = '/home/daq/2020_02_cmstiming_BTL/sw_daq_tofpet2_2020_02_February/DAQReco/'
@@ -69,9 +69,9 @@ TOFHIRConfigFileBasePath = '/home/daq/2020_02_cmstiming_BTL/TOFHIR/ConfigArchive
 
 
 ############# OTSDAQ Information ################
-ip_address = "192.168.133.46"
+ip_address = "192.168.133.48"
 use_socket = 17000
-runFileName ="/data-08/TestBeam/Users/RunNumber/OtherRuns0NextRunNumber.txt"
+runFileName ="/data/TestBeam/Users/RunNumber/OtherRuns0NextRunNumber.txt"
 localRunFileName = "../AutoPilot/otsdaq_runNumber.txt"
 TClockFilePath = "../AutoPilot/TClock"
 

@@ -15,7 +15,7 @@ import GetTemp as gt
 
 NumSpillsPerRun = 1
 RP = False #### It needs to be true if you want to get files from Raspberry Pi, otherwise it would give default values. 
-BTLLogging = True
+BTLLogging = False
 ETLTemp = False
 
 #################################Parsing arguments######################################
@@ -184,7 +184,7 @@ while (AutoPilotStatus == 1):
 	## Refresh this
 	DigitizerList = pf.GetDigiFromConfig(Configuration, False, key)
 
-	##sync local run number file with ftbf-daq-08
+	##sync local run number file with ftbf-daq-06
 	tp.GetRunFile()
 	time.sleep(5)
 	RunNumber = tp.GetRunNumber()
