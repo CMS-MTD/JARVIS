@@ -1,2 +1,2 @@
 ##### Open one tab for VME reco and other tab for doing tail -f on latest process log file ##########
-gnome-terminal --tab --title="VME Reco" --command="bash -c 'cd /home/daq/JARVIS/RecoProcesses; python StartVMEProcessing.py; $SHELL'" --tab --title="TimingDAQ Logs" --command="bash -c 'cd /home/daq/2019_04_April_CMSTiming/ProcessLog/TimingDAQVME; python /home/daq/JARVIS/BackEndProcesses/CheckLogs.py; $SHELL'"
+gnome-terminal --tab --title="VME Reco" --command="bash -c 'cd /home/daq/2020_02_cmstiming_BTL/JARVIS/RecoProcesses; python StartVMEProcessing.py; $SHELL'" --tab --title="TimingDAQ Logs" --command="bash -c 'cd home/daq/2020_02_cmstiming_BTL/ProcessLog/TimingDAQVME; python /home/daq/JARVIS/BackEndProcesses/CheckLogs.py; $SHELL'"

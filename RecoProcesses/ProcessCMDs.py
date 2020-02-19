@@ -261,6 +261,7 @@ def TimingDAQCMDsBTL(RunNumber, SaveWaveformBool, Version, DoTracking, Digitizer
                 if Digitizer == am.DigitizerDict[5]:
                     RecoBaseLocalPath1 = RecoBaseLocalPath + 'RecoWithTracks/'
                     RecoBaseLocalPath2 = RecoBaseLocalPath + 'RecoWithTracks/'
+                    RecoBaseLocalPath3 = RecoBaseLocalPath + 'RecoWithTracks/'
                     RawBaseLocalPath2 = RawBaseLocalPath + 'RecoWithTracks/'
                 else:
                     RecoBaseLocalPath = RecoBaseLocalPath + 'RecoWithTracks/'
@@ -286,6 +287,7 @@ def TimingDAQCMDsBTL(RunNumber, SaveWaveformBool, Version, DoTracking, Digitizer
                 RawLocalPath2 = RawBaseLocalPath2 + am.OneStageRecoDigitizers[Digitizer]['RawTimingDAQFileNameFormat'] + str(run) + '_singles.root'                                   
                 RecoLocalPath1 = RecoBaseLocalPath1 + '/' + am.OneStageRecoDigitizers[Digitizer]['RawTimingDAQFileNameFormat']+ str(run) + '_singles.root'
                 RecoLocalPath2 = RecoBaseLocalPath2 + '/' + am.OneStageRecoDigitizers[Digitizer]['RawTimingDAQFileNameFormat']+ str(run) + '_events.root'  
+                RecoLocalPath3 = RecoBaseLocalPath3 + '/' + am.OneStageRecoDigitizers[Digitizer]['RawTimingDAQFileNameFormat']+ str(run) + '_trigger.root'  
 
             else:
                 RawLocalPath = RawBaseLocalPath + am.TwoStageRecoDigitizers[Digitizer]['RawTimingDAQFileNameFormat'] + str(run) + '.root'                                      
@@ -295,7 +297,7 @@ def TimingDAQCMDsBTL(RunNumber, SaveWaveformBool, Version, DoTracking, Digitizer
 
                 ResultFileLocationList.append(RecoLocalPath)
                 if Digitizer == am.DigitizerDict[5] and not DoTracking:
-                    DatToRootCMD = './' + DatToROOTExec + ' --config ' + ConfigFilePath + ' -i ' + RawLocalPath + ' -o ' + RecoLocalPath + ' --writeRoot --channelIDs 0,1,6,8,14,15,128,129,130,131,132,133,134,135,136,137,138,139,140,141,142,143,384'
+                    DatToRootCMD = './' + DatToROOTExec + ' --config ' + ConfigFilePath + ' -i ' + RawLocalPath + ' -o ' + RecoLocalPath + ' --writeRoot'
                 elif Digitizer != am.DigitizerDict[5]:
                     DatToRootCMD = './' + DatToROOTExec + ' --config_file=' + ConfigFilePath + ' --input_file=' + RawLocalPath + ' --output_file=' + RecoLocalPath
                 if SaveWaveformBool and Digitizer != am.DigitizerDict[5]: DatToRootCMD = DatToRootCMD + ' --save_meas'
@@ -325,11 +327,21 @@ def TimingDAQCMDsBTLForTOFHIRTracks(RunNumber, SaveWaveformBool, Version, DoTrac
     MyKey = MyKey
     Digitizer = Digitizer
     RunNumber = RunNumber
-
+    
     RunList, FieldIDList = pr.TimingDAQRuns(RunNumber, DoTracking, Digitizer, MyKey, False)
+
+    #sixie debug
+    #print "Runs"
+    #print RunNumber
+    #print DoTracking
+    #print Digitizer
+    #print MyKey
+    #print RunList,FieldIDList
+
     RunsNotPresent = []
     DatToRootCMDList1 = []
     DatToRootCMDList2 = []
+    DatToRootCMDList3 = []
     ResultFileLocationList = []
 
     if RunList != None:
@@ -349,6 +361,7 @@ def TimingDAQCMDsBTLForTOFHIRTracks(RunNumber, SaveWaveformBool, Version, DoTrac
                     RawBaseLocalPath2 = am.OneStageRecoDigitizers[Digitizer]['RecoTimingDAQLocalPath']
                     DatToROOTExec1 = am.OneStageRecoDigitizers[Digitizer]['DatToROOTExec1']
                     DatToROOTExec2 = am.OneStageRecoDigitizers[Digitizer]['DatToROOTExec2']
+                    DatToROOTExec3 = am.OneStageRecoDigitizers[Digitizer]['DatToROOTExec3']
                     ResultTrackFileNameAfterRunNumber = am.ResultTrackFileNameAfterRunNumberFast
                 else:
                     RecoBaseLocalPath = am.OneStageRecoDigitizers[Digitizer]['RecoTimingDAQLocalPath']
@@ -373,6 +386,7 @@ def TimingDAQCMDsBTLForTOFHIRTracks(RunNumber, SaveWaveformBool, Version, DoTrac
                 if Digitizer == am.DigitizerDict[5]:
                     RecoBaseLocalPath1 = RecoBaseLocalPath + 'RecoWithTracks/'
                     RecoBaseLocalPath2 = RecoBaseLocalPath + 'RecoWithTracks/'
+                    RecoBaseLocalPath3 = RecoBaseLocalPath + 'RecoWithTracks/'
                     RawBaseLocalPath2 = RawBaseLocalPath2 + 'RecoWithTracks/'
                 else:
                     RecoBaseLocalPath = RecoBaseLocalPath + 'RecoWithTracks/'
@@ -398,6 +412,7 @@ def TimingDAQCMDsBTLForTOFHIRTracks(RunNumber, SaveWaveformBool, Version, DoTrac
                 RawLocalPath2 = RawBaseLocalPath2 + am.OneStageRecoDigitizers[Digitizer]['RawTimingDAQFileNameFormat'] + str(run) + '_singles.root'                                   
                 RecoLocalPath1 = RecoBaseLocalPath1 + '/' + am.OneStageRecoDigitizers[Digitizer]['RawTimingDAQFileNameFormat']+ str(run) + '_singles.root'
                 RecoLocalPath2 = RecoBaseLocalPath2 + '/' + am.OneStageRecoDigitizers[Digitizer]['RawTimingDAQFileNameFormat']+ str(run) + '_events.root'  
+                RecoLocalPath3 = RecoBaseLocalPath3 + '/' + am.OneStageRecoDigitizers[Digitizer]['RawTimingDAQFileNameFormat']+ str(run) + '_trigger.root'  
 
             else:
                 RawLocalPath = RawBaseLocalPath + am.TwoStageRecoDigitizers[Digitizer]['RawTimingDAQFileNameFormat'] + str(run) + '.root'                                      
@@ -407,7 +422,7 @@ def TimingDAQCMDsBTLForTOFHIRTracks(RunNumber, SaveWaveformBool, Version, DoTrac
 
                 ResultFileLocationList.append(RecoLocalPath2)
                 if Digitizer == am.DigitizerDict[5] and not DoTracking:
-                    DatToRootCMD = './' + DatToROOTExec + ' --config ' + ConfigFilePath + ' -i ' + RawLocalPath + ' -o ' + RecoLocalPath + ' --writeRoot --channelIDs 0,1,6,8,14,15,128,129,130,131,132,133,134,135,136,137,138,139,140,141,142,143,384'
+                    DatToRootCMD = './' + DatToROOTExec + ' --config ' + ConfigFilePath + ' -i ' + RawLocalPath + ' -o ' + RecoLocalPath + ' --writeRoot'
                 elif Digitizer != am.DigitizerDict[5]:
                     DatToRootCMD = './' + DatToROOTExec + ' --config_file=' + ConfigFilePath + ' --input_file=' + RawLocalPath + ' --output_file=' + RecoLocalPath
                 if SaveWaveformBool and Digitizer != am.DigitizerDict[5]: DatToRootCMD = DatToRootCMD + ' --save_meas'
@@ -416,21 +431,23 @@ def TimingDAQCMDsBTLForTOFHIRTracks(RunNumber, SaveWaveformBool, Version, DoTrac
                     TrackFilePathLocal = am.BaseTrackDirLocal + am.ResultTrackFileNameBeforeRunNumber + str(run) + ResultTrackFileNameAfterRunNumber
                     if Digitizer == am.DigitizerDict[5]:
                         DatToRootCMD1 = './' + DatToROOTExec1 + ' --config ' + ConfigFilePath + ' -i ' + RawLocalPath1 + ' -o ' + RecoLocalPath1 + ' --writeRoot'
-                        DatToRootCMD2 = './' + DatToROOTExec2 + ' ' + RawLocalPath2 + ' ' + TrackFilePathLocal + ' ' + RecoLocalPath2
+                        DatToRootCMD2 = './' + DatToROOTExec2 + ' ' + str(run) + ' ' + RawLocalPath2 + ' ' + TrackFilePathLocal + ' ' + RecoLocalPath2
+                        DatToRootCMD3 = './' + DatToROOTExec3 + ' --config ' + ConfigFilePath + ' -i ' + RawLocalPath1 + ' -o ' + RecoLocalPath3 + ' --writeRoot --coincidence --refChannel 255'
                     else:
                         DatToRootCMD = DatToRootCMD + ' --pixel_input_file=' + TrackFilePathLocal
                 DatToRootCMDList1.append(DatToRootCMD1)
                 DatToRootCMDList2.append(DatToRootCMD2)
-
+                DatToRootCMDList3.append(DatToRootCMD3)
+                
         #Remove the runs which were not present
         for run in RunsNotPresent:
             print 'Run %d not present in the raw files' % run
             del FieldIDList[RunList.index(run)]
             RunList.remove(run)
 
-        return DatToRootCMDList1, DatToRootCMDList2, ResultFileLocationList, RunList, FieldIDList
+        return DatToRootCMDList1, DatToRootCMDList2, DatToRootCMDList3, ResultFileLocationList, RunList, FieldIDList
 
     else:
-        return None,None,None,None,None
+        return None,None,None,None,None,None
 
 

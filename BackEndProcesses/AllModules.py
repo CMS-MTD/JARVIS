@@ -34,25 +34,25 @@ QueryFilePath ="../QueryLog.txt" # Don't care about this
 #############################################################
 
 ############# Tracking Paths ##############
-HyperscriptPath = '/home/otsdaq/CMSTiming/HyperScriptFastTrigger_NewGeo_19_04_08.sh'
+HyperscriptPath = '/home/otsdaq/CMSTiming/HyperScriptFastTrigger_NewGeo_2020_02_05.sh'
 RulinuxSSH = 'otsdaq@rulinux04.dhcp.fnal.gov'
-BaseTrackDirRulinux = '/data/TestBeam/2019_04_April_CMSTiming/'
+BaseTrackDirRulinux = '/data/TestBeam/2020_02_February_cmstiming/'
 ResultTrackFileNameBeforeRunNumber = 'Run' ###########'Run%d_CMSTiming_converted.root'
 ResultTrackFileNameAfterRunNumber = '_CMSTiming_converted.root' 
 ResultTrackFileNameAfterRunNumberSlow = '_CMSTiming_SlowTriggerStream_converted.root'
 ResultTrackFileNameAfterRunNumberFast = '_CMSTiming_FastTriggerStream_converted.root'
 
 ############## For timingdaq02 ############
-BaseTestbeamDir = '/home/daq/2020_02_CMSTiming/' 
+BaseTestbeamDir = '/home/daq/2020_02_cmstiming_BTL/' 
 BaseTrackDirLocal = '%sTracks/' % BaseTestbeamDir
 LocalSSH = 'daq@timingdaq02.dhcp.fnal.gov'
 EnvSetupPath = '/home/daq/setup.sh' ############### Remember to change ProcessExec accordingly
 #EnvSetupPath2 = '/home/daq/otsdaq/setup_ots.sh' ############### Remember to change ProcessExec accordingly
 #TimingDAQDir = '/home/daq/CMS-MTD/TimingDAQ/'
-TimingDAQDir = '/home/daq/CMS-MTD/TimingDAQ_20190619/'
-TOFHIRRecoDir = '/home/daq/sw_daq_tofhir_v1/build/'
-TOFHIRConfigDir = '/home/daq/2019_04_April_CMSTiming/TOFHIR/ConfigArchive/'
-TOFHIRRecoDir2 = '/home/daq/sw_daq_tofhir_v1/DAQReco/'
+TimingDAQDir = '/home/daq/2020_02_cmstiming_BTL/TimingDAQ_2020_02/'
+TOFHIRRecoDir = '/home/daq/2020_02_cmstiming_BTL/sw_daq_tofpet2_2020_02_February/build/'
+TOFHIRConfigDir = '/home/daq/2020_02_cmstiming_BTL/TOFHIR/ConfigArchive/'
+TOFHIRRecoDir2 = '/home/daq/2020_02_cmstiming_BTL/sw_daq_tofpet2_2020_02_February/DAQReco/'
 ############## For PCCITFNAL01 ############
 #BaseTestbeamDir = '/data2/2019_04_April_CMSTiming/'
 #BaseTrackDirLocal = '%sTracks/' % BaseTestbeamDir
@@ -63,8 +63,8 @@ TOFHIRRecoDir2 = '/home/daq/sw_daq_tofhir_v1/DAQReco/'
 ScopeControlDir = '%sKeySightScope/ETL_Agilent_MSO-X-92004A/' % BaseTestbeamDir
 ScopeStateFileName = '%sAcquisition/RunLog.txt' % ScopeControlDir
 ScopeCommFileName = '%sAcquisition/ScopeStatus.txt' % ScopeControlDir
-ConfigFileBasePath = '%sconfig/FNAL_TestBeam_1904/' % TimingDAQDir
-TOFHIRConfigFileBasePath = '/home/daq/2019_04_April_CMSTiming/TOFHIR/ConfigArchive/'
+ConfigFileBasePath = '%sconfig/FNAL_TestBeam_2020_02/' % TimingDAQDir
+TOFHIRConfigFileBasePath = '/home/daq/2020_02_cmstiming_BTL/TOFHIR/ConfigArchive/'
 
 
 
@@ -127,9 +127,9 @@ OneStageRecoDigitizers = {
                                             },
 
                          'TOFHIR'     :  {  'ConfigFileBasePath'     : '%sConfig_v' % (TOFHIRConfigFileBasePath), ### Set this
-                                            'DatToROOTExec'          : 'convert_raw_to_trigger', ### Set this
                                             'DatToROOTExec1'         : 'convert_raw_to_singles',
                                             'DatToROOTExec2'         : 'ConvertTOFPETSinglesToEvents', #With Tracks
+                                            'DatToROOTExec3'         : 'convert_raw_to_trigger',
                                             'RawTimingDAQLocalPath'  : '%sTOFHIR/RawData/'  % (BaseTestbeamDir),
                                             'RecoTimingDAQLocalPath' : '%sTOFHIR/RecoData/v1/' % (BaseTestbeamDir),
                                             'TimingDAQLocalPath' : '%sTOFHIR/RecoData/v1/' % (BaseTestbeamDir), # Path for both raw and reco of tofhir timingdaqwithtracks

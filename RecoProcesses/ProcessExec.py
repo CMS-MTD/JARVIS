@@ -68,6 +68,11 @@ def ProcessExec(OrderOfExecution, PID, SaveWaveformBool = None, Version = None, 
 		else:
 			RunListInt.sort(reverse = True)
 
+                #print "sixie debug"
+                #print CMDList
+                #continue
+                
+
 		if CMDList != []:	
 
 			if GetRunListEachTime:
@@ -120,10 +125,10 @@ def ProcessExec(OrderOfExecution, PID, SaveWaveformBool = None, Version = None, 
 						if not line and session.poll() != None:
 							break
                                 
-                                if DigitizerKey == 5:
-                                        print 'Sleeping for 60 sec'
-                                        am.time.sleep(60)
-                                        print 'Done sleeping'
+                                #if DigitizerKey == 5:
+                                        #print 'Sleeping for 60 sec'
+                                        #am.time.sleep(60)
+                                        #print 'Done sleeping'
                                 
 				if FileSizeBool(ResultFileLocation,SizeCut) or not am.os.path.exists(ResultFileLocation): BadProcessExec = True                                                                                                                                                                                                                                                     
 				if BadProcessExec:                                                                                                                                                                                                                               
@@ -179,8 +184,8 @@ def ProcessExecBTLForTOFHIRTracks(OrderOfExecution, PID, SaveWaveformBool = None
 		elif PID == 2:
 			ProcessName = am.ProcessDict[PID].keys()[0] + Digitizer	
 			DoTracking = True
-			CMDList1, CMDList2, ResultFileLocationList, RunList, FieldIDList = pc.TimingDAQCMDsBTLForTOFHIRTracks(RunNumber, SaveWaveformBool, Version, DoTracking, Digitizer, MyKey, False)
-			SizeCut = am.ProcessDict[PID][am.ProcessDict[PID].keys()[0]]['SizeCut']
+			CMDList1, CMDList2, CMDList3, ResultFileLocationList, RunList, FieldIDList = pc.TimingDAQCMDsBTLForTOFHIRTracks(RunNumber, SaveWaveformBool, Version, DoTracking, Digitizer, MyKey, False)
+			SizeCut = 100 # am.ProcessDict[PID][am.ProcessDict[PID].keys()[0]]['SizeCut'] #manually set this to a small number for now
 		elif PID == 3:
 			ProcessName = am.ProcessDict[PID].keys()[0] + Digitizer
 			DoTracking = False	
@@ -195,6 +200,14 @@ def ProcessExecBTLForTOFHIRTracks(OrderOfExecution, PID, SaveWaveformBool = None
 
 		print RunListInt
 
+                #sixie debugging
+                #print "sixie debug"
+                #print CMDList1
+                #print CMDList2
+                #continue
+                
+
+
 		if CMDList1 != []:	
 
 			if GetRunListEachTime:
@@ -205,6 +218,7 @@ def ProcessExecBTLForTOFHIRTracks(OrderOfExecution, PID, SaveWaveformBool = None
 				index = RunList.index(run)      
 				CMD1 = CMDList1[index]  
 				CMD2 = CMDList2[index] 
+				CMD3 = CMDList3[index] 
 				if RunNumber != -1: 
 					FieldID = FieldIDList[index][0]
 				else:
@@ -216,6 +230,7 @@ def ProcessExecBTLForTOFHIRTracks(OrderOfExecution, PID, SaveWaveformBool = None
 				am.DeleteProcessLog(ProcessName, run) ###########Delete previous log file if exists
 				am.ProcessLog(ProcessName, run, CMD1)
 				am.ProcessLog(ProcessName, run, CMD2)
+				am.ProcessLog(ProcessName, run, CMD3)
 				
 				print '\n###############################'
 				print 'Starting process %s for run %d\n' % (ProcessName, run)
@@ -248,6 +263,7 @@ def ProcessExecBTLForTOFHIRTracks(OrderOfExecution, PID, SaveWaveformBool = None
 					if Digitizer == am.DigitizerDict[5]:
 						EnvirSetup1 = am.TOFHIRRecoDir
 						EnvirSetup2 = am.TOFHIRRecoDir2
+						EnvirSetup3 = am.TOFHIRRecoDir
 						session1 = am.subprocess.Popen('cd %s; %s;cd -' % (EnvirSetup1, str(CMD1)),stdout=am.subprocess.PIPE,stderr=am.subprocess.STDOUT, shell=True)
 						while True:
 							line = session1.stdout.readline()
@@ -259,6 +275,13 @@ def ProcessExecBTLForTOFHIRTracks(OrderOfExecution, PID, SaveWaveformBool = None
 							line = session2.stdout.readline()
 							am.ProcessLog(ProcessName, run, line)
 							if not line and session2.poll() != None:
+								break
+
+						session3 = am.subprocess.Popen('cd %s; %s;cd -' % (EnvirSetup3, str(CMD3)),stdout=am.subprocess.PIPE,stderr=am.subprocess.STDOUT, shell=True)
+						while True:
+							line = session3.stdout.readline()
+							am.ProcessLog(ProcessName, run, line)
+							if not line and session3.poll() != None:
 								break				
 				if FileSizeBool(ResultFileLocation,SizeCut) or not am.os.path.exists(ResultFileLocation): BadProcessExec = True                                                                                                                                                                                                                                                     
 				if BadProcessExec:                                                                                                                                                                                                                               
@@ -456,6 +479,7 @@ def ProcessExecApril(OrderOfExecution, PID, SaveWaveformBool = None, Version1 = 
 			RunListInt.sort() #Ascending Sorting
 		else:
 			RunListInt.sort(reverse = True)
+
 
 		if CMDList1 != []:	
 

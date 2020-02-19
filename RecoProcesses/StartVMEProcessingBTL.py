@@ -18,7 +18,7 @@ print "\n##############################"
 print "## Starting Data processing ##"
 print "##############################\n"
 
-ProcessExecBTL(ExecutionOrder,PID, SaveWaveForms, ConfigVersion1, ConfigVersion2, -1,DigitizerKey,key,GetRunListEachTime)
+ProcessExecBTL(ExecutionOrder,PID, SaveWaveForms, ConfigVersion1, -1,DigitizerKey,key,GetRunListEachTime)
 
 print "\n##############################"
 print "## Completed Data processing ##"
