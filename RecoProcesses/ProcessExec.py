@@ -18,7 +18,7 @@ def GetSessionOutputRealTime(session):
 		line = session.stdout.readline().rstrip()
 		if not line:
 			break
-		print type(line)
+		print((type(line)))
 		yield line
 
 def TrackFileRemoteExists(RunNumber):
@@ -45,58 +45,58 @@ def ProcessExec(OrderOfExecution, PID, SaveWaveformBool = None, Version = None, 
 	while True:
 	
 		if PID == 0:
-			ProcessName = am.ProcessDict[PID].keys()[0]
-			print ProcessName
+			ProcessName = list(am.ProcessDict[PID].keys())[0]
+			print(ProcessName)
 			CMDList, ResultFileLocationList, RunList, FieldIDList = pc.TrackingCMDs(RunNumber, MyKey, False)
-			SizeCut = am.ProcessDict[PID][am.ProcessDict[PID].keys()[0]]['SizeCut']
+			SizeCut = am.ProcessDict[PID][list(am.ProcessDict[PID].keys())[0]]['SizeCut']
 		elif PID == 1:
-			ProcessName = am.ProcessDict[PID].keys()[0] + Digitizer
+			ProcessName = list(am.ProcessDict[PID].keys())[0] + Digitizer
 			CMDList, ResultFileLocationList, RunList, FieldIDList = pc.ConversionCMDs(RunNumber, Digitizer, MyKey, False, condor)
-			SizeCut = am.ProcessDict[PID][am.ProcessDict[PID].keys()[0]]['SizeCut']
+			SizeCut = am.ProcessDict[PID][list(am.ProcessDict[PID].keys())[0]]['SizeCut']
 		elif PID == 2:
-			ProcessName = am.ProcessDict[PID].keys()[0] + Digitizer	
+			ProcessName = list(am.ProcessDict[PID].keys())[0] + Digitizer	
 			DoTracking = True
 			CMDList, ResultFileLocationList, RunList, FieldIDList = pc.TimingDAQCMDs(RunNumber, SaveWaveformBool, Version, DoTracking, Digitizer, MyKey, False, condor)
-                        print CMDList
-                        print ResultFileLocationList
-                        print RunList
-                        print FieldIDList
-			SizeCut = am.ProcessDict[PID][am.ProcessDict[PID].keys()[0]]['SizeCut']
+			print(CMDList)
+			print(ResultFileLocationList)
+			print(RunList)
+			print(FieldIDList)
+			SizeCut = am.ProcessDict[PID][list(am.ProcessDict[PID].keys())[0]]['SizeCut']
 		elif PID == 3:
-			ProcessName = am.ProcessDict[PID].keys()[0] + Digitizer
+			ProcessName = list(am.ProcessDict[PID].keys())[0] + Digitizer
 			DoTracking = False	
 			CMDList, ResultFileLocationList, RunList, FieldIDList = pc.TimingDAQCMDs(RunNumber, SaveWaveformBool, Version, DoTracking, Digitizer, MyKey, False)
-			SizeCut = am.ProcessDict[PID][am.ProcessDict[PID].keys()[0]]['SizeCut']
-			print CMDList
+			SizeCut = am.ProcessDict[PID][list(am.ProcessDict[PID].keys())[0]]['SizeCut']
+			print(CMDList)
 		elif PID == 5:
-			ProcessName = am.ProcessDict[PID].keys()[0] + Digitizer	
+			ProcessName = list(am.ProcessDict[PID].keys())[0] + Digitizer	
 			DoTracking = True
 			CMDList, ResultFileLocationList, RunList, FieldIDList = pc.WatchCondorCMDs(RunNumber, SaveWaveformBool, Version, DoTracking, Digitizer, MyKey, False)
-			SizeCut = am.ProcessDict[2][am.ProcessDict[2].keys()[0]]['SizeCut']		
-			print ResultFileLocationList, RunList
+			SizeCut = am.ProcessDict[2][list(am.ProcessDict[2].keys())[0]]['SizeCut']		
+			print((ResultFileLocationList, RunList))
 		elif PID == 6:
-			ProcessName = am.ProcessDict[PID].keys()[0] + Digitizer	
+			ProcessName = list(am.ProcessDict[PID].keys())[0] + Digitizer	
 			DoTracking = True
 			CMDList, ResultFileLocationList, RunList, FieldIDList = pc.xrdcpRawCMDs(RunNumber, SaveWaveformBool, Version, DoTracking, Digitizer, MyKey, False)
-			SizeCut = am.ProcessDict[PID][am.ProcessDict[PID].keys()[0]]['SizeCut']		
+			SizeCut = am.ProcessDict[PID][list(am.ProcessDict[PID].keys())[0]]['SizeCut']		
 			#print ResultFileLocationList, RunList
 		elif PID == 7:
-			ProcessName = am.ProcessDict[PID].keys()[0] + Digitizer	
+			ProcessName = list(am.ProcessDict[PID].keys())[0] + Digitizer	
 			DoScope = True
 			CMDList, ResultFileLocationList, RunList, FieldIDList = pc.RecoTOFHIRCMDs(RunNumber, Version, DoScope, Digitizer, MyKey)
-			SizeCut = am.ProcessDict[PID][am.ProcessDict[PID].keys()[0]]['SizeCut']
+			SizeCut = am.ProcessDict[PID][list(am.ProcessDict[PID].keys())[0]]['SizeCut']
 		elif PID == 8:
-			ProcessName = am.ProcessDict[PID].keys()[0] + Digitizer	
+			ProcessName = list(am.ProcessDict[PID].keys())[0] + Digitizer	
 			DoScope = False
 			CMDList, ResultFileLocationList, RunList, FieldIDList = pc.RecoTOFHIRCMDs(RunNumber, Version, DoScope, Digitizer, MyKey)
-                        print CMDList
-                        print ResultFileLocationList
-                        print RunList
-                        print FieldIDList
-			SizeCut = am.ProcessDict[PID][am.ProcessDict[PID].keys()[0]]['SizeCut']
+			print(CMDList)
+			print(ResultFileLocationList)
+			print(RunList)
+			print(FieldIDList)
+			SizeCut = am.ProcessDict[PID][list(am.ProcessDict[PID].keys())[0]]['SizeCut']
 
 
-		RunListInt = map(int,RunList)
+		RunListInt = list(map(int,RunList))
 		if OrderOfExecution == 1: 
 			RunListInt.sort() #Ascending Sorting
 		else:
@@ -109,7 +109,7 @@ def ProcessExec(OrderOfExecution, PID, SaveWaveformBool = None, Version = None, 
 
 			for run in RunListInt: 
 				# if run > 27363: continue 
-				if PID!=0: ProcessName = am.ProcessDict[PID].keys()[0] + Digitizer	
+				if PID!=0: ProcessName = list(am.ProcessDict[PID].keys())[0] + Digitizer	
 				index = RunList.index(run)
 				CMD = CMDList[index]  
 				if RunNumber != -1 and len(FieldIDList[index])>0: 
@@ -123,8 +123,8 @@ def ProcessExec(OrderOfExecution, PID, SaveWaveformBool = None, Version = None, 
 				am.DeleteProcessLog(ProcessName, run) ###########Delete previous log file if exists
 				am.ProcessLog(ProcessName, run, CMD)
 				
-				print '\n###############################'
-				print 'Starting process %s for run %d\n' % (ProcessName, run)
+				print('\n###############################')
+				print(('Starting process %s for run %d\n' % (ProcessName, run)))
 								
 				if PID == 0:
 					if pf.QueryGreenSignal(True): pf.UpdateAttributeStatus(str(FieldID), ProcessName, am.StatusDict[1], False, MyKey)
@@ -134,11 +134,11 @@ def ProcessExec(OrderOfExecution, PID, SaveWaveformBool = None, Version = None, 
 						am.ProcessLog(ProcessName, run, line)
 						if not line and session.poll() != None:
 							break
-					print "Looking for file at ",ResultFileLocation
+					print(("Looking for file at ",ResultFileLocation))
 					if FileSizeBool(ResultFileLocation,SizeCut) or not am.os.path.exists(ResultFileLocation): BadProcessExec = True                                                                                                                                                                                                                                                     
 					if BadProcessExec:                                                                                                                                                                                                                               
 						if pf.QueryGreenSignal(True): pf.UpdateAttributeStatus(str(FieldID), ProcessName, am.StatusDict[2], False, MyKey)  
-						print 'Bad %s execution for run %d. Either the CMD format is wrong or somwthing else was wrong while execution. Please check the ProcessLog to know more.\n' % (ProcessName, run)
+						print(('Bad %s execution for run %d. Either the CMD format is wrong or somwthing else was wrong while execution. Please check the ProcessLog to know more.\n' % (ProcessName, run)))
 					else:
 						if pf.QueryGreenSignal(True): pf.UpdateAttributeStatus(str(FieldID), ProcessName, am.StatusDict[0], False, MyKey)
 				
@@ -158,11 +158,11 @@ def ProcessExec(OrderOfExecution, PID, SaveWaveformBool = None, Version = None, 
 								break
 						if FileSizeBool(ResultFileLocation,SizeCut) or not am.os.path.exists(ResultFileLocation):
 							BadProcessExec = True
-							print "Looking for file at ",ResultFileLocation
+							print(("Looking for file at ",ResultFileLocation))
                                                                                                            
 						if BadProcessExec:                                                                                                                                                                                                                               
 							if pf.QueryGreenSignal(True): pf.UpdateAttributeStatus(str(FieldID), ProcessName, am.StatusDict[2], False, MyKey)  
-							print 'Bad %s execution for run %d. Either the CMD format is wrong or somwthing else was wrong while execution. Please check the ProcessLog to know more.\n' % (ProcessName, run)
+							print(('Bad %s execution for run %d. Either the CMD format is wrong or somwthing else was wrong while execution. Please check the ProcessLog to know more.\n' % (ProcessName, run)))
 						else:
 							if pf.QueryGreenSignal(True): pf.UpdateAttributeStatus(str(FieldID), ProcessName, am.StatusDict[0], False, MyKey)
 					else:
@@ -175,9 +175,8 @@ def ProcessExec(OrderOfExecution, PID, SaveWaveformBool = None, Version = None, 
 							jdlname = cu.prepareJDL(PID,DigitizerKey,run,CMD,freq)
 							cu.prepareExecutable(PID,DigitizerKey,run,CMD,freq)
 							## cd and submit to condor
-							print (CMD)
-                                                        print (jdlname)
-                                                        
+							print(CMD)
+							print(jdlname)
 							session = am.subprocess.Popen('cd %s; condor_submit %s; cd -' % (am.CondorDir,jdlname),stdout=am.subprocess.PIPE,stderr=am.subprocess.STDOUT, shell=True)                                                                                                                                                                                   			
 
 							## wait for submission
@@ -191,7 +190,7 @@ def ProcessExec(OrderOfExecution, PID, SaveWaveformBool = None, Version = None, 
 					# print CMD
 					if not condor: 
 						if pf.QueryGreenSignal(True): pf.UpdateAttributeStatus(str(FieldID), ProcessName, am.StatusDict[1], False, MyKey)
-						print am.TimingDAQDir
+						print((am.TimingDAQDir))
 						# session = am.subprocess.Popen('cd %s; source %s; %s;cd -' % (am.TimingDAQDir, am.EnvSetupPath, str(CMD)),stdout=am.subprocess.PIPE,stderr=am.subprocess.STDOUT, shell=True)                                                                          
 						### Hack for long acq            
 						CMD2 = CMD.replace("makeHitTree","addBranches2.py")                                                                                             			
@@ -205,16 +204,16 @@ def ProcessExec(OrderOfExecution, PID, SaveWaveformBool = None, Version = None, 
 								break
 								
 						if DigitizerKey == 5:
-							print 'Sleeping for 60 sec'
+							print('Sleeping for 60 sec')
 							am.time.sleep(60)
-							print 'Done sleeping'
+							print('Done sleeping')
 						
-						print ResultFileLocation
-						print SizeCut
+						print(ResultFileLocation)
+						print(SizeCut)
 						if FileSizeBool(ResultFileLocation,SizeCut) or not am.os.path.exists(ResultFileLocation): BadProcessExec = True                                                                                                                                                                                                                                                     
 						if BadProcessExec:                                                                                                                                                                                                                               
 							if pf.QueryGreenSignal(True): pf.UpdateAttributeStatus(str(FieldID), ProcessName, am.StatusDict[2], False, MyKey)  
-							print 'Bad %s execution for run %d. Either the CMD format is wrong or somwthing else was wrong while execution. Please check the ProcessLog to know more.\n' % (ProcessName, run)
+							print('Bad %s execution for run %d. Either the CMD format is wrong or somwthing else was wrong while execution. Please check the ProcessLog to know more.\n' % (ProcessName, run))
 						else:
 							if pf.QueryGreenSignal(True): pf.UpdateAttributeStatus(str(FieldID), ProcessName, am.StatusDict[0], False, MyKey)
 							if PID == 2 and DigitizerKey == 3:
@@ -231,8 +230,8 @@ def ProcessExec(OrderOfExecution, PID, SaveWaveformBool = None, Version = None, 
 								if pf.QueryGreenSignal(True): 
 									pf.UpdateAttributeStatus2(str(FieldID), "EntriesWithTrackWithoutNplanesScope", int(EntriesWithTrackWithoutNplanes), False, MyKey)
 
-						print 'Finished process %s for run %d' % (ProcessName, run)		
-						print '###############################\n'
+						print('Finished process %s for run %d' % (ProcessName, run))		
+						print('###############################\n')
 
 					elif condor:
 						if pf.QueryGreenSignal(True) and not ApplyFilter: pf.UpdateAttributeStatus(str(FieldID), ProcessName, am.StatusDict[8], False, MyKey)
@@ -246,7 +245,7 @@ def ProcessExec(OrderOfExecution, PID, SaveWaveformBool = None, Version = None, 
 							## cd and submit to condor
 							print (CMD)
 							print (run)
-                                                        print (jdlname)
+							print(jdlname)
 							session = am.subprocess.Popen('cd %s; condor_submit %s; cd -' % (am.CondorDir,jdlname),stdout=am.subprocess.PIPE,stderr=am.subprocess.STDOUT, shell=True)                                                                                                                                                                                   			
 
 							# print 'condor_submit %s; cd -' % (jdlname)
@@ -265,11 +264,11 @@ def ProcessExec(OrderOfExecution, PID, SaveWaveformBool = None, Version = None, 
 					if "Conversion" in CMD: 
 						this_proc_key=1
 
-					ProcessName = am.ProcessDict[this_proc_key].keys()[0] + Digitizer
+					ProcessName = list(am.ProcessDict[this_proc_key].keys())[0] + Digitizer
 					
-                                        if "TOFHIR" in CMD:
-                                                ProcessName = "BTLRecoNoScopeTOFHIR"
-                                                this_proc_key = 8
+					if "TOFHIR" in CMD:
+							ProcessName = "BTLRecoNoScopeTOFHIR"
+							this_proc_key = 8
 
 					if cu.CheckExistsLogs(this_proc_key,DigitizerKey,run,CMD):
 						if cu.CheckExistsEOS(ResultFileLocation,SizeCut):
@@ -357,15 +356,14 @@ def ProcessExec(OrderOfExecution, PID, SaveWaveformBool = None, Version = None, 
 						cu.prepareExecutableTOFHIR(PID,DigitizerKey,run,CMD,freq)
 						## cd and submit to condor
 						#print CMD
-						print run
+						print(run)
 						session = am.subprocess.Popen('cd %s; condor_submit %s; cd -' % (am.CondorDir,jdlname),stdout=am.subprocess.PIPE,stderr=am.subprocess.STDOUT, shell=True)                                                                                                                                                                                   			
-				
-                                                print 'ciao'
+						print('ciao')
 						#			# print 'condor_submit %s; cd -' % (jdlname)
 						# print am.CondorDir
 						## wait for submission
 						line = session.stdout.readline()
-                                                print line
+						print(line)
 						am.ProcessLog(ProcessName, run, line)
 						if not line and session.poll() != None:
 							break
@@ -377,9 +375,9 @@ def ProcessExec(OrderOfExecution, PID, SaveWaveformBool = None, Version = None, 
 			am.time.sleep(4)	
 		
 		else:
-			print '\n######################'
-			print 'No runs to process!!!!'
-			print '######################\n'
+			print('\n######################')
+			print('No runs to process!!!!')
+			print('######################\n')
 			am.time.sleep(4)
 
 def ProcessExecBTLForTOFHIRTracks(OrderOfExecution, PID, SaveWaveformBool = None, Version = None, RunNumber = -1, DigitizerKey = -1 , MyKey = None, GetRunListEachTime = True):
@@ -393,25 +391,25 @@ def ProcessExecBTLForTOFHIRTracks(OrderOfExecution, PID, SaveWaveformBool = None
 	while True:
 		
 		if PID == 0:
-			ProcessName = am.ProcessDict[PID].keys()[0]
+			ProcessName = list(am.ProcessDict[PID].keys())[0]
 			CMDList, ResultFileLocationList, RunList, FieldIDList = pc.TrackingCMDs(RunNumber, MyKey, False)
-			SizeCut = am.ProcessDict[PID][am.ProcessDict[PID].keys()[0]]['SizeCut']
+			SizeCut = am.ProcessDict[PID][list(am.ProcessDict[PID].keys())[0]]['SizeCut']
 		elif PID == 1:
-			ProcessName = am.ProcessDict[PID].keys()[0] + Digitizer
+			ProcessName = list(am.ProcessDict[PID].keys())[0] + Digitizer
 			CMDList, ResultFileLocationList, RunList, FieldIDList = pc.ConversionCMDs(RunNumber, Digitizer, MyKey, False)
-			SizeCut = am.ProcessDict[PID][am.ProcessDict[PID].keys()[0]]['SizeCut']
+			SizeCut = am.ProcessDict[PID][list(am.ProcessDict[PID].keys())[0]]['SizeCut']
 		elif PID == 2:
-			ProcessName = am.ProcessDict[PID].keys()[0] + Digitizer	
+			ProcessName = list(am.ProcessDict[PID].keys())[0] + Digitizer	
 			DoTracking = True
 			CMDList1, CMDList2, ResultFileLocationList, RunList, FieldIDList = pc.TimingDAQCMDsBTLForTOFHIRTracks(RunNumber, SaveWaveformBool, Version, DoTracking, Digitizer, MyKey, False)
-			SizeCut = am.ProcessDict[PID][am.ProcessDict[PID].keys()[0]]['SizeCut']
+			SizeCut = am.ProcessDict[PID][list(am.ProcessDict[PID].keys())[0]]['SizeCut']
 		elif PID == 3:
-			ProcessName = am.ProcessDict[PID].keys()[0] + Digitizer
+			ProcessName = list(am.ProcessDict[PID].keys())[0] + Digitizer
 			DoTracking = False	
 			CMDList, ResultFileLocationList, RunList, FieldIDList = pc.TimingDAQCMDsBTL(RunNumber, SaveWaveformBool, Version, DoTracking, Digitizer, MyKey, False)
-			SizeCut = am.ProcessDict[PID][am.ProcessDict[PID].keys()[0]]['SizeCut']
+			SizeCut = am.ProcessDict[PID][list(am.ProcessDict[PID].keys())[0]]['SizeCut']
 			#print RunList
-		RunListInt = map(int,RunList)
+		RunListInt = list(map(int,RunList))
 		if OrderOfExecution == 1: 
 			RunListInt.sort() #Ascending Sorting
 		else:
@@ -439,13 +437,13 @@ def ProcessExecBTLForTOFHIRTracks(OrderOfExecution, PID, SaveWaveformBool = None
 				am.ProcessLog(ProcessName, run, CMD1)
 				am.ProcessLog(ProcessName, run, CMD2)
 				
-				print '\n###############################'
-				print 'Starting process %s for run %d\n' % (ProcessName, run)
+				print('\n###############################')
+				print('Starting process %s for run %d\n' % (ProcessName, run))
 								
 				if DigitizerKey == 5:
-						print 'Sleeping for 1 sec'
+						print('Sleeping for 1 sec')
 						am.time.sleep(1)
-						print 'Done sleeping'
+						print('Done sleeping')
 								
 				if PID == 0:
 					if pf.QueryGreenSignal(True): pf.UpdateAttributeStatus(str(FieldID), ProcessName, am.StatusDict[1], False, MyKey)
@@ -485,7 +483,7 @@ def ProcessExecBTLForTOFHIRTracks(OrderOfExecution, PID, SaveWaveformBool = None
 				if FileSizeBool(ResultFileLocation,SizeCut) or not am.os.path.exists(ResultFileLocation): BadProcessExec = True                                                                                                                                                                                                                                                     
 				if BadProcessExec:                                                                                                                                                                                                                               
 					if pf.QueryGreenSignal(True): pf.UpdateAttributeStatus(str(FieldID), ProcessName, am.StatusDict[2], False, MyKey)  
-					print 'Bad %s execution for run %d. Either the CMD format is wrong or somwthing else was wrong while execution. Please check the ProcessLog to know more.\n' % (ProcessName, run)
+					print('Bad %s execution for run %d. Either the CMD format is wrong or somwthing else was wrong while execution. Please check the ProcessLog to know more.\n' % (ProcessName, run))
 				else:
 					if pf.QueryGreenSignal(True): pf.UpdateAttributeStatus(str(FieldID), ProcessName, am.StatusDict[0], False, MyKey)
 					if PID == 2 and DigitizerKey == 3:
@@ -502,17 +500,17 @@ def ProcessExecBTLForTOFHIRTracks(OrderOfExecution, PID, SaveWaveformBool = None
 						if pf.QueryGreenSignal(True): 
 							pf.UpdateAttributeStatus2(str(FieldID), "EntriesWithTrackWithoutNplanesScope", int(EntriesWithTrackWithoutNplanes), False, MyKey)
 
-				print 'Finished process %s for run %d' % (ProcessName, run)		
-				print '###############################\n'
+				print('Finished process %s for run %d' % (ProcessName, run))		
+				print('###############################\n')
 			
 			if RunNumber != -1:
 				break
 			am.time.sleep(1)	
 		
 		else:
-			print '\n######################'
-			print 'No runs to process!!!!'
-			print '######################\n'
+			print('\n######################')
+			print('No runs to process!!!!')
+			print('######################\n')
 			am.time.sleep(4)
 
 def ProcessExecBTL(OrderOfExecution, PID, SaveWaveformBool = None, Version = None, RunNumber = -1, DigitizerKey = -1 , MyKey = None, GetRunListEachTime = True):
@@ -526,31 +524,31 @@ def ProcessExecBTL(OrderOfExecution, PID, SaveWaveformBool = None, Version = Non
 	while True:
 	
 		if PID == 0:
-			ProcessName = am.ProcessDict[PID].keys()[0]
+			ProcessName = list(am.ProcessDict[PID].keys())[0]
 			CMDList, ResultFileLocationList, RunList, FieldIDList = pc.TrackingCMDs(RunNumber, MyKey, False)
-			SizeCut = am.ProcessDict[PID][am.ProcessDict[PID].keys()[0]]['SizeCut']
+			SizeCut = am.ProcessDict[PID][list(am.ProcessDict[PID].keys())[0]]['SizeCut']
 		elif PID == 1:
-			ProcessName = am.ProcessDict[PID].keys()[0] + Digitizer
+			ProcessName = list(am.ProcessDict[PID].keys())[0] + Digitizer
 			CMDList, ResultFileLocationList, RunList, FieldIDList = pc.ConversionCMDs(RunNumber, Digitizer, MyKey, False)
-			SizeCut = am.ProcessDict[PID][am.ProcessDict[PID].keys()[0]]['SizeCut']
+			SizeCut = am.ProcessDict[PID][list(am.ProcessDict[PID].keys())[0]]['SizeCut']
 		elif PID == 2:
-			ProcessName = am.ProcessDict[PID].keys()[0] + Digitizer	
+			ProcessName = list(am.ProcessDict[PID].keys())[0] + Digitizer	
 			DoTracking = True
 			CMDList, ResultFileLocationList, RunList, FieldIDList = pc.TimingDAQCMDsBTL(RunNumber, SaveWaveformBool, Version, DoTracking, Digitizer, MyKey, False)
-			SizeCut = am.ProcessDict[PID][am.ProcessDict[PID].keys()[0]]['SizeCut']
+			SizeCut = am.ProcessDict[PID][list(am.ProcessDict[PID].keys())[0]]['SizeCut']
 		elif PID == 3:
-			ProcessName = am.ProcessDict[PID].keys()[0] + Digitizer
+			ProcessName = list(am.ProcessDict[PID].keys())[0] + Digitizer
 			DoTracking = False	
 			CMDList, ResultFileLocationList, RunList, FieldIDList = pc.TimingDAQCMDsBTL(RunNumber, SaveWaveformBool, Version, DoTracking, Digitizer, MyKey, False)
-			SizeCut = am.ProcessDict[PID][am.ProcessDict[PID].keys()[0]]['SizeCut']
+			SizeCut = am.ProcessDict[PID][list(am.ProcessDict[PID].keys())[0]]['SizeCut']
 			#print RunList
-		RunListInt = map(int,RunList)
+		RunListInt = list(map(int,RunList))
 		if OrderOfExecution == 1: 
 			RunListInt.sort() #Ascending Sorting
 		else:
 			RunListInt.sort(reverse = True)
 
-		print RunListInt
+		print(RunListInt)
 
 		if CMDList != []:	
 
@@ -572,13 +570,13 @@ def ProcessExecBTL(OrderOfExecution, PID, SaveWaveformBool = None, Version = Non
 				am.DeleteProcessLog(ProcessName, run) ###########Delete previous log file if exists
 				am.ProcessLog(ProcessName, run, CMD)
 				
-				print '\n###############################'
-				print 'Starting process %s for run %d\n' % (ProcessName, run)
+				print('\n###############################')
+				print('Starting process %s for run %d\n' % (ProcessName, run))
 								
 				if DigitizerKey == 5:
-						print 'Sleeping for 60 sec'
+						print('Sleeping for 60 sec')
 						am.time.sleep(60)
-						print 'Done sleeping'
+						print('Done sleeping')
 				
 				if PID == 0:
 					if pf.QueryGreenSignal(True): pf.UpdateAttributeStatus(str(FieldID), ProcessName, am.StatusDict[1], False, MyKey)
@@ -619,7 +617,7 @@ def ProcessExecBTL(OrderOfExecution, PID, SaveWaveformBool = None, Version = Non
 				if FileSizeBool(ResultFileLocation,SizeCut) or not am.os.path.exists(ResultFileLocation): BadProcessExec = True                                                                                                                                                                                                                                                     
 				if BadProcessExec:                                                                                                                                                                                                                               
 					if pf.QueryGreenSignal(True): pf.UpdateAttributeStatus(str(FieldID), ProcessName, am.StatusDict[2], False, MyKey)  
-					print 'Bad %s execution for run %d. Either the CMD format is wrong or somwthing else was wrong while execution. Please check the ProcessLog to know more.\n' % (ProcessName, run)
+					print('Bad %s execution for run %d. Either the CMD format is wrong or somwthing else was wrong while execution. Please check the ProcessLog to know more.\n' % (ProcessName, run))
 				else:
 					if pf.QueryGreenSignal(True): pf.UpdateAttributeStatus(str(FieldID), ProcessName, am.StatusDict[0], False, MyKey)
 					if PID == 2 and DigitizerKey == 3:
@@ -648,17 +646,17 @@ def ProcessExecBTL(OrderOfExecution, PID, SaveWaveformBool = None, Version = Non
 							pf.UpdateAttributeStatus2(str(FieldID), "HitsCh4", int(hits_ch4), False, MyKey)
 							am.time.sleep(0.3)
 
-				print 'Finished process %s for run %d' % (ProcessName, run)		
-				print '###############################\n'
+				print('Finished process %s for run %d' % (ProcessName, run))		
+				print('###############################\n')
 			
 			if RunNumber != -1:
 				break
 			am.time.sleep(1)	
 		
 		else:
-			print '\n######################'
-			print 'No runs to process!!!!'
-			print '######################\n'
+			print('\n######################')
+			print('No runs to process!!!!')
+			print('######################\n')
 			am.time.sleep(4)
 
 
@@ -675,17 +673,17 @@ def ProcessExecApril(OrderOfExecution, PID, SaveWaveformBool = None, Version1 = 
 	while True:
 	
 		if PID == 2:
-			ProcessName = am.ProcessDict[PID].keys()[0] + Digitizer	
+			ProcessName = list(am.ProcessDict[PID].keys())[0] + Digitizer	
 			DoTracking = True
 			CMDList1, CMDList2, ResultFileLocationList1, ResultFileLocationList2, RunList, FieldIDList = pc.TimingDAQCMDsBTL(RunNumber, SaveWaveformBool, Version1, Version2, DoTracking, Digitizer, MyKey, False)
-			SizeCut = am.ProcessDict[PID][am.ProcessDict[PID].keys()[0]]['SizeCut']
+			SizeCut = am.ProcessDict[PID][list(am.ProcessDict[PID].keys())[0]]['SizeCut']
 		elif PID == 3:
-			ProcessName = am.ProcessDict[PID].keys()[0] + Digitizer
+			ProcessName = list(am.ProcessDict[PID].keys())[0] + Digitizer
 			DoTracking = False	
 			CMDList1, CMSList2, ResultFileLocationList1, ResultFileLocationList2, RunList, FieldIDList = pc.TimingDAQCMDsBTL(RunNumber, SaveWaveformBool, Version1, Version2, DoTracking, Digitizer, MyKey, False)
-			SizeCut = am.ProcessDict[PID][am.ProcessDict[PID].keys()[0]]['SizeCut']
+			SizeCut = am.ProcessDict[PID][list(am.ProcessDict[PID].keys())[0]]['SizeCut']
 
-		RunListInt = map(int,RunList)
+		RunListInt = list(map(int,RunList))
 		if OrderOfExecution == 1: 
 			RunListInt.sort() #Ascending Sorting
 		else:
@@ -713,8 +711,8 @@ def ProcessExecApril(OrderOfExecution, PID, SaveWaveformBool = None, Version1 = 
 				am.DeleteProcessLog(ProcessName, run) ###########Delete previous log file if exists
 				am.ProcessLog(ProcessName, run, CMD1)
 				
-				print '\n###############################'
-				print 'Starting process %s for run %d\n' % (ProcessName, run)
+				print('\n###############################')
+				print('Starting process %s for run %d\n' % (ProcessName, run))
 								
 				if PID == 2 or PID == 3:
 					if pf.QueryGreenSignal(True): pf.UpdateAttributeStatus(str(FieldID), ProcessName, am.StatusDict[1], False, MyKey)
@@ -739,21 +737,21 @@ def ProcessExecApril(OrderOfExecution, PID, SaveWaveformBool = None, Version1 = 
 				if FileSizeBool(ResultFileLocation1,SizeCut) or FileSizeBool(ResultFileLocation2,SizeCut) or not am.os.path.exists(ResultFileLocation1) or not am.os.path.exists(ResultFileLocation2): BadProcessExec = True                                                                                                                                                                                                                                                     
 				if BadProcessExec:                                                                                                                                                                                                                               
 					if pf.QueryGreenSignal(True): pf.UpdateAttributeStatus(str(FieldID), ProcessName, am.StatusDict[2], False, MyKey)  
-					print 'Bad %s execution for run %d. Either the CMD format is wrong or somwthing else was wrong while execution. Please check the ProcessLog to know more.\n' % (ProcessName, run)
+					print('Bad %s execution for run %d. Either the CMD format is wrong or somwthing else was wrong while execution. Please check the ProcessLog to know more.\n' % (ProcessName, run))
 				else:
 					if pf.QueryGreenSignal(True): pf.UpdateAttributeStatus(str(FieldID), ProcessName, am.StatusDict[0], False, MyKey)
 				
-				print 'Finished process %s for run %d' % (ProcessName, run)		
-				print '###############################\n'
+				print('Finished process %s for run %d' % (ProcessName, run))		
+				print('###############################\n')
 			
 			if RunNumber != -1:
 				break
 			am.time.sleep(1)	
 		
 		else:
-			print '\n######################'
-			print 'No runs to process!!!!'
-			print '######################\n'
+			print('\n######################')
+			print('No runs to process!!!!')
+			print('######################\n')
 			am.time.sleep(4)
 
 

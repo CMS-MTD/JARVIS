@@ -21,9 +21,9 @@ if KeyFile: keyFile.close()
 if key = None or not KeyFile:
 	raise Exception('\n Either the key file is not present in the current directory or there is no key in it! \n')
 
-print "\n##############################"
-print "## Starting Data processing ##"
-print "##############################\n"
+print("\n##############################")
+print("## Starting Data processing ##")
+print("##############################\n")
 
 if RunNumber != -1:
 	for run in range (StartRunNumber, StopRunNumber + 1):	
@@ -31,6 +31,6 @@ if RunNumber != -1:
 else:
 	ProcessExec(ExecutionOrder,TimingPID, SaveWaveForms, ConfigVersion,RunNumber,DigitizerKey,key)
 
-print "\n##############################"
-print "## Completed Data processing ##"
-print "##############################\n"
+print("\n##############################")
+print("## Completed Data processing ##")
+print("##############################\n")

@@ -28,7 +28,7 @@ def TrackingCMDs(RunNumber, MyKey, Debug):
         return None,None,None,None   
 
 
-def xrdcpRawCMDs(RunNumber, SaveWaveformBool, Version, DoTracking, Digitizer, MyKey, False):
+def xrdcpRawCMDs(RunNumber, SaveWaveformBool, Version, DoTracking, Digitizer, MyKey, op=False):
     RunList, FieldIDList = pr.xrdcpRawRuns(RunNumber, Digitizer, MyKey, False)
     cpCMDList = []
     ResultFileLocationList = []
@@ -124,7 +124,7 @@ def TimingDAQCMDs(RunNumber, SaveWaveformBool, Version, DoTracking, Digitizer, M
             if not RunNotPresent:
 
                 ResultFileLocationList.append(RecoLocalPath)
-                print DatToROOTExec, ConfigFilePath, RawLocalPath, RecoLocalPath
+                print(DatToROOTExec, ConfigFilePath, RawLocalPath, RecoLocalPath)
                 DatToRootCMD = './' + DatToROOTExec + ' --config_file=' + ConfigFilePath + ' --input_file=' + RawLocalPath + ' --output_file=' + RecoLocalPath
                 if SaveWaveformBool: DatToRootCMD = DatToRootCMD + ' --save_meas'
                 ### Hack for long acq
@@ -139,7 +139,7 @@ def TimingDAQCMDs(RunNumber, SaveWaveformBool, Version, DoTracking, Digitizer, M
 
         #Remove the runs which were not present
         for run in RunsNotPresent:
-            print 'Run %d not present in the raw files' % run
+            print('Run %d not present in the raw files' % run)
             del FieldIDList[RunList.index(run)]
             RunList.remove(run)
 
@@ -167,7 +167,7 @@ def RecoTOFHIRCMDs(RunNumber, Version, doScope, Digitizer, MyKey):
 
     return DatToRootCMDList, ResultFileLocationList, RunList, FieldIDList
 
-def WatchCondorCMDs(RunNumber, SaveWaveformBool, Version, DoTracking, Digitizer, MyKey, False):
+def WatchCondorCMDs(RunNumber, SaveWaveformBool, Version, DoTracking, Digitizer, MyKey, op=False):
     RunList, FieldIDList,ProcessList = pr.WatchCondorRuns(RunNumber, DoTracking, Digitizer, MyKey, False)
     WatchCMDList = []
     ResultFileLocationList = []
@@ -175,7 +175,7 @@ def WatchCondorCMDs(RunNumber, SaveWaveformBool, Version, DoTracking, Digitizer,
     ConvertedBaseLocalPath = am.TwoStageRecoDigitizers[Digitizer]['RawTimingDAQLocalPath']
 
     for i,run in enumerate(RunList):
-        print ProcessList[i]
+        print(ProcessList[i])
 
         if(ProcessList[i]==2):
             if Digitizer == "KeySightScope":
@@ -191,7 +191,7 @@ def WatchCondorCMDs(RunNumber, SaveWaveformBool, Version, DoTracking, Digitizer,
         if(ProcessList[i]==8):
             #RecoLocalPath = ConvertedBaseLocalPath + "run" + str(run)+ am.OneStageRecoDigitizers["TOFHIR"]['RawTimingDAQFileNameFormat'] + '.root'
             RecoLocalPath = "/store/group/cmstestbeam/2023_03_cmstiming_BTL/TOFHIR/RecoData/run" + str(run) + "_e.root"
-            print RecoLocalPath
+            print(RecoLocalPath)
             RecoEOSpath = RecoLocalPath.replace(am.BaseTestbeamDir,am.eosBaseDir)
             WatchCMDList.append("BTLRecoNoScopeTOFHIR")
 
@@ -274,7 +274,7 @@ def TimingDAQCMDsBTLApril(RunNumber, SaveWaveformBool, Version1, Version2, DoTra
 
         #Remove the runs which were not present
         for run in RunsNotPresent:
-            print 'Run %d not present in the raw files' % run
+            print('Run %d not present in the raw files' % run)
             del FieldIDList[RunList.index(run)]
             RunList.remove(run)
 
@@ -385,7 +385,7 @@ def TimingDAQCMDsBTL(RunNumber, SaveWaveformBool, Version, DoTracking, Digitizer
 
         #Remove the runs which were not present
         for run in RunsNotPresent:
-            print 'Run %d not present in the raw files' % run
+            print('Run %d not present in the raw files' % run)
             del FieldIDList[RunList.index(run)]
             RunList.remove(run)
 
@@ -498,7 +498,7 @@ def TimingDAQCMDsBTLForTOFHIRTracks(RunNumber, SaveWaveformBool, Version, DoTrac
 
         #Remove the runs which were not present
         for run in RunsNotPresent:
-            print 'Run %d not present in the raw files' % run
+            print('Run %d not present in the raw files' % run)
             del FieldIDList[RunList.index(run)]
             RunList.remove(run)
 

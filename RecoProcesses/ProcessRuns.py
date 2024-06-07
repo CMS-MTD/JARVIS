@@ -9,7 +9,7 @@ def TrackingRuns(RunNumber, MyKey, Debug):
     if RunNumber == -1:
         #Retrieve the list of all runs that have not been processed yet
 
-        FilterByFormula = pf.ORFunc([am.ProcessDict[0].keys()[0],am.ProcessDict[0].keys()[0]],[am.StatusDict[3], am.StatusDict[5]])                                                                 
+        FilterByFormula = pf.ORFunc([list(am.ProcessDict[0].keys())[0],list(am.ProcessDict[0].keys())[0]],[am.StatusDict[3], am.StatusDict[5]])                                                                 
         headers = {'Authorization': 'Bearer %s' % MyKey, } 
     
         if pf.QueryGreenSignal(True): response = am.requests.get(am.CurlBaseCommand  + '?filterByFormula=' + FilterByFormula, headers=headers)
@@ -34,11 +34,11 @@ def ConversionRuns(RunNumber, Digitizer, MyKey, Debug, condor):
     MyKey = MyKey
     if RunNumber == -1:                                                                                                                                                                                                                                                                  
 
-        ProcessName = am.ProcessDict[1].keys()[0] + Digitizer
+        ProcessName = list(am.ProcessDict[1].keys())[0] + Digitizer
         if not condor: 
             FilterByFormula = pf.ORFunc([ProcessName, ProcessName],[am.StatusDict[3], am.StatusDict[5]])                                                                 
         else:   
-            OR1 = pf.ORFunc([am.ProcessDict[6].keys()[0] + Digitizer],[am.StatusDict[0]]) ## xrd raw files is complete
+            OR1 = pf.ORFunc([list(am.ProcessDict[6].keys())[0] + Digitizer],[am.StatusDict[0]]) ## xrd raw files is complete
             OR2 = pf.ORFunc([ProcessName, ProcessName],[am.StatusDict[3], am.StatusDict[5]]) ## conversion not started or on retry
             FilterByFormula = 'AND(' + OR1 + ',' + OR2 + ')'
             # OR1 = pf.EqualToFunc(pf.Curly(am.ProcessDict[6].keys()[0]+ Digitizer), pf.DoubleQuotes(am.StatusDict[3]))
@@ -63,8 +63,8 @@ def LabviewRuns(RunNumber, Digitizer, MyKey, Debug):
     MyKey = MyKey
     if RunNumber == -1:                                                                                                                                                                                                                                                                  
 
-        ProcessName = am.ProcessDict[4].keys()[0] + Digitizer
-        OR1 = pf.ORFunc([am.ProcessDict[2].keys()[0] + Digitizer, am.ProcessDict[2].keys()[0] + Digitizer],[am.StatusDict[0], am.StatusDict[7]])
+        ProcessName = list(am.ProcessDict[4].keys())[0] + Digitizer
+        OR1 = pf.ORFunc([list(am.ProcessDict[2].keys())[0] + Digitizer, list(am.ProcessDict[2].keys())[0] + Digitizer],[am.StatusDict[0], am.StatusDict[7]])
         OR2 = pf.ORFunc([ProcessName, ProcessName],[am.StatusDict[3], am.StatusDict[5]])                                                                 
         FilterByFormula = 'AND(' + OR1 + ',' + OR2 + ')'
 
@@ -92,17 +92,17 @@ def TimingDAQRuns(RunNumber, DoTracking, Digitizer, MyKey, Debug, condor=False):
     MyKey = MyKey                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
 
     if DoTracking: 
-        ProcessName = am.ProcessDict[2].keys()[0] + Digitizer
+        ProcessName = list(am.ProcessDict[2].keys())[0] + Digitizer
     else:
-        ProcessName = am.ProcessDict[3].keys()[0] + Digitizer
+        ProcessName = list(am.ProcessDict[3].keys())[0] + Digitizer
 
     if RunNumber == -1:            
-        OR1 = pf.ORFunc([am.ProcessDict[1].keys()[0] + Digitizer, am.ProcessDict[1].keys()[0] + Digitizer],[am.StatusDict[0], am.StatusDict[7]])                                                                 
-        OR2 = pf.ORFunc([am.ProcessDict[0].keys()[0],am.ProcessDict[0].keys()[0]],[am.StatusDict[0], am.StatusDict[7]])                                                                                                                                                              
+        OR1 = pf.ORFunc([list(am.ProcessDict[1].keys())[0] + Digitizer, list(am.ProcessDict[1].keys())[0] + Digitizer],[am.StatusDict[0], am.StatusDict[7]])                                                                 
+        OR2 = pf.ORFunc([list(am.ProcessDict[0].keys())[0],list(am.ProcessDict[0].keys())[0]],[am.StatusDict[0], am.StatusDict[7]])                                                                                                                                                              
         OR3 = pf.ORFunc([ProcessName, ProcessName],[am.StatusDict[3], am.StatusDict[5]])
-        OR4 = pf.ORFunc([am.ProcessDict[3].keys()[0] + Digitizer],[am.StatusDict[0]])                                                                                                                                                                                                  
-        xrdcpDone = pf.ORFunc([am.ProcessDict[6].keys()[0] + Digitizer],[am.StatusDict[0]])                                                                                                                                                                                                  
-        AND1 = pf.ANDFunc([am.ProcessDict[0].keys()[0], ProcessName],[am.StatusDict[0], am.StatusDict[3]])
+        OR4 = pf.ORFunc([list(am.ProcessDict[3].keys())[0] + Digitizer],[am.StatusDict[0]])                                                                                                                                                                                                  
+        xrdcpDone = pf.ORFunc([list(am.ProcessDict[6].keys())[0] + Digitizer],[am.StatusDict[0]])                                                                                                                                                                                                  
+        AND1 = pf.ANDFunc([list(am.ProcessDict[0].keys())[0], ProcessName],[am.StatusDict[0], am.StatusDict[3]])
         if Digitizer == am.DigitizerDict[0] or Digitizer == am.DigitizerDict[1] or Digitizer == am.DigitizerDict[5]:
             if DoTracking and not Digitizer == am.DigitizerDict[5]: 
                 FilterByFormula = 'AND(' + OR3 + ',' + OR2 + ')'
@@ -129,8 +129,8 @@ def TimingDAQRuns(RunNumber, DoTracking, Digitizer, MyKey, Debug, condor=False):
         RunList.append(RunNumber)
         FieldIDList.append(pf.GetFieldID(am.QueryFieldsDict[0], RunNumber, False, MyKey))
 
-    print "TimingDAQRuns wants to reco these runs:"
-    print RunList
+    print("TimingDAQRuns wants to reco these runs:")
+    print(RunList)
     return RunList, FieldIDList                                            
 
 def RecoTOFHIRRuns(RunNumber, doScope, Digitizer, MyKey):
@@ -141,16 +141,16 @@ def RecoTOFHIRRuns(RunNumber, doScope, Digitizer, MyKey):
     FieldIDList = []                                                                                                                                                                                                                                                                     
     DigitizerList = []   
 
-    ProcessName =  am.ProcessDict[7].keys()[0] + Digitizer
-    ScopeProcessName =am.ProcessDict[2].keys()[0] + "LecroyScope"
+    ProcessName =  list(am.ProcessDict[7].keys())[0] + Digitizer
+    ScopeProcessName =list(am.ProcessDict[2].keys())[0] + "LecroyScope"
 
-    if not doScope: ProcessName = am.ProcessDict[8].keys()[0] + Digitizer
+    if not doScope: ProcessName = list(am.ProcessDict[8].keys())[0] + Digitizer
     if RunNumber == -1:
 
         #### For doScope: want AND of (xrdcpRawTOFHIR == Complete, TimingDAQLecroyScope == Complete)
-        xrdcpDone = pf.ORFunc([am.ProcessDict[6].keys()[0] + Digitizer],[am.StatusDict[0]])   
+        xrdcpDone = pf.ORFunc([list(am.ProcessDict[6].keys())[0] + Digitizer],[am.StatusDict[0]])   
 
-        ScopeRecoDone = pf.ORFunc([am.ProcessDict[2].keys()[0] + "LecroyScope"],[am.StatusDict[0]])   
+        ScopeRecoDone = pf.ORFunc([list(am.ProcessDict[2].keys())[0] + "LecroyScope"],[am.StatusDict[0]])   
         TOFHIRRecoNotYetDone = pf.ORFunc([ProcessName, ProcessName],[am.StatusDict[3], am.StatusDict[5]])
 
         FilterByFormula = 'AND(' + xrdcpDone + ',' + TOFHIRRecoNotYetDone   
@@ -168,11 +168,11 @@ def RecoTOFHIRRuns(RunNumber, doScope, Digitizer, MyKey):
         RunList.append(RunNumber)
         FieldIDList.append(pf.GetFieldID(am.QueryFieldsDict[0], RunNumber, False, MyKey))
     
-    print "RecoTOFHIRRuns wants to reco these runs:"
-    print RunList
+    print("RecoTOFHIRRuns wants to reco these runs:")
+    print(RunList)
     return RunList, FieldIDList  
 
-def WatchCondorRuns(RunNumber, DoTracking, Digitizer, MyKey, False):
+def WatchCondorRuns(RunNumber, DoTracking, Digitizer, MyKey, op= False):
     RunNumber = RunNumber
     DoTracking = DoTracking
     Digitizer = Digitizer                                                                                                                                                                                                                                           
@@ -186,7 +186,7 @@ def WatchCondorRuns(RunNumber, DoTracking, Digitizer, MyKey, False):
    
 
 
-    print Digitizer
+    print(Digitizer)
     ######################################################################################
     if Digitizer == "TOFHIR":
         ### Get TOFHIR condor runs
@@ -206,7 +206,7 @@ def WatchCondorRuns(RunNumber, DoTracking, Digitizer, MyKey, False):
     else:
         ######################################################################################
         ### Get TimingDAQ condor runs
-        Condition = pf.EqualToFunc(pf.Curly(am.ProcessDict[2].keys()[0]+ Digitizer), pf.DoubleQuotes(am.StatusDict[8]))
+        Condition = pf.EqualToFunc(pf.Curly(list(am.ProcessDict[2].keys())[0]+ Digitizer), pf.DoubleQuotes(am.StatusDict[8]))
         
         # print am.CurlBaseCommand  + '?filterByFormula=' + Condition
         headers = {'Authorization': 'Bearer %s' % MyKey, }                                                                                                                                                                                                                                
@@ -223,7 +223,7 @@ def WatchCondorRuns(RunNumber, DoTracking, Digitizer, MyKey, False):
         ######################################################################################
         
         ### Get Conversion condor runs
-        Condition = pf.EqualToFunc(pf.Curly(am.ProcessDict[1].keys()[0]+ Digitizer), pf.DoubleQuotes(am.StatusDict[8]))
+        Condition = pf.EqualToFunc(pf.Curly(list(am.ProcessDict[1].keys())[0]+ Digitizer), pf.DoubleQuotes(am.StatusDict[8]))
         # print am.CurlBaseCommand  + '?filterByFormula=' + Condition
         headers = {'Authorization': 'Bearer %s' % MyKey, }                                                                                                                                                                                                                                
         if pf.QueryGreenSignal(True): response = am.requests.get(am.CurlBaseCommand  + '?filterByFormula=' + Condition, headers=headers)                                                                                                                                                                               
@@ -239,14 +239,14 @@ def WatchCondorRuns(RunNumber, DoTracking, Digitizer, MyKey, False):
     # print RunList,ProcessList,FieldIDList
     return RunList, FieldIDList, ProcessList    
 
-def xrdcpRawRuns(RunNumber, Digitizer, MyKey, False):
+def xrdcpRawRuns(RunNumber, Digitizer, MyKey, op=False):
     RunNumber = RunNumber
     Digitizer = Digitizer                                                                                                                                                                                                                                           
     RunList = []                                                                                                                                                                                                                                                                         
     FieldIDList = []                                                                                                                                                                                                                                                                     
     DigitizerList = []   
     MyKey = MyKey     
-    ProcessName = am.ProcessDict[6].keys()[0]+ Digitizer
+    ProcessName = list(am.ProcessDict[6].keys())[0]+ Digitizer
     Condition = pf.EqualToFunc(pf.Curly(ProcessName), pf.DoubleQuotes(am.StatusDict[3]))
     
     # conversion_done = pf.EqualToFunc(pf.Curly(am.ProcessDict[1].keys()[0]+ Digitizer), pf.DoubleQuotes(am.StatusDict[0]))
@@ -262,7 +262,7 @@ def xrdcpRawRuns(RunNumber, Digitizer, MyKey, False):
         RunList.append(i['fields'][am.QueryFieldsDict[0]])                                                                                                                                                                                                                                        
         FieldIDList.append(i['id'])
 
-    print RunList
+    print(RunList)
     return RunList, FieldIDList        
 
 
