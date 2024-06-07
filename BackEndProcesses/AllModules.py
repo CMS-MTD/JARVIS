@@ -379,7 +379,7 @@ def ProcessLog(ProcessName, RunNumber, ProcessOutput):
     ProcessLogBasePath = "%sProcessLog/%s/" % (BaseTestbeamDir, ProcessName)
     if not os.path.exists(ProcessLogBasePath): os.system('mkdir -p %s' % ProcessLogBasePath)
     ProcessLogFilePath = ProcessLogBasePath + 'run%d.txt' % RunNumber
-    ProcessFile_handle = open(ProcessLogFilePath, "a+")                                                                                                                                                                                                                                 
+    ProcessFile_handle = open(ProcessLogFilePath, "a+")
     ProcessFile_handle.write(ProcessOutput)
     ProcessFile_handle.close()
 

@@ -128,7 +128,7 @@ def ProcessExec(OrderOfExecution, PID, SaveWaveformBool = None, Version = None, 
 								
 				if PID == 0:
 					if pf.QueryGreenSignal(True): pf.UpdateAttributeStatus(str(FieldID), ProcessName, am.StatusDict[1], False, MyKey)
-					session = am.subprocess.Popen(["ssh", am.RulinuxSSH, str(CMD)],stdout=am.subprocess.PIPE,stderr=am.subprocess.STDOUT)
+					session = am.subprocess.Popen(["ssh", am.RulinuxSSH, str(CMD)],stdout=am.subprocess.PIPE,stderr=am.subprocess.STDOUT, universal_newlines=True)
 					while True:
 						line = session.stdout.readline()
 						am.ProcessLog(ProcessName, run, line)
@@ -148,7 +148,7 @@ def ProcessExec(OrderOfExecution, PID, SaveWaveformBool = None, Version = None, 
 						if pf.QueryGreenSignal(True):
 							pf.UpdateAttributeStatus(str(FieldID), ProcessName, am.StatusDict[1], False, MyKey)
 							am.time.sleep(15) #may not be necessary to wait too long anymore
-						session = am.subprocess.Popen('source %s; %s' % (am.EnvSetupPath,str(CMD)),stdout=am.subprocess.PIPE,stderr=am.subprocess.STDOUT, shell=True)
+						session = am.subprocess.Popen('source %s; %s' % (am.EnvSetupPath,str(CMD)),stdout=am.subprocess.PIPE,stderr=am.subprocess.STDOUT, shell=True, universal_newlines=True)
 						# print CMD
 						# return
 						while True:
@@ -177,7 +177,7 @@ def ProcessExec(OrderOfExecution, PID, SaveWaveformBool = None, Version = None, 
 							## cd and submit to condor
 							print(CMD)
 							print(jdlname)
-							session = am.subprocess.Popen('cd %s; condor_submit %s; cd -' % (am.CondorDir,jdlname),stdout=am.subprocess.PIPE,stderr=am.subprocess.STDOUT, shell=True)                                                                                                                                                                                   			
+							session = am.subprocess.Popen('cd %s; condor_submit %s; cd -' % (am.CondorDir,jdlname),stdout=am.subprocess.PIPE,stderr=am.subprocess.STDOUT, shell=True, universal_newlines = True)                                                                                                                                                                                   			
 
 							## wait for submission
 							line = session.stdout.readline()
@@ -194,7 +194,7 @@ def ProcessExec(OrderOfExecution, PID, SaveWaveformBool = None, Version = None, 
 						# session = am.subprocess.Popen('cd %s; source %s; %s;cd -' % (am.TimingDAQDir, am.EnvSetupPath, str(CMD)),stdout=am.subprocess.PIPE,stderr=am.subprocess.STDOUT, shell=True)                                                                          
 						### Hack for long acq            
 						CMD2 = CMD.replace("makeHitTree","addBranches2.py")                                                                                             			
-						session = am.subprocess.Popen('cd %s; %s;cd -' % (am.TimingDAQDir, str(CMD)),stdout=am.subprocess.PIPE,stderr=am.subprocess.STDOUT, shell=True)                                                                                                                                                                                   			
+						session = am.subprocess.Popen('cd %s; %s;cd -' % (am.TimingDAQDir, str(CMD)),stdout=am.subprocess.PIPE,stderr=am.subprocess.STDOUT, shell=True, universal_newlines=True)                                                                                                                                                                                   			
 						######## For Caltech CMS Timing computer uncomment this and comment out the above line 
 						#session = am.subprocess.Popen('cd %s; %s;cd -' % (am.TimingDAQDir, str(CMD)),stdout=am.subprocess.PIPE, shell=True)  
 						while True:
@@ -246,7 +246,7 @@ def ProcessExec(OrderOfExecution, PID, SaveWaveformBool = None, Version = None, 
 							print (CMD)
 							print (run)
 							print(jdlname)
-							session = am.subprocess.Popen('cd %s; condor_submit %s; cd -' % (am.CondorDir,jdlname),stdout=am.subprocess.PIPE,stderr=am.subprocess.STDOUT, shell=True)                                                                                                                                                                                   			
+							session = am.subprocess.Popen('cd %s; condor_submit %s; cd -' % (am.CondorDir,jdlname),stdout=am.subprocess.PIPE,stderr=am.subprocess.STDOUT, shell=True, universal_newlines=True)                                                                                                                                                                                   			
 
 							# print 'condor_submit %s; cd -' % (jdlname)
 							# print am.CondorDir
@@ -269,9 +269,10 @@ def ProcessExec(OrderOfExecution, PID, SaveWaveformBool = None, Version = None, 
 					if "TOFHIR" in CMD:
 							ProcessName = "BTLRecoNoScopeTOFHIR"
 							this_proc_key = 8
-
 					if cu.CheckExistsLogs(this_proc_key,DigitizerKey,run,CMD):
+						print("log exists")
 						if cu.CheckExistsEOS(ResultFileLocation,SizeCut):
+							print("file exists")
 							if pf.QueryGreenSignal(True): pf.UpdateAttributeStatus(str(FieldID), ProcessName, am.StatusDict[0], False, MyKey)
 						# else:
 						# 	if pf.QueryGreenSignal(True): pf.UpdateAttributeStatus(str(FieldID), ProcessName, am.StatusDict[2], False, MyKey)
@@ -357,7 +358,7 @@ def ProcessExec(OrderOfExecution, PID, SaveWaveformBool = None, Version = None, 
 						## cd and submit to condor
 						#print CMD
 						print(run)
-						session = am.subprocess.Popen('cd %s; condor_submit %s; cd -' % (am.CondorDir,jdlname),stdout=am.subprocess.PIPE,stderr=am.subprocess.STDOUT, shell=True)                                                                                                                                                                                   			
+						session = am.subprocess.Popen('cd %s; condor_submit %s; cd -' % (am.CondorDir,jdlname),stdout=am.subprocess.PIPE,stderr=am.subprocess.STDOUT, shell=True, universal_newlines=True)                                                                                                                                                                                   			
 						print('ciao')
 						#			# print 'condor_submit %s; cd -' % (jdlname)
 						# print am.CondorDir
@@ -447,7 +448,7 @@ def ProcessExecBTLForTOFHIRTracks(OrderOfExecution, PID, SaveWaveformBool = None
 								
 				if PID == 0:
 					if pf.QueryGreenSignal(True): pf.UpdateAttributeStatus(str(FieldID), ProcessName, am.StatusDict[1], False, MyKey)
-					session = am.subprocess.Popen(["ssh", am.RulinuxSSH, str(CMD)],stdout=am.subprocess.PIPE,stderr=am.subprocess.STDOUT)
+					session = am.subprocess.Popen(["ssh", am.RulinuxSSH, str(CMD)],stdout=am.subprocess.PIPE,stderr=am.subprocess.STDOUT, universal_newlines=True)
 					while True:
 						line = session.stdout.readline()
 						am.ProcessLog(ProcessName, run, line)
@@ -456,7 +457,7 @@ def ProcessExecBTLForTOFHIRTracks(OrderOfExecution, PID, SaveWaveformBool = None
 				elif PID == 1:
 					am.time.sleep(60)
 					if pf.QueryGreenSignal(True): pf.UpdateAttributeStatus(str(FieldID), ProcessName, am.StatusDict[1], False, MyKey)
-					session = am.subprocess.Popen('source %s; %s' % (am.EnvSetupPath,str(CMD)),stdout=am.subprocess.PIPE,stderr=am.subprocess.STDOUT, shell=True)
+					session = am.subprocess.Popen('source %s; %s' % (am.EnvSetupPath,str(CMD)),stdout=am.subprocess.PIPE,stderr=am.subprocess.STDOUT, shell=True, universal_newlines=True)
 					while True:
 						line = session.stdout.readline()
 						am.ProcessLog(ProcessName, run, line)
@@ -468,13 +469,13 @@ def ProcessExecBTLForTOFHIRTracks(OrderOfExecution, PID, SaveWaveformBool = None
 					if Digitizer == am.DigitizerDict[5]:
 						EnvirSetup1 = am.TOFHIRRecoDir
 						EnvirSetup2 = am.TOFHIRRecoDir2
-						session1 = am.subprocess.Popen('cd %s; %s;cd -' % (EnvirSetup1, str(CMD1)),stdout=am.subprocess.PIPE,stderr=am.subprocess.STDOUT, shell=True)
+						session1 = am.subprocess.Popen('cd %s; %s;cd -' % (EnvirSetup1, str(CMD1)),stdout=am.subprocess.PIPE,stderr=am.subprocess.STDOUT, shell=True, universal_newlines=True)
 						while True:
 							line = session1.stdout.readline()
 							am.ProcessLog(ProcessName, run, line)
 							if not line and session1.poll() != None:
 								break
-						session2 = am.subprocess.Popen('cd %s; %s;cd -' % (EnvirSetup2, str(CMD2)),stdout=am.subprocess.PIPE,stderr=am.subprocess.STDOUT, shell=True)
+						session2 = am.subprocess.Popen('cd %s; %s;cd -' % (EnvirSetup2, str(CMD2)),stdout=am.subprocess.PIPE,stderr=am.subprocess.STDOUT, shell=True, universal_newlines=True)
 						while True:
 							line = session2.stdout.readline()
 							am.ProcessLog(ProcessName, run, line)
@@ -580,7 +581,7 @@ def ProcessExecBTL(OrderOfExecution, PID, SaveWaveformBool = None, Version = Non
 				
 				if PID == 0:
 					if pf.QueryGreenSignal(True): pf.UpdateAttributeStatus(str(FieldID), ProcessName, am.StatusDict[1], False, MyKey)
-					session = am.subprocess.Popen(["ssh", am.RulinuxSSH, str(CMD)],stdout=am.subprocess.PIPE,stderr=am.subprocess.STDOUT)
+					session = am.subprocess.Popen(["ssh", am.RulinuxSSH, str(CMD)],stdout=am.subprocess.PIPE,stderr=am.subprocess.STDOUT, universal_newlines=True)
 					while True:
 						line = session.stdout.readline()
 						am.ProcessLog(ProcessName, run, line)
@@ -589,7 +590,7 @@ def ProcessExecBTL(OrderOfExecution, PID, SaveWaveformBool = None, Version = Non
 				elif PID == 1:
 					am.time.sleep(60)
 					if pf.QueryGreenSignal(True): pf.UpdateAttributeStatus(str(FieldID), ProcessName, am.StatusDict[1], False, MyKey)
-					session = am.subprocess.Popen('source %s; %s' % (am.EnvSetupPath,str(CMD)),stdout=am.subprocess.PIPE,stderr=am.subprocess.STDOUT, shell=True)
+					session = am.subprocess.Popen('source %s; %s' % (am.EnvSetupPath,str(CMD)),stdout=am.subprocess.PIPE,stderr=am.subprocess.STDOUT, shell=True, universal_newlines=True)
 					while True:
 						line = session.stdout.readline()
 						am.ProcessLog(ProcessName, run, line)
@@ -603,9 +604,9 @@ def ProcessExecBTL(OrderOfExecution, PID, SaveWaveformBool = None, Version = Non
 							EnvirSetup = am.TOFHIRRecoDir
 						elif PID == 2:
 							EnvirSetup = am.TOFHIRRecoDir2
-						session = am.subprocess.Popen('cd %s; %s;cd -' % (EnvirSetup, str(CMD)),stdout=am.subprocess.PIPE,stderr=am.subprocess.STDOUT, shell=True)
+						session = am.subprocess.Popen('cd %s; %s;cd -' % (EnvirSetup, str(CMD)),stdout=am.subprocess.PIPE,stderr=am.subprocess.STDOUT, shell=True, universal_newlines=True)
 					else:
-						session = am.subprocess.Popen('cd %s; source %s; %s;cd -' % (am.TimingDAQDir, am.EnvSetupPath, str(CMD)),stdout=am.subprocess.PIPE,stderr=am.subprocess.STDOUT, shell=True)                                                                                                                                                                                   			
+						session = am.subprocess.Popen('cd %s; source %s; %s;cd -' % (am.TimingDAQDir, am.EnvSetupPath, str(CMD)),stdout=am.subprocess.PIPE,stderr=am.subprocess.STDOUT, shell=True, universal_newlines=True)                                                                                                                                                                                   			
 					######## For Caltech CMS Timing computer uncomment this and comment out the above line 
 					#session = am.subprocess.Popen('cd %s; %s;cd -' % (am.TimingDAQDir, str(CMD)),stdout=am.subprocess.PIPE, shell=True)                                                                                                                                                                                   			
 					while True:
@@ -717,7 +718,7 @@ def ProcessExecApril(OrderOfExecution, PID, SaveWaveformBool = None, Version1 = 
 				if PID == 2 or PID == 3:
 					if pf.QueryGreenSignal(True): pf.UpdateAttributeStatus(str(FieldID), ProcessName, am.StatusDict[1], False, MyKey)
 					######## For TimingDAQ02 
-					session1 = am.subprocess.Popen('cd %s; source %s; %s;cd -' % (am.TimingDAQDir, am.EnvSetupPath, str(CMD1)),stdout=am.subprocess.PIPE,stderr=am.subprocess.STDOUT, shell=True)                                                                                                                                                                                   			
+					session1 = am.subprocess.Popen('cd %s; source %s; %s;cd -' % (am.TimingDAQDir, am.EnvSetupPath, str(CMD1)),stdout=am.subprocess.PIPE,stderr=am.subprocess.STDOUT, shell=True, universal_newlines=True)
 					######## For Caltech CMS Timing computer uncomment this and comment out the above line 
 					#session = am.subprocess.Popen('cd %s; %s;cd -' % (am.TimingDAQDir, str(CMD)),stdout=am.subprocess.PIPE, shell=True)                                                                                                                                                                                   			
 					while True:
@@ -725,7 +726,7 @@ def ProcessExecApril(OrderOfExecution, PID, SaveWaveformBool = None, Version1 = 
 						am.ProcessLog(ProcessName, run, line)
 						if not line and session1.poll() != None:
 							break
-					session2 = am.subprocess.Popen('cd %s; source %s; %s;cd -' % (am.TimingDAQDir, am.EnvSetupPath, str(CMD2)),stdout=am.subprocess.PIPE,stderr=am.subprocess.STDOUT, shell=True)                                                                                                                                                                                   			
+					session2 = am.subprocess.Popen('cd %s; source %s; %s;cd -' % (am.TimingDAQDir, am.EnvSetupPath, str(CMD2)),stdout=am.subprocess.PIPE,stderr=am.subprocess.STDOUT, shell=True, universal_newlines=True)
 					######## For Caltech CMS Timing computer uncomment this and comment out the above line 
 					#session = am.subprocess.Popen('cd %s; %s;cd -' % (am.TimingDAQDir, str(CMD)),stdout=am.subprocess.PIPE, shell=True)                                                                                                                                                                                   			
 					while True:

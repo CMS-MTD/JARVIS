@@ -226,16 +226,18 @@ def CheckExistsEOS(ResultFileLocation,sizecut):
 		print("Error, this path is not in EOS:",ResultFileLocation)
 
 	if "cmseos.fnal.gov/" in ResultFileLocation:
-		cmd = ["eos", "root://cmseos.fnal.gov", "find", "--size",ResultFileLocation.split("cmseos.fnal.gov/")[1]]
+		#cmd = ["eos", "root://cmseos.fnal.gov", "find", "--size",ResultFileLocation.split("cmseos.fnal.gov/")[1]]
+		cmd = ["eos", "root://cmseos.fnal.gov", "find", "--size", ResultFileLocation.replace("root://cmseos.fnal.gov/", '/eos/uscms/').replace('group', 'user')] #20240607, fix by CW, softlinks are not made correctly
 	else:
 		cmd = ["eos", "root://cmseos.fnal.gov", "find", "--size",ResultFileLocation]	
 
 	print(cmd)
-	session = am.subprocess.Popen(cmd,stdout=am.subprocess.PIPE,stderr=am.subprocess.STDOUT)
+	session = am.subprocess.Popen(cmd,stdout=am.subprocess.PIPE,stderr=am.subprocess.STDOUT, universal_newlines = True)
 	line = session.stdout.readline()
-	if "size=" not in line: return False;
-	if int(line.split("size=")[1].strip()) > sizecut:
-		return True
+	print(line)
+	if "size=" not in line: return False
+	print("size", int(line.split("size=")[1].strip()) , sizecut)
+	if int(line.split("size=")[1].strip()) > sizecut:return True
 	else: return False
 
 def CheckExistsLogs(PID,digitizer_key,run,CMD):
@@ -399,7 +401,7 @@ def prepareExecutable(PID,digitizer_key,run,CMD,frequency=0):
 	if PID==2:
 		f.write("source /cvmfs/cms.cern.ch/cmsset_default.sh\n")
 		# f.write("cd /cvmfs/cms.cern.ch/slc7_amd64_gcc530/cms/cmssw/CMSSW_8_0_20/src/\n")
-		f.wtie("cd /cvmfs/cms.cern.ch/el9_amd64_gcc12/cms/cmssw/CMSSW_13_3_2/src/\n")
+		f.write("cd /cvmfs/cms.cern.ch/el9_amd64_gcc12/cms/cmssw/CMSSW_13_3_2/src/\n")
 		f.write("eval `scramv1 runtime -sh`\n")
 		f.write("cd -\n")
 		f.write("chmod 755 NetScopeStandaloneDat2Root\n")
@@ -418,7 +420,7 @@ def prepareExecutable(PID,digitizer_key,run,CMD,frequency=0):
 				f.write("ls\n")
 				f.write("xrdcp -fs out_%s %s\n" % (os.path.basename(outputfile), outputfile))
 		if digitizer_key==6:
-				f.write("python add_branches_TimingDAQ.py %i %i %s\n" % (run,9999,"out_"+os.path.basename(outputfile)))
+				f.write("python3 add_branches_TimingDAQ.py %i %i %s\n" % (run,9999,"out_"+os.path.basename(outputfile)))
 				f.write("ls\n")
 				f.write("xrdcp -fs out_%s %s\n" % (os.path.basename(outputfile).replace(".root","_info.root"), outputfile.replace(".root","_info.root")))
 
