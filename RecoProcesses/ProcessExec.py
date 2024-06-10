@@ -146,7 +146,9 @@ def ProcessExec(OrderOfExecution, PID, SaveWaveformBool = None, Version = None, 
 						if pf.QueryGreenSignal(True):
 							pf.UpdateAttributeStatus(str(FieldID), ProcessName, am.StatusDict[1], False, MyKey)
 							am.time.sleep(15) #may not be necessary to wait too long anymore
-						session = am.subprocess.Popen('source %s; %s' % (am.EnvSetupPath,str(CMD)),stdout=am.subprocess.PIPE,stderr=am.subprocess.STDOUT, shell=True, universal_newlines=True)
+						print(CMD)
+						conversion_path = am.os.path.dirname(CMD.split(' ')[1])
+						session = am.subprocess.Popen('cd %s; %s' % (conversion_path,CMD),stdout=am.subprocess.PIPE,stderr=am.subprocess.STDOUT, shell=True, universal_newlines=True)
 						# print CMD
 						# return
 						# ResultFileLocation = ResultFileLocation.replace()
@@ -469,7 +471,9 @@ def ProcessExecBTLForTOFHIRTracks(OrderOfExecution, PID, SaveWaveformBool = None
 				elif PID == 1:
 					am.time.sleep(60)
 					if pf.QueryGreenSignal(True): pf.UpdateAttributeStatus(str(FieldID), ProcessName, am.StatusDict[1], False, MyKey)
-					session = am.subprocess.Popen('source %s; %s' % (am.EnvSetupPath,str(CMD)),stdout=am.subprocess.PIPE,stderr=am.subprocess.STDOUT, shell=True, universal_newlines=True)
+					# session = am.subprocess.Popen('source %s; %s' % (am.EnvSetupPath,str(CMD)),stdout=am.subprocess.PIPE,stderr=am.subprocess.STDOUT, shell=True, universal_newlines=True)
+					print(CMD)
+					session = am.subprocess.Popen(CMD,stdout=am.subprocess.PIPE,stderr=am.subprocess.STDOUT, shell=True, universal_newlines=True)
 					while True:
 						line = session.stdout.readline()
 						am.ProcessLog(ProcessName, run, line)
