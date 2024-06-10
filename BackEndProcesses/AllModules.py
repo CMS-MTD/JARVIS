@@ -178,7 +178,7 @@ TwoStageRecoDigitizers = {
                         'LecroyScope'      :  {
                                            'ConfigFileBasePath'     : '%sLecroyScope_' % (ConfigFileBasePath),
                                            'DatToROOTExec'          : 'NetScopeStandaloneDat2Root', 
-                                           'ConversionCMD'          : 'python %s/Reconstruction/conversion.py --runNumber ' % (LecroyScopeControlDir), 
+                                           'ConversionCMD'          : 'python3 %s/Reconstruction/conversion.py --runNumber ' % (LecroyScopeControlDir), 
                                            'RawConversionLocalPath' : '/home/daq/LecroyMount/',
                                            'RawTimingDAQLocalPath'  : '%sLecroyScope/RecoData/ConversionRECO/'  % (BaseTestbeamDir),
                                            'RecoTimingDAQLocalPath' : '%sLecroyScope/RecoData/TimingDAQRECO/' % (BaseTestbeamDir),
