@@ -399,6 +399,8 @@ def prepareExecutable(PID,digitizer_key,run,CMD,frequency=0):
 		f.write("rm *.py\n")		
 
 	if PID==2:
+		f.write("date\n")
+		f.write("start_time=`date +%s`\n")
 		f.write("source /cvmfs/cms.cern.ch/cmsset_default.sh\n")
 		# f.write("cd /cvmfs/cms.cern.ch/slc7_amd64_gcc530/cms/cmssw/CMSSW_8_0_20/src/\n")
 		f.write("cd /cvmfs/cms.cern.ch/el9_amd64_gcc12/cms/cmssw/CMSSW_13_3_2/src/\n")
@@ -433,6 +435,9 @@ def prepareExecutable(PID,digitizer_key,run,CMD,frequency=0):
 		f.write("rm *.py\n")
 
 	f.write("echo '##### HOST DETAILS #####\n'")
+	f.write("end_time=`date +%s`\n")
+	f.write("runtime=$((end_time-start_time))\n")
+	f.write("echo 'I ran for ${runtime} seconds`\n")
 	f.write("echo 'I ran on'\n")
 	f.write("hostname\n")
 	f.write("date\n")

@@ -49,6 +49,7 @@ def ProcessExec(OrderOfExecution, PID, SaveWaveformBool = None, Version = None, 
 			print(ProcessName)
 			CMDList, ResultFileLocationList, RunList, FieldIDList = pc.TrackingCMDs(RunNumber, MyKey, False)
 			SizeCut = am.ProcessDict[PID][list(am.ProcessDict[PID].keys())[0]]['SizeCut']
+			print(ResultFileLocationList)
 		elif PID == 1:
 			ProcessName = list(am.ProcessDict[PID].keys())[0] + Digitizer
 			CMDList, ResultFileLocationList, RunList, FieldIDList = pc.ConversionCMDs(RunNumber, Digitizer, MyKey, False, condor)
@@ -57,10 +58,7 @@ def ProcessExec(OrderOfExecution, PID, SaveWaveformBool = None, Version = None, 
 			ProcessName = list(am.ProcessDict[PID].keys())[0] + Digitizer	
 			DoTracking = True
 			CMDList, ResultFileLocationList, RunList, FieldIDList = pc.TimingDAQCMDs(RunNumber, SaveWaveformBool, Version, DoTracking, Digitizer, MyKey, False, condor)
-			print(CMDList)
-			print(ResultFileLocationList)
-			print(RunList)
-			print(FieldIDList)
+			
 			SizeCut = am.ProcessDict[PID][list(am.ProcessDict[PID].keys())[0]]['SizeCut']
 		elif PID == 3:
 			ProcessName = list(am.ProcessDict[PID].keys())[0] + Digitizer
@@ -193,7 +191,12 @@ def ProcessExec(OrderOfExecution, PID, SaveWaveformBool = None, Version = None, 
 						print((am.TimingDAQDir))
 						# session = am.subprocess.Popen('cd %s; source %s; %s;cd -' % (am.TimingDAQDir, am.EnvSetupPath, str(CMD)),stdout=am.subprocess.PIPE,stderr=am.subprocess.STDOUT, shell=True)                                                                          
 						### Hack for long acq            
-						CMD2 = CMD.replace("makeHitTree","addBranches2.py")                                                                                             			
+						# CMD2 = CMD.replace("makeHitTree","addBranches2.py")    
+						# print(am.TimingDAQDir)
+						# CMD = CMD.replace(am.BaseTestbeamDir,am.eosBaseDir.replace('root://cmseos.fnal.gov//','/eos/uscms/'))
+
+						CMD = './script.sh %s' %(str(run))
+
 						session = am.subprocess.Popen('cd %s; %s;cd -' % (am.TimingDAQDir, str(CMD)),stdout=am.subprocess.PIPE,stderr=am.subprocess.STDOUT, shell=True, universal_newlines=True)                                                                                                                                                                                   			
 						######## For Caltech CMS Timing computer uncomment this and comment out the above line 
 						#session = am.subprocess.Popen('cd %s; %s;cd -' % (am.TimingDAQDir, str(CMD)),stdout=am.subprocess.PIPE, shell=True)  
@@ -210,8 +213,12 @@ def ProcessExec(OrderOfExecution, PID, SaveWaveformBool = None, Version = None, 
 						
 						print(ResultFileLocation)
 						print(SizeCut)
+						ResultFileLocation = ResultFileLocation.replace(am.BaseTestbeamDir,am.eosBaseDir.replace('root://cmseos.fnal.gov//','/eos/uscms/'))
+						ResultFileLocation = ResultFileLocation.replace('.root', '_info.root')
 						if FileSizeBool(ResultFileLocation,SizeCut) or not am.os.path.exists(ResultFileLocation): BadProcessExec = True                                                                                                                                                                                                                                                     
-						if BadProcessExec:                                                                                                                                                                                                                               
+						if BadProcessExec:   
+							print(FileSizeBool(ResultFileLocation,SizeCut), am.os.path.exists(ResultFileLocation)) 
+							print(ResultFileLocation)                                                                                                                                                                                                                           
 							if pf.QueryGreenSignal(True): pf.UpdateAttributeStatus(str(FieldID), ProcessName, am.StatusDict[2], False, MyKey)  
 							print('Bad %s execution for run %d. Either the CMD format is wrong or somwthing else was wrong while execution. Please check the ProcessLog to know more.\n' % (ProcessName, run))
 						else:

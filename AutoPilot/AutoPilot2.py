@@ -60,6 +60,7 @@ default_run_info["xrdcpRawLecroyScope"] = not_applicable
 default_run_info["ConversionLecroyScope"] = not_applicable
 default_run_info["TimingDAQLecroyScope"] = not_applicable
 default_run_info["TimingDAQNoTracksLecroyScope"] = not_applicable
+default_run_info["TimingDAQFastLecroyScope"] = not_applicable
 
 ##VME defaults
 default_run_info["TimingDAQVME"] = not_applicable
@@ -250,6 +251,7 @@ while (AutoPilotStatus == 1 and iteration < maxRuns):
 		this_run_info["ConversionLecroyScope"] = not_started
 		this_run_info["TimingDAQNoTracksLecroyScope"] = not_started
 		this_run_info["TimingDAQLecroyScope"] = not_started
+		this_run_info["TimingDAQFastLecroyScope"] = not_started
 	
 
 	if IncludesVME:

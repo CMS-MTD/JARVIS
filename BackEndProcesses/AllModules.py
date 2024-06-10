@@ -110,6 +110,7 @@ LecroyScopeCommFileName = '%s/JARVIS/BackEndProcesses/ScopeStatus.txt' % BaseTes
 
 
 ConfigFileBasePath = '%sconfig/' % TimingDAQDir
+ConfigFileBasePath = TimingDAQDir
 TOFHIRConfigFileBasePath = '/home/daq/2019_04_April_CMSTiming/TOFHIR/ConfigArchive/'
 
 ###Low pass filter frequencies####
@@ -181,6 +182,7 @@ TwoStageRecoDigitizers = {
                                            'RawConversionLocalPath' : '/home/daq/LecroyMount/',
                                            'RawTimingDAQLocalPath'  : '%sLecroyScope/RecoData/ConversionRECO/'  % (BaseTestbeamDir),
                                            'RecoTimingDAQLocalPath' : '%sLecroyScope/RecoData/TimingDAQRECO/' % (BaseTestbeamDir),
+                                           'RecoTimingDAQFastLocalPath' : '%sLecroyScope/RecoData/TimingDAQFastRECO/' % (BaseTestbeamDir),
                                            'RawTimingDAQFileNameFormat' : 'converted_run', ##### run_scope<run>.root 
                                            'FinalFileNameFormat' : 'run',
                                           
@@ -246,7 +248,8 @@ ProcessDict = {
                     5 : {'WatchCondor' : {'SizeCut' : 20000}},
                     6 : {'xrdcpRaw' : {'SizeCut' : 20000}},
                     7 : {'BTLReco' : {'SizeCut' : 20000}},
-                    8 : {'BTLRecoNoScope' : {'SizeCut' : 20000}}
+                    8 : {'BTLRecoNoScope' : {'SizeCut' : 20000}},
+                    9 : {'TimingDAQFast' : {'SizeCut' : 20000}}
                 }
 StatusDict = {
                     0 : 'Complete',
