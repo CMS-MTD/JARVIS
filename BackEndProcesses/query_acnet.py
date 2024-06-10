@@ -2,12 +2,13 @@ import urllib2 as url #python2
 #import urllib.request as url #python3
 # import numpy as np
 import sys
+import AllModules as am
 
 # this is static and is the first part of the Acnet URL
 acnet_webString = 'http://www-bd.fnal.gov/cgi-bin/acl.pl?acl=logger_get/start='
 
 # output file name
-acnet_results = "/home/daq/2024_05_SNSPD_FCFD_ETL/JARVIS/SlowControl/acnet_buffer.txt"
+acnet_results = "/home/daq/%s/JARVIS/SlowControl/acnet_buffer.txt" % am.BaseDirName
 
 # Function to construct URL and write results to text file
 def get_acnet_data(T1, T2, device):
