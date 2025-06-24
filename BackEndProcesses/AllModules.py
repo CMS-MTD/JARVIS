@@ -30,7 +30,7 @@ if isLPC:
 
 ################### Run Table Information #################
 MyKey = '' #Read MyKey from key file in RecoProcesses
-BaseID = 'appGZS0BMrLSbYaEK'
+BaseID = 'appNqeAN28zTs2JLJ'
 RunTableName = 'tbl5V5QTHVk5YEBhK'
 SensorTableName = 'tbl3L7HhQ6G3fSvRh'
 ConfigTableName = 'tbliBCnhoZXPQPYXw'
@@ -65,7 +65,7 @@ ResultTrackFileNameAfterRunNumberSlow = '_CMSTiming_SlowTriggerStream_converted.
 ResultTrackFileNameAfterRunNumberFast = '_CMSTiming_FastTriggerStream_converted.root'
 
 ############## For timingdaq02 ############
-BaseDirName = '2024_05_SNSPD_FCFD_ETL'
+BaseDirName = '2025_08_SNSPD'
 BaseTestbeamDir = '/home/daq/{}/'.format(BaseDirName) 
 if isLPC:
     if 'rheller' in user:
