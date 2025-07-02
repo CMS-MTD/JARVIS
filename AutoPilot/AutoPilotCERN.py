@@ -151,7 +151,7 @@ if IncludesKeySightScope:
 	else:
 		# print("Scope still busy. Excluding scope from the next run\n")
 		print("Scope still busy. Wait for next chance.\n")
-		continue #### Should instead check both scopes before continue command.....
+		exit()
 
 
 
@@ -170,8 +170,7 @@ if IncludesLecroyScope:
 		print("Lecroy Scope has started.")
 	else:			
 		print("Lecroy Scope still busy. Wait for next chance.\n")
-		continue
-
+		exit()
 
 ### Preparing to start run
 print "Keysight Scope included ",KeySightScopeIncludedThisRun
