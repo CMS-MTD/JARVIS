@@ -105,8 +105,9 @@ ScopeCommFileName = '%sAcquisition/ScopeStatus.txt' % ScopeControlDir
 
 ################ Lecroy Scope Control from AutoPilot Paths ################
 LecroyScopeControlDir = '%sScopeHandler/Lecroy/' % BaseTestbeamDir
-LecroyScopeStateFileName = '%s/JARVIS/BackEndProcesses/RunLog.txt' % BaseTestbeamDir
-LecroyScopeCommFileName = '%s/JARVIS/BackEndProcesses/ScopeStatus.txt' % BaseTestbeamDir
+LecroyScopeStateFileName = '%sAcquisition/RunLog.txt' % LecroyScopeControlDir
+LecroyScopeCommFileName = '%sAcquisition/ScopeStatus.txt' % LecroyScopeControlDir
+
 
 
 ConfigFileBasePath = '%sconfig/' % TimingDAQDir
