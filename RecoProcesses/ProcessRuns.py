@@ -35,13 +35,15 @@ def ConversionRuns(RunNumber, Digitizer, MyKey, Debug, condor):
     if RunNumber == -1:                                                                                                                                                                                                                                                                  
 
         ProcessName = list(am.ProcessDict[1].keys())[0] + Digitizer
-        if not condor: 
-            FilterByFormula = pf.ORFunc([ProcessName, ProcessName],[am.StatusDict[3], am.StatusDict[5]])                                                                 
-        else:   
-            OR1 = pf.ORFunc([list(am.ProcessDict[6].keys())[0] + Digitizer],[am.StatusDict[0]]) ## xrd raw files is complete
-            OR2 = pf.ORFunc([ProcessName, ProcessName],[am.StatusDict[3], am.StatusDict[5]]) ## conversion not started or on retry
-            FilterByFormula = 'AND(' + OR1 + ',' + OR2 + ')'
-            # OR1 = pf.EqualToFunc(pf.Curly(am.ProcessDict[6].keys()[0]+ Digitizer), pf.DoubleQuotes(am.StatusDict[3]))
+        #if not condor: 
+        #    FilterByFormula = pf.ORFunc([ProcessName, ProcessName],[am.StatusDict[3], am.StatusDict[5]])                                                                 
+        #else:   
+        #    OR1 = pf.ORFunc([list(am.ProcessDict[6].keys())[0] + Digitizer],[am.StatusDict[0]]) ## xrd raw files is complete
+        #    OR2 = pf.ORFunc([ProcessName, ProcessName],[am.StatusDict[3], am.StatusDict[5]]) ## conversion not started or on retry
+        #    FilterByFormula = 'AND(' + OR1 + ',' + OR2 + ')'
+        OR1 = pf.ORFunc([list(am.ProcessDict[6].keys())[0] + Digitizer],[am.StatusDict[0]]) ## xrd raw files is complete
+        OR2 = pf.ORFunc([ProcessName, ProcessName],[am.StatusDict[3], am.StatusDict[5]]) ## conversion not started or on retry
+        FilterByFormula = 'AND(' + OR1 + ',' + OR2 + ')'
             
         headers = {'Authorization': 'Bearer %s' % MyKey, }                                                                                                                                                                                                                                
         if pf.QueryGreenSignal(True): response = am.requests.get(am.CurlBaseCommand  + '?filterByFormula=' + FilterByFormula, headers=headers)                                                                                                                                                                                
