@@ -121,7 +121,6 @@ def DownloadConfigs(Debug, MyKey):
 
     TOFHIRResponse = am.requests.get(am.CurlBaseCommandTOFHIR, headers=headers)
     TOFHIRDict = am.ast.literal_eval(TOFHIRResponse.text)
-
     CAENResponse = am.requests.get(am.CurlBaseCommandCAEN, headers=headers)
     CAENDict = am.ast.literal_eval(CAENResponse.text)
 
