@@ -124,7 +124,7 @@ def TimingDAQCMDs(RunNumber, SaveWaveformBool, Version, DoTracking, Digitizer, M
             if not RunNotPresent:
 
                 ResultFileLocationList.append(RecoLocalPath)
-                print(DatToROOTExec, ConfigFilePath, RawLocalPath, RecoLocalPath)
+                #print(DatToROOTExec, ConfigFilePath, RawLocalPath, RecoLocalPath)
                 DatToRootCMD = './' + DatToROOTExec + ' --config_file=' + ConfigFilePath + ' --input_file=' + RawLocalPath + ' --output_file=' + RecoLocalPath
                 if SaveWaveformBool: DatToRootCMD = DatToRootCMD + ' --save_meas'
                 ### Hack for long acq
