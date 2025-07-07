@@ -139,12 +139,12 @@ def xrdcpTOFHIR(run):
 def xrdcpRaw2(run,Digitizer):
 	mountDir = am.TwoStageRecoDigitizers[Digitizer]['RawConversionLocalPath']
 	print("Looking for files at ",mountDir)
-
+	success = True
 	LocalDir = am.BaseTestbeamDir+ Digitizer+"/RawData/" #am.TwoStageRecoDigitizers[Digitizer]['RawConversionLocalPath']
-	destination = am.eosBaseDir+Digitizer+"/RawData/" 
+	destination = am.eosBaseDir+Digitizer+"/RawData/"
+	Path(destination).replace("root://cmseos.fnal.gov/","/eos/uscms/").mkdir(parents=True, exist_ok=True)
 	time.sleep(36)
 	nchan = 4
-	print(Digitizer)
 	if Digitizer == "LecroyScope":
 		nchan=8
 	for i in range(1,nchan+1):
@@ -178,8 +178,10 @@ def xrdcpRaw2(run,Digitizer):
 		
 		if Digitizer == "KeySightScope": 
 			cmd = ["xrdcp", "-f",LocalDir+"Wavenewscope_CH%i_%i.bin" %(i,run),destination]
+			success = success and CheckExistsEOS(destination+"Wavenewscope_CH%i_%i.bin" %(i,run),2000)
 		elif Digitizer == "LecroyScope":
 			cmd = ["xrdcp", "-f",LocalDir+"C%i--Trace%i.trc" %(i,run),destination]
+			success = success and CheckExistsEOS(destination+"C%i--Trace%i.trc" %(i,run),2000)
 		print(cmd)
 		session2 = am.subprocess.Popen(cmd,stdout=am.subprocess.PIPE,stderr=am.subprocess.STDOUT)
 		while True:
@@ -205,9 +207,8 @@ def xrdcpRaw2(run,Digitizer):
 	# 	success = success and CheckExistsEOS(destination+"Wavenewscope_CH%i_%i.bin" %(i,run),2000)
 
 
-	return True
+	return success
 
-#	return success
  
 
 
