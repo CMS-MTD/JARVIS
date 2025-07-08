@@ -149,9 +149,6 @@ def ProcessExec(OrderOfExecution, PID, SaveWaveformBool = None, Version = None, 
 						print(CMD)
 						conversion_path = am.os.path.dirname(CMD.split(' ')[1])
 						session = am.subprocess.Popen('cd %s; %s' % (conversion_path,CMD),stdout=am.subprocess.PIPE,stderr=am.subprocess.STDOUT, shell=True, universal_newlines=True)
-						# print CMD
-						# return
-						# ResultFileLocation = ResultFileLocation.replace()
 						ResultFileLocation = ResultFileLocation.replace(am.BaseTestbeamDir,am.eosBaseDir.replace('root://cmseos.fnal.gov//','/eos/uscms/'))
 						while True:
 							line = session.stdout.readline()
@@ -195,15 +192,15 @@ def ProcessExec(OrderOfExecution, PID, SaveWaveformBool = None, Version = None, 
 					# print CMD
 					if not condor: 
 						if pf.QueryGreenSignal(True): pf.UpdateAttributeStatus(str(FieldID), ProcessName, am.StatusDict[1], False, MyKey)
-						print((am.TimingDAQDir))
 						# session = am.subprocess.Popen('cd %s; source %s; %s;cd -' % (am.TimingDAQDir, am.EnvSetupPath, str(CMD)),stdout=am.subprocess.PIPE,stderr=am.subprocess.STDOUT, shell=True)                                                                          
 						### Hack for long acq            
 						# CMD2 = CMD.replace("makeHitTree","addBranches2.py")    
 						# print(am.TimingDAQDir)
 						# CMD = CMD.replace(am.BaseTestbeamDir,am.eosBaseDir.replace('root://cmseos.fnal.gov//','/eos/uscms/'))
 
-						CMD = './script.sh %s' %(str(run))
-
+						CMD = './script.sh %s %s' %(str(run), str(Version))
+						print((am.TimingDAQDir))
+						print(CMD)
 						session = am.subprocess.Popen('cd %s; %s;cd -' % (am.TimingDAQDir, str(CMD)),stdout=am.subprocess.PIPE,stderr=am.subprocess.STDOUT, shell=True, universal_newlines=True)                                                                                                                                                                                   			
 						######## For Caltech CMS Timing computer uncomment this and comment out the above line 
 						#session = am.subprocess.Popen('cd %s; %s;cd -' % (am.TimingDAQDir, str(CMD)),stdout=am.subprocess.PIPE, shell=True)  
@@ -218,10 +215,9 @@ def ProcessExec(OrderOfExecution, PID, SaveWaveformBool = None, Version = None, 
 							am.time.sleep(60)
 							print('Done sleeping')
 						
-						print(ResultFileLocation)
-						print(SizeCut)
 						ResultFileLocation = ResultFileLocation.replace(am.BaseTestbeamDir,am.eosBaseDir.replace('root://cmseos.fnal.gov//','/eos/uscms/'))
 						ResultFileLocation = ResultFileLocation.replace('.root', '_info.root')
+						print("Check output file size > {}: {}".format(SizeCut, ResultFileLocation))
 						if FileSizeBool(ResultFileLocation,SizeCut) or not am.os.path.exists(ResultFileLocation): BadProcessExec = True                                                                                                                                                                                                                                                     
 						if BadProcessExec:   
 							print(FileSizeBool(ResultFileLocation,SizeCut), am.os.path.exists(ResultFileLocation)) 
@@ -357,8 +353,7 @@ def ProcessExec(OrderOfExecution, PID, SaveWaveformBool = None, Version = None, 
 					am.time.sleep(0.5)
 					if cpstatus and pf.QueryGreenSignal(True): pf.UpdateAttributeStatus(str(FieldID), ProcessName, am.StatusDict[0], False, MyKey) 
 					elif not cpstatus and pf.QueryGreenSignal(True): pf.UpdateAttributeStatus(str(FieldID), ProcessName, am.StatusDict[2], False, MyKey)
-					am.time.sleep(0.5) 
-					am.time.sleep(2.0)
+					am.time.sleep(2.5)
 				elif (PID == 7 or PID == 8):
 					if pf.QueryGreenSignal(True) and not ApplyFilter: pf.UpdateAttributeStatus(str(FieldID), ProcessName, am.StatusDict[8], False, MyKey)
 
