@@ -30,15 +30,15 @@ if isLPC:
 
 ################### Run Table Information #################
 MyKey = '' #Read MyKey from key file in RecoProcesses
-BaseID = 'appNqeAN28zTs2JLJ'
-RunTableName = 'tbl5V5QTHVk5YEBhK'
-SensorTableName = 'tbl3L7HhQ6G3fSvRh'
-ConfigTableName = 'tbliBCnhoZXPQPYXw'
-KeySightScopeConfigTableName = 'tblxohrwBBHdUSSN8'
-LecroyScopeConfigTableName = 'tblQwkypkREsLoJQf'
-TOFHIRConfigTableName = 'tblh3QkfVUF9YvYwf'
-CAENConfigTableName = 'tblmuNDqvbXc81mJ9'
-VMEConfigTableName = 'tblH3jbEEPg1QVSAR'
+BaseID = 'apph1hvOjPqgbkyoW'
+RunTableName = 'tblf6RYlowYIrnGrG'
+SensorTableName = 'tbldWTPJxHkGIBA1d'
+ConfigTableName = 'tblsMovJ5ABsjy37s'
+KeySightScopeConfigTableName = 'tblUL4shmxS9Ap1mw'
+LecroyScopeConfigTableName = 'tbl0H6GR1si5e7O0b'
+TOFHIRConfigTableName = 'tbl2qbjPDjGWUSkYq'
+CAENConfigTableName = 'tblwFzLScMBPBKrT5'
+VMEConfigTableName = 'tblHo3G78r9uZPXjb'
 
 CurlBaseCommandWithoutTable = 'https://api.airtable.com/v0/%s' % (BaseID)
 CurlBaseCommand = 'https://api.airtable.com/v0/%s/%s' % (BaseID, RunTableName)
@@ -65,7 +65,7 @@ ResultTrackFileNameAfterRunNumberSlow = '_CMSTiming_SlowTriggerStream_converted.
 ResultTrackFileNameAfterRunNumberFast = '_CMSTiming_FastTriggerStream_converted.root'
 
 ############## For timingdaq02 ############
-BaseDirName = '2025_08_SNSPD'
+BaseDirName = '2025_07_FCFD'
 BaseTestbeamDir = '/home/daq/{}/'.format(BaseDirName) 
 if isLPC:
     if 'rheller' in user:
@@ -76,6 +76,8 @@ if isLPC:
         BaseTestbeamDir = '/uscms/home/apresyan/nobackup/{}/'.format(BaseDirName)
     elif 'christiw' in user:
         BaseTestbeamDir = '/uscms/home/christiw/nobackup/testbeam/{}/'.format(BaseDirName)
+    elif 'swu' in user:
+        BaseTestbeamDir = '/uscms/home/swu1/nobackup/testbeam/{}/'.format(BaseDirName)
     else:
         raise ValueError("\"{}\" please define your code path above for the lpc in JARVIS/BackEndProcesses/AllModules.py".format(user))
 
@@ -105,8 +107,8 @@ ScopeCommFileName = '%sAcquisition/ScopeStatus.txt' % ScopeControlDir
 
 ################ Lecroy Scope Control from AutoPilot Paths ################
 LecroyScopeControlDir = '%sScopeHandler/Lecroy/' % BaseTestbeamDir
-LecroyScopeStateFileName = '%s/JARVIS/BackEndProcesses/RunLog.txt' % BaseTestbeamDir
-LecroyScopeCommFileName = '%s/JARVIS/BackEndProcesses/ScopeStatus.txt' % BaseTestbeamDir
+LecroyScopeStateFileName = '%sAcquisition/RunLog.txt' % LecroyScopeControlDir
+LecroyScopeCommFileName = '%sAcquisition/ScopeStatus.txt' % LecroyScopeControlDir
 
 
 ConfigFileBasePath = '%sconfig/' % TimingDAQDir

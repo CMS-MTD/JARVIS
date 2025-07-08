@@ -41,9 +41,9 @@ print "Stopping after %i runs." % maxRuns
 
 ############ Getting the digitizer list from the configuration table #############
 DigitizerList = pf.GetDigiFromConfig(Configuration, False, key)
-
+print("here")
 print(DigitizerList)
-
+print("here")
 not_applicable = ['N/A']
 not_started = ['Not started']
 

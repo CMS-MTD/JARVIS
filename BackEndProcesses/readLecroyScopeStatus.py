@@ -9,21 +9,21 @@ Configuration = 122   ##not used except in BTL mode
 LongAcquisitionMode = False #True
 
 
-numEvents = 2 #28000 ## not used in Long mode #Max with math mode off is 32000 for Lecroy
+numEvents = 1000 #28000 ## not used in Long mode #Max with math mode off is 32000 for Lecroy
 numPoints = 25 ##MSa, only used in Long mode
 sampleRate = 10 #GSa/s
 horizontalWindow = 50 #ns
 
 ### if sample rate or horizontal window is changed, TimingDAQ must be recompiled to account for new npoints.
-#trigCh = "C8"
-#trig   = -0.05
-#slope = "NEG"
+trigCh = "C8"
+trig   = -0.05
+slope = "NEG"
 
 
 #trigCh = "EX"
-trigCh = "LINE" 
-trig = 0.15 #0.41 #0.15 # V
-slope = "POS"
+#trigCh = "LINE" 
+#trig = 0.15 #0.41 #0.15 # V
+#slope = "POS"
 
 vScale1 = 0.05  
 vScale2 = 0.05
