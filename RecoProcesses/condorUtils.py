@@ -254,10 +254,16 @@ def CheckExistsEOSfromDaq(ResultFileLocation,sizecut):
 	else: 
 		print("KERBEROS NOT FOUND!!")
 		return False
+	print(username)
 	session = am.subprocess.Popen(["ssh", "%s@cmslpc-el9.fnal.gov" % username, " ".join(cmd)],stdout=am.subprocess.PIPE,stderr=am.subprocess.STDOUT, universal_newlines = True)
 
 	line = session.stdout.readline()
-	print(line)
+	while True:
+                line = session.stdout.readline()
+		if "size=" in line: break
+                if not line and session3.poll() != None:
+                        break
+	
 	if "size=" not in line: return False
 	#print("size", int(line.split("size=")[1].strip()) , sizecut)
 	if int(line.split("size=")[1].strip()) > sizecut:return True
