@@ -155,8 +155,8 @@ def xrdcpRaw2(run,Digitizer):
 	success = True
 	LocalDir = am.BaseTestbeamDir+ Digitizer+"/RawData/" #am.TwoStageRecoDigitizers[Digitizer]['RawConversionLocalPath']
 	destination = am.eosBaseDir+Digitizer+"/RawData/"
-	Path(destination).replace("root://cmseos.fnal.gov/","/eos/uscms/").mkdir(parents=True, exist_ok=True)
 	time.sleep(36)
+	print(destination)
 	nchan = 4
 	if Digitizer == "LecroyScope":
 		nchan=8
@@ -171,7 +171,6 @@ def xrdcpRaw2(run,Digitizer):
 			counter =counter+1
 			print("Sleeping 2 sec, counter: {} for file: {}".format(counter, raw_filename))
 			time.sleep(2)
-
 		cmd = ["cp",raw_filename,LocalDir]
 		print(cmd)
 		session = am.subprocess.Popen(cmd,stdout=am.subprocess.PIPE,stderr=am.subprocess.STDOUT)
@@ -180,6 +179,10 @@ def xrdcpRaw2(run,Digitizer):
 			# am.ProcessLog(ProcessName, run, line)
 			if not line and session.poll() != None:
 				break
+		if pe.FileSizeBool(LocalDir + "C%i--Trace%i.trc" %(i,run), 10**6): 
+			print("Copied to local directory failed for", "C%i--Trace%i.trc" %(i,run))
+			success = False
+			return success 
 		cmd = ["mv",raw_filename,mountDir+"/to_delete"]
 		print(cmd)
 		session3 = am.subprocess.Popen(cmd,stdout=am.subprocess.PIPE,stderr=am.subprocess.STDOUT)
@@ -188,13 +191,10 @@ def xrdcpRaw2(run,Digitizer):
 			# am.ProcessLog(ProcessName, run, line)
 			if not line and session3.poll() != None:
 				break
-		
 		if Digitizer == "KeySightScope": 
 			cmd = ["xrdcp", "-f",LocalDir+"Wavenewscope_CH%i_%i.bin" %(i,run),destination]
-			success = success and CheckExistsEOS(destination+"Wavenewscope_CH%i_%i.bin" %(i,run),2000)
 		elif Digitizer == "LecroyScope":
 			cmd = ["xrdcp", "-f",LocalDir+"C%i--Trace%i.trc" %(i,run),destination]
-			success = success and CheckExistsEOS(destination+"C%i--Trace%i.trc" %(i,run),2000)
 		print(cmd)
 		session2 = am.subprocess.Popen(cmd,stdout=am.subprocess.PIPE,stderr=am.subprocess.STDOUT)
 		while True:
@@ -202,7 +202,11 @@ def xrdcpRaw2(run,Digitizer):
 			# am.ProcessLog(ProcessName, run, line)
 			if not line and session2.poll() != None:
 				break
-	
+		if Digitizer == "KeySightScope": 
+			success = success and CheckExistsEOSfromDaq(destination+"Wavenewscope_CH%i_%i.bin" %(i,run),2000)
+		elif Digitizer == "LecroyScope":
+			success = success and CheckExistsEOSfromDaq(destination+"C%i--Trace%i.trc" %(i,run),2000)
+		if not success: return False # make job fail early 
 
 	#### Copy configuration info.
 	configFileName = am.LocalConfigPath +"/Runs/info_%i.json"%run
@@ -216,12 +220,8 @@ def xrdcpRaw2(run,Digitizer):
 		if not line and session3.poll() != None:
 			break
 
-	# for i in range(1,5):
-	# 	success = success and CheckExistsEOS(destination+"Wavenewscope_CH%i_%i.bin" %(i,run),2000)
-
-
 	return success
-
+	#return True
  
 
 
@@ -235,6 +235,52 @@ def prepareDirs():
 	if not os.path.exists(am.CondorDir+"exec"):
 		os.makedirs(am.CondorDir+"exec")	
 
+def get_kerberos_principal():
+    try:
+        # Run klist and capture output
+        output = am.subprocess.check_output(['klist'], stderr=am.subprocess.STDOUT, universal_newlines = True)
+        
+        # Parse for the line containing "Default principal"
+        for line in output.splitlines():
+            if "Default principal:" in line:
+                return line.split(":", 1)[1].strip()
+        
+        return None  # Not found
+    except am.subprocess.CalledProcessError:
+        # No valid ticket or klist failed
+        return None
+
+
+def CheckExistsEOSfromDaq(ResultFileLocation,sizecut):
+	if "store" not in ResultFileLocation:
+		print("Error, this path is not in EOS:",ResultFileLocation)
+
+	if "cmseos.fnal.gov/" in ResultFileLocation:
+		#cmd = ["eos", "root://cmseos.fnal.gov", "find", "--size",ResultFileLocation.split("cmseos.fnal.gov/")[1]]
+		cmd = ["eos", "root://cmseos.fnal.gov", "find", "--size", ResultFileLocation.replace("root://cmseos.fnal.gov/", '/eos/uscms/').replace('group', 'user')] #20240607, fix by CW, softlinks are not made correctly
+	else:
+		cmd = ["eos", "root://cmseos.fnal.gov", "find", "--size",ResultFileLocation]	
+
+	print(cmd)
+	principal = get_kerberos_principal()
+	if principal: username = principal.split('@')[0]
+	else: 
+		print("KERBEROS NOT FOUND!!")
+		return False
+	print(username)
+	session = am.subprocess.Popen(["ssh", "%s@cmslpc-el9.fnal.gov" % username, " ".join(cmd)],stdout=am.subprocess.PIPE,stderr=am.subprocess.STDOUT, universal_newlines = True)
+
+	line = session.stdout.readline()
+	while True:
+                line = session.stdout.readline()
+		if "size=" in line: break
+                if not line and session3.poll() != None:
+                        break
+	
+	if "size=" not in line: return False
+	#print("size", int(line.split("size=")[1].strip()) , sizecut)
+	if int(line.split("size=")[1].strip()) > sizecut:return True
+	else: return False
 def CheckExistsEOS(ResultFileLocation,sizecut):
 	if "store" not in ResultFileLocation:
 		print("Error, this path is not in EOS:",ResultFileLocation)

@@ -225,8 +225,6 @@ if IncludesVME:
 if IncludesTOFHIR:
 	DigiListThisRun.append("TOFHIR")
 
-## Minimum run duration
-time.sleep(60*(NumSpillsPerRun-1))
 
 ### Don't stop run until scope has acquired all events (OK if still writing events disk, though)
 scope_finished=0

@@ -30,7 +30,7 @@ if isLPC:
 
 ################### Run Table Information #################
 MyKey = '' #Read MyKey from key file in RecoProcesses
-BaseID = 'appNqeAN28zTs2JLJ'
+BaseID = 'appEpGbWvvHCRClB3'
 RunTableName = 'tbl5V5QTHVk5YEBhK'
 SensorTableName = 'tbl3L7HhQ6G3fSvRh'
 ConfigTableName = 'tbliBCnhoZXPQPYXw'
@@ -65,7 +65,7 @@ ResultTrackFileNameAfterRunNumberSlow = '_CMSTiming_SlowTriggerStream_converted.
 ResultTrackFileNameAfterRunNumberFast = '_CMSTiming_FastTriggerStream_converted.root'
 
 ############## For timingdaq02 ############
-BaseDirName = '2025_08_SNSPD'
+BaseDirName = '2025_07_FCFD'
 BaseTestbeamDir = '/home/daq/{}/'.format(BaseDirName) 
 if isLPC:
     if 'rheller' in user:
@@ -76,6 +76,8 @@ if isLPC:
         BaseTestbeamDir = '/uscms/home/apresyan/nobackup/{}/'.format(BaseDirName)
     elif 'christiw' in user:
         BaseTestbeamDir = '/uscms/home/christiw/nobackup/testbeam/{}/'.format(BaseDirName)
+    elif 'swu' in user:
+        BaseTestbeamDir = '/uscms/home/swu1/nobackup/testbeam/{}/'.format(BaseDirName)
     else:
         raise ValueError("\"{}\" please define your code path above for the lpc in JARVIS/BackEndProcesses/AllModules.py".format(user))
 
@@ -107,7 +109,6 @@ ScopeCommFileName = '%sAcquisition/ScopeStatus.txt' % ScopeControlDir
 LecroyScopeControlDir = '%sScopeHandler/Lecroy/' % BaseTestbeamDir
 LecroyScopeStateFileName = '%sAcquisition/RunLog.txt' % LecroyScopeControlDir
 LecroyScopeCommFileName = '%sAcquisition/ScopeStatus.txt' % LecroyScopeControlDir
-
 
 
 ConfigFileBasePath = '%sconfig/' % TimingDAQDir

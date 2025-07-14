@@ -245,7 +245,7 @@ def ProcessExec(OrderOfExecution, PID, SaveWaveformBool = None, Version = None, 
 						
 						ResultFileLocation = ResultFileLocation.replace(am.BaseTestbeamDir,am.eosBaseDir.replace('root://cmseos.fnal.gov//','/eos/uscms/'))
 						ResultFileLocation = ResultFileLocation.replace('.root', '_info.root')
-						print(f"Check output file size > {SizeCut}: {ResultFileLocation}")
+						print("Check output file size > {}: {}".format(SizeCut, ResultFileLocation))
 						if FileSizeBool(ResultFileLocation,SizeCut) or not am.os.path.exists(ResultFileLocation): BadProcessExec = True                                                                                                                                                                                                                                                     
 						if BadProcessExec:   
 							print(FileSizeBool(ResultFileLocation,SizeCut), am.os.path.exists(ResultFileLocation)) 
