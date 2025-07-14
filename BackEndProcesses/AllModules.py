@@ -57,8 +57,8 @@ QueryFilePath ="../QueryLog.txt" # Don't care about this
 
 ############# Tracking Paths ##############
 HyperscriptPath = '/home/otsdaq/CMSTiming/HyperScriptBTL2023.sh'
-RulinuxSSH = 'otsdaq@teddy01.dhcp.fnal.gov'#'otsdaq@rulinux04.dhcp.fnal.gov'
-BaseTrackDirRulinux = '/data/TestBeam/2023_03_March_BTL/'
+RulinuxSSH = 'telescope@128.141.149.171'#'otsdaq@rulinux04.dhcp.fnal.gov'
+BaseTrackDirRulinux = '/home/telescope/snspd/data/'
 ResultTrackFileNameBeforeRunNumber = 'Run' ###########'Run%d_CMSTiming_converted.root'
 ResultTrackFileNameAfterRunNumber = '_CMSTiming_converted.root' 
 ResultTrackFileNameAfterRunNumberSlow = '_CMSTiming_SlowTriggerStream_converted.root'

@@ -34,7 +34,7 @@ def FileSizeBool(FilePath, SizeCut):
 		return am.os.stat(FilePath).st_size < SizeCut
 	else: return True
 
-def ProcessExec(OrderOfExecution, PID, SaveWaveformBool = None, Version = None, RunNumber = -1, DigitizerKey = -1 , MyKey = None, GetRunListEachTime = True, condor = False, ApplyFilter = False):
+def ProcessExec(OrderOfExecution, PID, SaveWaveformBool = None, Version = None, RunNumber = -1, DigitizerKey = -1 , MyKey = None, GetRunListEachTime = True, condor = False, ApplyFilter = False, FNALTelescope = True):
 	
 	if not DigitizerKey == -1: Digitizer = am.DigitizerDict[DigitizerKey]
 	SaveWaveformBool = SaveWaveformBool
@@ -126,21 +126,49 @@ def ProcessExec(OrderOfExecution, PID, SaveWaveformBool = None, Version = None, 
 								
 				if PID == 0:
 					if pf.QueryGreenSignal(True): pf.UpdateAttributeStatus(str(FieldID), ProcessName, am.StatusDict[1], False, MyKey)
-					session = am.subprocess.Popen(["ssh", am.RulinuxSSH, str(CMD)],stdout=am.subprocess.PIPE,stderr=am.subprocess.STDOUT, universal_newlines=True)
-					while True:
-						line = session.stdout.readline()
-						am.ProcessLog(ProcessName, run, line)
-						if not line and session.poll() != None:
-							break
-					print(("Looking for file at ",ResultFileLocation))
-					if FileSizeBool(ResultFileLocation,SizeCut) or not am.os.path.exists(ResultFileLocation): BadProcessExec = True                                                                                                                                                                                                                                                     
-					if BadProcessExec:                                                                                                                                                                                                                               
-						if pf.QueryGreenSignal(True): pf.UpdateAttributeStatus(str(FieldID), ProcessName, am.StatusDict[2], False, MyKey)  
-						print(('Bad %s execution for run %d. Either the CMD format is wrong or somwthing else was wrong while execution. Please check the ProcessLog to know more.\n' % (ProcessName, run)))
+					if FNALTelescope:
+						session = am.subprocess.Popen(["ssh", am.RulinuxSSH, str(CMD)],stdout=am.subprocess.PIPE,stderr=am.subprocess.STDOUT, universal_newlines=True)
+						while True:
+							line = session.stdout.readline()
+							am.ProcessLog(ProcessName, run, line)
+							if not line and session.poll() != None:
+								break
+						print(("Looking for file at ",ResultFileLocation))
+						if FileSizeBool(ResultFileLocation,SizeCut) or not am.os.path.exists(ResultFileLocation): BadProcessExec = True                                                                                                                                                                                                                                                     
+						if BadProcessExec:                                                                                                                                                                                                                               
+							if pf.QueryGreenSignal(True): pf.UpdateAttributeStatus(str(FieldID), ProcessName, am.StatusDict[2], False, MyKey)  
+							print(('Bad %s execution for run %d. Either the CMD format is wrong or somwthing else was wrong while execution. Please check the ProcessLog to know more.\n' % (ProcessName, run)))
+						else:
+							if pf.QueryGreenSignal(True): pf.UpdateAttributeStatus(str(FieldID), ProcessName, am.StatusDict[0], False, MyKey)
+						cu.xrdcpTracks(run,Version)
 					else:
-						if pf.QueryGreenSignal(True): pf.UpdateAttributeStatus(str(FieldID), ProcessName, am.StatusDict[0], False, MyKey)
-				
-					cu.xrdcpTracks(run,Version)
+						### replace this line with copying binary file to daq computer
+						session = am.subprocess.Popen(["scp", am.RulinuxSSH + ": %s /run*%s.raw"% (BaseTrackDirRulinux, run), BaseTrackDirLocal + '/'],stdout=am.subprocess.PIPE,stderr=am.subprocess.STDOUT, universal_newlines=True)
+						while True:
+							line = session.stdout.readline()
+							am.ProcessLog(ProcessName, run, line)
+							if not line and session.poll() != None:
+								break
+						## copy from daq computer to cmslpc
+						cu.xrdcpTracksCERN(run,Version)
+
+						#### then run corryvreckan on cmslpc
+						session = am.subprocess.Popen(["scp", am.RulinuxSSH + ": %s /run*%s.raw"% (BaseTrackDirRulinux, run), BaseTrackDirLocal + '/'],stdout=am.subprocess.PIPE,stderr=am.subprocess.STDOUT, universal_newlines=True)
+						while True:
+							line = session.stdout.readline()
+							am.ProcessLog(ProcessName, run, line)
+							if not line and session.poll() != None:
+								break
+
+						print(("Looking for file at ",ResultFileLocation))
+						if FileSizeBool(ResultFileLocation,SizeCut) or not am.os.path.exists(ResultFileLocation): BadProcessExec = True                                                                                                                                                                                                                                                     
+						if BadProcessExec:                                                                                                                                                                                                                               
+							if pf.QueryGreenSignal(True): pf.UpdateAttributeStatus(str(FieldID), ProcessName, am.StatusDict[2], False, MyKey)  
+							print(('Bad %s execution for run %d. Either the CMD format is wrong or somwthing else was wrong while execution. Please check the ProcessLog to know more.\n' % (ProcessName, run)))
+						else:
+							if pf.QueryGreenSignal(True): pf.UpdateAttributeStatus(str(FieldID), ProcessName, am.StatusDict[0], False, MyKey)
+						
+
 				elif PID == 1:
 					if not condor:
 						if pf.QueryGreenSignal(True):

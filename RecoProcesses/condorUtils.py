@@ -15,6 +15,19 @@ def xrdcpTracks(run,Version):
 		# am.ProcessLog(ProcessName, run, line)
 		if not line and session.poll() != None:
 			break
+def xrdcpTracks(run,Version): 
+	mountDir = am.BaseTrackDirLocal #am.TwoStageRecoDigitizers[Digitizer]['RawTimingDAQLocalPath']
+	destination = am.eosBaseDir+"Tracks/RawData/"
+	success=True
+	cmd = ["xrdcp", "-fs", mountDir+"run{:06d}.raw".format(run),destination]
+	
+	print(cmd)
+	session = am.subprocess.Popen(cmd,stdout=am.subprocess.PIPE,stderr=am.subprocess.STDOUT)
+	while True:
+		line = session.stdout.readline()
+		# am.ProcessLog(ProcessName, run, line)
+		if not line and session.poll() != None:
+			break
 
 
 
