@@ -30,7 +30,7 @@ if isLPC:
 
 ################### Run Table Information #################
 MyKey = '' #Read MyKey from key file in RecoProcesses
-BaseID = 'appEpGbWvvHCRClB3'
+BaseID = 'appNqeAN28zTs2JLJ'
 RunTableName = 'tbl5V5QTHVk5YEBhK'
 SensorTableName = 'tbl3L7HhQ6G3fSvRh'
 ConfigTableName = 'tbliBCnhoZXPQPYXw'
@@ -39,6 +39,7 @@ LecroyScopeConfigTableName = 'tblQwkypkREsLoJQf'
 TOFHIRConfigTableName = 'tblh3QkfVUF9YvYwf'
 CAENConfigTableName = 'tblmuNDqvbXc81mJ9'
 VMEConfigTableName = 'tblH3jbEEPg1QVSAR'
+
 
 CurlBaseCommandWithoutTable = 'https://api.airtable.com/v0/%s' % (BaseID)
 CurlBaseCommand = 'https://api.airtable.com/v0/%s/%s' % (BaseID, RunTableName)
@@ -65,7 +66,7 @@ ResultTrackFileNameAfterRunNumberSlow = '_CMSTiming_SlowTriggerStream_converted.
 ResultTrackFileNameAfterRunNumberFast = '_CMSTiming_FastTriggerStream_converted.root'
 
 ############## For timingdaq02 ############
-BaseDirName = '2025_07_FCFD'
+BaseDirName = '2025_08_SNSPD'
 BaseTestbeamDir = '/home/daq/{}/'.format(BaseDirName) 
 if isLPC:
     if 'rheller' in user:

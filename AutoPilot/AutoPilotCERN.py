@@ -22,15 +22,36 @@ parser = argparse.ArgumentParser(description='Information for running the AutoPi
 parser.add_argument('-de', '--Debug', type=int, default = 0, required=False)
 parser.add_argument('-it', '--IsTelescope', type=int,default=0, help = 'Give 1 if using the telescope',required=False)
 parser.add_argument('-conf', '--Configuration', type=int, help = 'Make sure to add the configuration in the run table. Give COnfiguration S/N from the run table',required=True)
-parser.add_argument('-run', '--RunNumber', type=int, help = '',required=True)
+parser.add_argument('-run', '--RunNumber', type=int, help = '',required=False)
+parser.add_argument('-nruns', '--maxIterations', type=int,default=1, help = 'Number of runs to take',required=False)
+
 args = parser.parse_args()
 Debug = args.Debug
 IsTelescope = args.IsTelescope
-RunNumber = args.RunNumber
+#RunNumber = args.RunNumber
 Configuration = args.Configuration
-RunNumber = args.RunNumber
+maxRuns = int(args.maxIterations)
 
 Debug=False
+
+########################## Get Run Number ########################################
+# Read the current run number
+if args.RunNumber is not None: RunNumber = args.RunNumber
+else:
+	with open('runNum.txt', 'r') as file:
+    		RunNumber = int(file.read().strip())
+
+# Write the run number+1 back to the file regardless how the Run number was received
+with open('runNum.txt', 'w') as file:
+    file.write(str(RunNumber+1))
+print("Current Run is: ", RunNumber)
+
+
+print "Stopping after %i runs." % maxRuns
+
+
+
+
 ########################### Only when Run table is used ############################
 ########### Get Key ###########
 key = GetKey()

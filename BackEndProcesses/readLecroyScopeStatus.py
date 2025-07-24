@@ -9,7 +9,7 @@ Configuration = 122   ##not used except in BTL mode
 LongAcquisitionMode = False #True
 
 
-numEvents = 100 #28000 ## not used in Long mode #Max with math mode off is 32000 for Lecroy
+numEvents = 30000 #28000 ## not used in Long mode #Max with math mode off is 32000 for Lecroy
 numPoints = 25 ##MSa, only used in Long mode
 sampleRate = 10 #GSa/s
 horizontalWindow = 500 #ns, full window, 10 divisions
@@ -21,10 +21,9 @@ slope = "NEG"
 
 
 #trigCh = "EX"
-trigCh = "LINE" 
-trigCh = "C3" 
-trig = 0.0 #0.41 #0.15 # V
-slope = "POS"
+trigCh = "C2" 
+trig = -0.05 #units of V
+slope = "NEG" #for positive: POS
 
 vScale1 = 0.05  
 vScale2 = 0.05
