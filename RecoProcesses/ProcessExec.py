@@ -142,15 +142,17 @@ def ProcessExec(OrderOfExecution, PID, SaveWaveformBool = None, Version = None, 
 							if pf.QueryGreenSignal(True): pf.UpdateAttributeStatus(str(FieldID), ProcessName, am.StatusDict[0], False, MyKey)
 						cu.xrdcpTracks(run,Version)
 					else:
-						### replace this line with copying binary file to daq computer
-						session = am.subprocess.Popen(["scp", am.RulinuxSSH + ": %s /run*%s.raw"% (BaseTrackDirRulinux, run), BaseTrackDirLocal + '/'],stdout=am.subprocess.PIPE,stderr=am.subprocess.STDOUT, universal_newlines=True)
+						### copy binary file from aidarc to daq compute
+						cmd = ["scp", am.RulinuxSSH + ":{}/run{:06d}.raw".format(am.BaseTrackDirRulinux, run), "{}/run{:06d}.raw".format(am.BaseTrackDirLocal,run)]
+						print(cmd)
+						session = am.subprocess.Popen(cmd,stdout=am.subprocess.PIPE,stderr=am.subprocess.STDOUT, universal_newlines=True)
 						while True:
 							line = session.stdout.readline()
 							am.ProcessLog(ProcessName, run, line)
 							if not line and session.poll() != None:
 								break
 						## copy from daq computer to cmslpc
-						cu.xrdcpTracksCERN(run,Version)
+						cu.xrdcpTracksRaw(run,Version) #Version doesn't matter, not used in function
 
 						#### then run corryvreckan on cmslpc
 						principal = cu.get_kerberos_principal()
@@ -160,18 +162,20 @@ def ProcessExec(OrderOfExecution, PID, SaveWaveformBool = None, Version = None, 
 							return False
 						print(username)
 
-						cms = ["cd %s" % CorryvreckanPath, "./%s %s" % (CorryvreckanScript, run)]
+						cmd = ["cd %s && ./%s %s" % (am.CorryvreckanPath, am.CorryvreckanScript, run)]
+						print(cmd)
 						session = am.subprocess.Popen(["ssh", "%s@cmslpc-el9.fnal.gov" % username, " ".join(cmd)],stdout=am.subprocess.PIPE,stderr=am.subprocess.STDOUT, universal_newlines = True)
 						while True:
 							line = session.stdout.readline()
 							am.ProcessLog(ProcessName, run, line)
+							print(line)
 							if not line and session.poll() != None:
 								break
 
 						#### then check if file exists in output path
-						OutputRoot = eosBaseDir+"Tracks/RecoData/v1/" +  am.ResultTrackFileNameBeforeRunNumber + str(run) + am.ResultTrackFileNameAfterRunNumberFast
+						OutputRoot = am.eosBaseDir+"Tracks/RecoData/%s/" % (Version) +  am.ResultTrackFileNameBeforeRunNumber + str(run) + am.ResultTrackFileNameAfterRunNumberFast
 		
-						if not CheckExistsEOSfromDaq(OutputRoot, 2000): BadProcessExec = True                                                                                                                                                                                                                                                     
+						if not cu.CheckExistsEOSfromDaq(OutputRoot, 2000): BadProcessExec = True                                                                                                                                                                                                                                                     
 						if BadProcessExec:                                                                                                                                                                                                                               
 							if pf.QueryGreenSignal(True): pf.UpdateAttributeStatus(str(FieldID), ProcessName, am.StatusDict[2], False, MyKey)  
 							print(('Bad %s execution for run %d. Either the CMD format is wrong or somwthing else was wrong while execution. Please check the ProcessLog to know more.\n' % (ProcessName, run)))

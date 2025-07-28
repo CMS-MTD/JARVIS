@@ -23,15 +23,15 @@ parser.add_argument('-de', '--Debug', type=int, default = 0, required=False)
 parser.add_argument('-it', '--IsTelescope', type=int,default=0, help = 'Give 1 if using the telescope',required=False)
 parser.add_argument('-conf', '--Configuration', type=int, help = 'Make sure to add the configuration in the run table. Give COnfiguration S/N from the run table',required=True)
 parser.add_argument('-run', '--RunNumber', type=int, help = '',required=False)
-parser.add_argument('-nruns', '--maxIterations', type=int,default=1, help = 'Number of runs to take',required=False)
+parser.add_argument('-nruns', '--maxIterations', nargs="?", type=int,default=1, help = 'Number of runs to take',required=False)
 
 args = parser.parse_args()
 Debug = args.Debug
 IsTelescope = args.IsTelescope
 #RunNumber = args.RunNumber
 Configuration = args.Configuration
-maxRuns = int(args.maxIterations)
-
+if args.maxIterations is not None: maxRuns = int(args.maxIterations)
+else: maxRuns = 1
 Debug=False
 
 ########################## Get Run Number ########################################
@@ -148,175 +148,212 @@ print ""
 print ""
 
 
-## Refresh this in case a digitizer was removed last run.
-DigitizerList = pf.GetDigiFromConfig(Configuration, False, key)
 
-##sync local run number file with ftbf-daq-06
-print "Next Run %i " % (RunNumber)
-print ""
+# Use Status file to tell autopilot when to stop.
+if os.path.exists("AutoPilot.status"):
+	os.remove("AutoPilot.status")
+statusFile = open("AutoPilot.status","w") 
+statusFile.write("START") 
+statusFile.close() 
+AutoPilotStatus = 1
 
-
-KeySightScopeIncludedThisRun = False
-if IncludesKeySightScope:
-	currentKeySightScopeState = ScopeState()
-	if currentKeySightScopeState == 'busy':
-		print "[WARNING] : Scope is still acquiring events, but autopilot is ready to start a new run. Likely someone killed a run prematurely. Tracking for scope in previous run is screwed up." 
-
-	if currentKeySightScopeState == 'ready': 
-		print("\n Sending start command to scope.\n")
-		if not Debug:
-			ScopeStatusAutoPilot(RunNumber)
-			KeySightScopeIncludedThisRun = True
-			WaitForScopeStart()
-		print("Scope has started.")
-	else:
-		# print("Scope still busy. Excluding scope from the next run\n")
-		print("Scope still busy. Wait for next chance.\n")
-		exit()
+# Get Start and stop seconds for the first iteration of the loop
+iteration = 0
+while (AutoPilotStatus == 1 and iteration < maxRuns):
 
 
 
-LecroyScopeIncludedThisRun = False
-if IncludesLecroyScope:	
-	currentLecroyScopeState = LecroyScopeState()
-	if currentLecroyScopeState == 'busy':
-		print "[WARNING] : Lecroy Scope is still acquiring events, but autopilot is ready to start a new run. Likely someone killed a run prematurely. Tracking for scope in previous run is screwed up." 
 
-	if currentLecroyScopeState == 'ready': 
-		print("\n Sending start command to Lecroy scope.\n")
-		if not Debug:
-			LecroyScopeStatusAutoPilot(RunNumber)
-			LecroyScopeIncludedThisRun = True
-			WaitForLecroyScopeStart()
-		print("Lecroy Scope has started.")
-	else:			
-		print("Lecroy Scope still busy. Wait for next chance.\n")
-		exit()
-
-### Preparing to start run
-print "Keysight Scope included ",KeySightScopeIncludedThisRun
-print "Lecroy Scope included ",LecroyScopeIncludedThisRun
-################### Starting the run ###################
-StartTime = datetime.now()  
-print "\nRun %i started at %s" % (RunNumber,StartTime)
-print ""
-
-# Get desired TOFHIR configuration from AirTable and construct corresponding config file, copy into TOFHIR PC via the TOFHIRMount directory
-if IncludesTOFHIR:
-	TOFHIRConfigFile = open("/home/daq/TOFHIRMount/raw/runSettingConfig_run" + str(RunNumber) + ".txt","w") 
-	TOFHIRConfigFile.write(str(TOFHIRConfigDict["VTH1"]) + " " 
-						 + str(TOFHIRConfigDict["VTH2"]) + " " 
-						 + str(TOFHIRConfigDict["VTHE"]) + " " 
-						 + str(TOFHIRConfigDict["OV"]) + " "
-						 + str(TOFHIRConfigDict["DELAYE"])
-						)
-	TOFHIRConfigFile.close()
-	print("Writing TOFHIR Config to : " + "/home/daq/TOFHIRMount/raw/runSettingConfig_run" + str(RunNumber) + ".txt")
-	print("Settings: ith1 = " + str(TOFHIRConfigDict["VTH1"]) 
-		+ " ith2 = "          + str(TOFHIRConfigDict["VTH2"])
-		+ " ithe = "          + str(TOFHIRConfigDict["VTHE"])
-		+ " ov = "            + str(TOFHIRConfigDict["OV"])
-		+ " delaE = "         + str(TOFHIRConfigDict["DELAYE"])
-		)
-
-
-#####Initialize run info dictionary to save to AirTable ####
-this_run_info = default_run_info.copy()
-#####
-
-DigiListThisRun = []
-if KeySightScopeIncludedThisRun:
-	DigiListThisRun.append("KeySightScope")
-	this_run_info["xrdcpRawKeySightScope"] = not_started
-	this_run_info["ConversionKeySightScope"] = not_started
-	this_run_info["TimingDAQNoTracksKeySightScope"] = not_started
-	this_run_info["TimingDAQKeySightScope"] = not_started
-
-if LecroyScopeIncludedThisRun:
-	DigiListThisRun.append("LecroyScope")
-	this_run_info["xrdcpRawLecroyScope"] = not_started
-	this_run_info["ConversionLecroyScope"] = not_started
-	this_run_info["TimingDAQNoTracksLecroyScope"] = not_started
-	this_run_info["TimingDAQLecroyScope"] = not_started
-	this_run_info["TimingDAQFastLecroyScope"] = not_started
-
-
-if IncludesVME:
-	DigiListThisRun.append("VME")
-if IncludesTOFHIR:
-	DigiListThisRun.append("TOFHIR")
-
-
-### Don't stop run until scope has acquired all events (OK if still writing events disk, though)
-scope_finished=0
-
-if ((IncludesKeySightScope and KeySightScopeIncludedThisRun) or (IncludesLecroyScope and LecroyScopeIncludedThisRun)):
-	time.sleep(15)
-			
-if IncludesKeySightScope and KeySightScopeIncludedThisRun:		
-	print "Waiting for Keysight scope to finish"
-	WaitForScopeFinishAcquisition()
-	scope_finished=time.time()
-	print "Keysight scope finished"
+	## Refresh this in case a digitizer was removed last run.
+	DigitizerList = pf.GetDigiFromConfig(Configuration, False, key)
 	
-if IncludesLecroyScope and LecroyScopeIncludedThisRun:		
-	print "Waiting for Lecroy scope to finish"
-	WaitForLecroyScopeFinishAcquisition()
-	scope_finished=time.time()
-	print "Lecroy scope finished"
-
+	print "Next Run %i " % (RunNumber)
+	print ""
 	
-if IncludesKeySightScope: 
-	print "Waiting for TClock stop time (%0.1f)"%StopSeconds
-	wait_until(StopSeconds)
-
-tclock_finished=time.time()
-
-
-
-print ("%0.1f seconds between scope finish and TClock time" % (tclock_finished-scope_finished))
-StopTime = datetime.now()
-print "\nRun %i stopped at %s" % (RunNumber,StopTime)
-print ""
-print "*********************************************************************"
-print ""
-
-Duration = int((StopTime - StartTime).total_seconds())
-
-if pf.QueryGreenSignal(True): 		
-
-	SpillTime = (StartTime+timedelta(0,27)).strftime("%Y-%m-%d %H:%M:%S")
 	
-	ETLTimestamp = (datetime.now() - datetime.strptime("2000-01-01 00:00:00", "%Y-%m-%d %H:%M:%S")).total_seconds() #- 3600 ### For daylight saving time 
-	print 'Getting ETL environmental data'
-	# Temp13ETL, Temp14ETL, Temp15ETL, Temp16ETL, Temp17ETL, Temp18ETL, Temp19ETL, Temp20ETL, LowVoltage1ETL, Current1ETL, LowVoltage2ETL, Current2ETL, LowVoltage3ETL, Current3ETL = gt.ConvertEnv(ETLTimestamp)
-
-	##### These fields are uploaded to AirTable. The field names and types must match exactly the names in the table. 
-	this_run_info["Run number"]=RunNumber
-	this_run_info["Configuration"]=ConfigID
-	this_run_info["Start time"]=str(SpillTime)
-	this_run_info["Duration"]=str(Duration)
-
-	gt.GetTemperaturesSimple(this_run_info)
-	gt.GetCAENInfoSimple(this_run_info)
-	gt.GetACNetYield(this_run_info)
-
-	this_run_info["Digitizer"]=DigiListThisRun
-
-	pf.NewRunRecordSimple(this_run_info,ConfigID, False, key)
+	KeySightScopeIncludedThisRun = False
+	if IncludesKeySightScope:
+		currentKeySightScopeState = ScopeState()
+		if currentKeySightScopeState == 'busy':
+			print "[WARNING] : Scope is still acquiring events, but autopilot is ready to start a new run. Likely someone killed a run prematurely. Tracking for scope in previous run is screwed up." 
+	
+		if currentKeySightScopeState == 'ready': 
+			print("\n Sending start command to scope.\n")
+			if not Debug:
+				ScopeStatusAutoPilot(RunNumber)
+				KeySightScopeIncludedThisRun = True
+				WaitForScopeStart()
+			print("Scope has started.")
+		else:
+			# print("Scope still busy. Excluding scope from the next run\n")
+			print("Scope still busy. Wait for next chance.\n")
+			continue
+	
+	
+	
+	LecroyScopeIncludedThisRun = False
+	if IncludesLecroyScope:	
+		currentLecroyScopeState = LecroyScopeState()
+		if currentLecroyScopeState == 'busy':
+			print "[WARNING] : Lecroy Scope is still acquiring events, but autopilot is ready to start a new run. Likely someone killed a run prematurely. Tracking for scope in previous run is screwed up." 
+	
+		if currentLecroyScopeState == 'ready': 
+			print("\n Sending start command to Lecroy scope.\n")
+			if not Debug:
+				LecroyScopeStatusAutoPilot(RunNumber)
+				LecroyScopeIncludedThisRun = True
+				WaitForLecroyScopeStart()
+			print("Lecroy Scope has started.")
+		else:			
+			print("Lecroy Scope still busy. Sleep for 5 seconds\n")
+			sleep(5)
+			continue
+	
+	### Preparing to start run
+	print "Keysight Scope included ",KeySightScopeIncludedThisRun
+	print "Lecroy Scope included ",LecroyScopeIncludedThisRun
+	################### Starting the run ###################
+	StartTime = datetime.now()  
+	print "\nRun %i started at %s" % (RunNumber,StartTime)
+	print ""
+	
+	# Get desired TOFHIR configuration from AirTable and construct corresponding config file, copy into TOFHIR PC via the TOFHIRMount directory
+	if IncludesTOFHIR:
+		TOFHIRConfigFile = open("/home/daq/TOFHIRMount/raw/runSettingConfig_run" + str(RunNumber) + ".txt","w") 
+		TOFHIRConfigFile.write(str(TOFHIRConfigDict["VTH1"]) + " " 
+							 + str(TOFHIRConfigDict["VTH2"]) + " " 
+							 + str(TOFHIRConfigDict["VTHE"]) + " " 
+							 + str(TOFHIRConfigDict["OV"]) + " "
+							 + str(TOFHIRConfigDict["DELAYE"])
+							)
+		TOFHIRConfigFile.close()
+		print("Writing TOFHIR Config to : " + "/home/daq/TOFHIRMount/raw/runSettingConfig_run" + str(RunNumber) + ".txt")
+		print("Settings: ith1 = " + str(TOFHIRConfigDict["VTH1"]) 
+			+ " ith2 = "          + str(TOFHIRConfigDict["VTH2"])
+			+ " ithe = "          + str(TOFHIRConfigDict["VTHE"])
+			+ " ov = "            + str(TOFHIRConfigDict["OV"])
+			+ " delaE = "         + str(TOFHIRConfigDict["DELAYE"])
+			)
+	
+	
+	#####Initialize run info dictionary to save to AirTable ####
+	this_run_info = default_run_info.copy()
+	#####
+	
+	DigiListThisRun = []
+	if KeySightScopeIncludedThisRun:
+		DigiListThisRun.append("KeySightScope")
+		this_run_info["xrdcpRawKeySightScope"] = not_started
+		this_run_info["ConversionKeySightScope"] = not_started
+		this_run_info["TimingDAQNoTracksKeySightScope"] = not_started
+		this_run_info["TimingDAQKeySightScope"] = not_started
+	
+	if LecroyScopeIncludedThisRun:
+		DigiListThisRun.append("LecroyScope")
+		this_run_info["xrdcpRawLecroyScope"] = not_started
+		this_run_info["ConversionLecroyScope"] = not_started
+		this_run_info["TimingDAQNoTracksLecroyScope"] = not_started
+		this_run_info["TimingDAQLecroyScope"] = not_started
+		this_run_info["TimingDAQFastLecroyScope"] = not_started
+	
+	
+	if IncludesVME:
+		DigiListThisRun.append("VME")
+	if IncludesTOFHIR:
+		DigiListThisRun.append("TOFHIR")
+	
+	
+	### Don't stop run until scope has acquired all events (OK if still writing events disk, though)
+	scope_finished=0
+	
+	if ((IncludesKeySightScope and KeySightScopeIncludedThisRun) or (IncludesLecroyScope and LecroyScopeIncludedThisRun)):
+		time.sleep(15)
+				
+	if IncludesKeySightScope and KeySightScopeIncludedThisRun:		
+		print "Waiting for Keysight scope to finish"
+		WaitForScopeFinishAcquisition()
+		scope_finished=time.time()
+		print "Keysight scope finished"
+		
+	if IncludesLecroyScope and LecroyScopeIncludedThisRun:		
+		print "Waiting for Lecroy scope to finish"
+		WaitForLecroyScopeFinishAcquisition()
+		scope_finished=time.time()
+		print "Lecroy scope finished"
+	
+		
+	if IncludesKeySightScope: 
+		print "Waiting for TClock stop time (%0.1f)"%StopSeconds
+		wait_until(StopSeconds)
+	
+	tclock_finished=time.time()
+	
+	
+	
+	print ("%0.1f seconds between scope finish and TClock time" % (tclock_finished-scope_finished))
+	StopTime = datetime.now()
+	print "\nRun %i stopped at %s" % (RunNumber,StopTime)
+	print ""
+	print "*********************************************************************"
+	print ""
+	
+	Duration = int((StopTime - StartTime).total_seconds())
+	
+	if pf.QueryGreenSignal(True): 		
+	
+		SpillTime = (StartTime+timedelta(0,27)).strftime("%Y-%m-%d %H:%M:%S")
+		
+		ETLTimestamp = (datetime.now() - datetime.strptime("2000-01-01 00:00:00", "%Y-%m-%d %H:%M:%S")).total_seconds() #- 3600 ### For daylight saving time 
+		print 'Getting ETL environmental data'
+		# Temp13ETL, Temp14ETL, Temp15ETL, Temp16ETL, Temp17ETL, Temp18ETL, Temp19ETL, Temp20ETL, LowVoltage1ETL, Current1ETL, LowVoltage2ETL, Current2ETL, LowVoltage3ETL, Current3ETL = gt.ConvertEnv(ETLTimestamp)
+	
+		##### These fields are uploaded to AirTable. The field names and types must match exactly the names in the table. 
+		this_run_info["Run number"]=RunNumber
+		this_run_info["Configuration"]=ConfigID
+		this_run_info["Start time"]=str(SpillTime)
+		this_run_info["Duration"]=str(Duration)
+	
+		gt.GetTemperaturesSimple(this_run_info)
+		gt.GetCAENInfoSimple(this_run_info)
+		gt.GetACNetYield(this_run_info)
+	
+		this_run_info["Digitizer"]=DigiListThisRun
+	
+		pf.NewRunRecordSimple(this_run_info,ConfigID, False, key)
+		
+	
+		##### These fields are NOT added to airtable, but saved for post processing
+	
+		this_run_info["Configuration"]=Configuration
+		if IncludesLecroyScope:
+			this_run_info.update(simpleLecroyDict)
+			this_run_info.update(simpleCAENDict)
+	
+			runLogFileName = LocalConfigPath+"/Runs/info_%i.json"%RunNumber
+	
+			a_file = open(runLogFileName, "w")
+			js.dump(this_run_info, a_file)
+			a_file.close()
 	
 
-	##### These fields are NOT added to airtable, but saved for post processing
+		#################################################
+		#Check for Stop signal in AutoPilot.status file
+		#################################################
+		tmpStatusFile = open("AutoPilot.status","r") 
+		tmpString = (tmpStatusFile.read().split())[0]
+		if (tmpString == "STOP" or tmpString == "stop"):
+			print "Detected stop signal.\nStopping AutoPilot...\n\n"
+			AutoPilotStatus = 0
+		tmpStatusFile.close()
+	iteration += 1
 
-	this_run_info["Configuration"]=Configuration
-	if IncludesLecroyScope:
-		this_run_info.update(simpleLecroyDict)
-		this_run_info.update(simpleCAENDict)
+	if iteration < maxRuns: #only increment run number if continue running
+		# Read the current run number
+		with open('runNum.txt', 'r') as file:
+        		RunNumber = int(file.read().strip())
 
-		runLogFileName = LocalConfigPath+"/Runs/info_%i.json"%RunNumber
-
-		a_file = open(runLogFileName, "w")
-		js.dump(this_run_info, a_file)
-		a_file.close()
-
+		# Write the run number+1 back to the file regardless how the Run number was received
+		with open('runNum.txt', 'w') as file:
+    			file.write(str(RunNumber+1))
+		print("Current Run is: ", RunNumber)
 

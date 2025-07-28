@@ -15,21 +15,18 @@ def xrdcpTracks(run,Version):
 		# am.ProcessLog(ProcessName, run, line)
 		if not line and session.poll() != None:
 			break
-def xrdcpTracksCERN(run,Version): 
-	mountDir = am.BaseTrackDirLocal #am.TwoStageRecoDigitizers[Digitizer]['RawTimingDAQLocalPath']
-	destination = am.eosBaseDir+"Tracks/RawData/"
+def xrdcpTracksRaw(run,Version): 
+	mountDir = am.BaseTrackDirLocal 
+	destination = am.TelescopeBinaryLPCPath
 	success=True
-	cmd = ["xrdcp", "-fs", mountDir+"run{:06d}.raw".format(run),destination]
+	cmd = ["xrdcp", "-fs", mountDir+"/run{:06d}.raw".format(run),destination]
 	
 	print(cmd)
 	session = am.subprocess.Popen(cmd,stdout=am.subprocess.PIPE,stderr=am.subprocess.STDOUT)
 	while True:
 		line = session.stdout.readline()
-		# am.ProcessLog(ProcessName, run, line)
 		if not line and session.poll() != None:
 			break
-
-
 
 def xrdcpRaw(run,Digitizer):
 	## hacked for conversion
@@ -274,7 +271,7 @@ def CheckExistsEOSfromDaq(ResultFileLocation,sizecut):
 	while True:
                 line = session.stdout.readline()
 		if "size=" in line: break
-                if not line and session3.poll() != None:
+                if not line and session.poll() != None:
                         break
 	print(line)
 	if "size=" not in line: return False

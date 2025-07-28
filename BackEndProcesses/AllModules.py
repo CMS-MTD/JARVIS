@@ -56,16 +56,6 @@ QueryFilePath ="../QueryLog.txt" # Don't care about this
 ################## Hard Code these paths ####################
 #############################################################
 
-############# Tracking Paths ##############
-HyperscriptPath = '/home/otsdaq/CMSTiming/HyperScriptBTL2023.sh'
-RulinuxSSH = 'telescope@128.141.149.171'#'otsdaq@rulinux04.dhcp.fnal.gov'
-BaseTrackDirRulinux = '/home/telescope/snspd/data/'
-ResultTrackFileNameBeforeRunNumber = 'Run' ###########'Run%d_CMSTiming_converted.root'
-ResultTrackFileNameAfterRunNumber = '_CMSTiming_converted.root' 
-ResultTrackFileNameAfterRunNumberSlow = '_CMSTiming_SlowTriggerStream_converted.root'
-ResultTrackFileNameAfterRunNumberFast = '_CMSTiming_FastTriggerStream_converted.root'
-CorryvreckanPath = "/uscms_data/d3/christiw/testbeam/track_reconstruction/corryvreckan/"
-CorryvreckanScript = "script.sh"
 ############## For timingdaq02 ############
 BaseDirName = '2025_08_SNSPD'
 BaseTestbeamDir = '/home/daq/{}/'.format(BaseDirName) 
@@ -84,7 +74,7 @@ if isLPC:
         raise ValueError("\"{}\" please define your code path above for the lpc in JARVIS/BackEndProcesses/AllModules.py".format(user))
 
 eosBaseDir = 'root://cmseos.fnal.gov//store/group/cmstestbeam/{}/'.format(BaseDirName)
-BaseTrackDirLocal = '%sTracks/v1/' % BaseTestbeamDir
+BaseTrackDirLocal = '%sTracks/RawData/' % BaseTestbeamDir
 LocalSSH = 'daq@timingdaq01.dhcp.fnal.gov'
 EnvSetupPath = '/home/daq/setup.sh' ############### Remember to change ProcessExec accordingly
 EnvSetupPath2 = '/home/daq/otsdaq/setup_ots.sh' ############### Remember to change ProcessExec accordingly
@@ -96,6 +86,22 @@ TOFHIRRecoDir2 = '/uscms/home/rheller/nobackup/sw_daq_tofhir_v1/DAQReco/'
 LocalConfigPath = '%sConfigInfo/'%BaseTestbeamDir
 
 
+############# Tracking Paths ##############
+HyperscriptPath = '/home/otsdaq/CMSTiming/HyperScriptBTL2023.sh'
+RulinuxSSH = 'telescope@128.141.149.171'#'otsdaq@rulinux04.dhcp.fnal.gov'
+BaseTrackDirRulinux = '/home/telescope/snspd/data/'
+ResultTrackFileNameBeforeRunNumber = 'Run' ###########'Run%d_CMSTiming_converted.root'
+ResultTrackFileNameAfterRunNumber = '_CMSTiming_converted.root' 
+ResultTrackFileNameAfterRunNumberSlow = '_CMSTiming_SlowTriggerStream_converted.root'
+ResultTrackFileNameAfterRunNumberFast = '_CMSTiming_FastTriggerStream_converted.root'
+
+RulinuxSSH = 'christiw@cmslpc-el9.fnal.gov'#'otsdaq@rulinux04.dhcp.fnal.gov'
+BaseTrackDirRulinux = '/uscms/home/christiw/nobackup/testbeam/test/'
+#TelescopeSSH = "-J christiw@lxplus.cern.ch aidarc"
+#TelescopeBinary="/home/telescope/snspd/data/"
+TelescopeBinaryLPCPath="%s/Tracks/RawData/" % (eosBaseDir)
+CorryvreckanPath = "/uscms_data/d3/christiw/testbeam/track_reconstruction/corryvreckan/"
+CorryvreckanScript = "testbeam_script.sh"
 ############## For PCCITFNAL01 ############
 #BaseTestbeamDir = '/data2/2019_04_April_CMSTiming/'
 #BaseTrackDirLocal = '%sTracks/' % BaseTestbeamDir

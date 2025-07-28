@@ -22,7 +22,7 @@ slope = "NEG"
 
 #trigCh = "EX"
 trigCh = "C2" 
-trig = -0.05 #units of V
+trig = -0.030 #units of V
 slope = "NEG" #for positive: POS
 
 vScale1 = 0.05  
