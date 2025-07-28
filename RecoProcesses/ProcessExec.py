@@ -153,15 +153,25 @@ def ProcessExec(OrderOfExecution, PID, SaveWaveformBool = None, Version = None, 
 						cu.xrdcpTracksCERN(run,Version)
 
 						#### then run corryvreckan on cmslpc
-						session = am.subprocess.Popen(["scp", am.RulinuxSSH + ": %s /run*%s.raw"% (BaseTrackDirRulinux, run), BaseTrackDirLocal + '/'],stdout=am.subprocess.PIPE,stderr=am.subprocess.STDOUT, universal_newlines=True)
+						principal = cu.get_kerberos_principal()
+						if principal: username = principal.split('@')[0]
+						else: 
+							print("KERBEROS NOT FOUND!!")
+							return False
+						print(username)
+
+						cms = ["cd %s" % CorryvreckanPath, "./%s %s" % (CorryvreckanScript, run)]
+						session = am.subprocess.Popen(["ssh", "%s@cmslpc-el9.fnal.gov" % username, " ".join(cmd)],stdout=am.subprocess.PIPE,stderr=am.subprocess.STDOUT, universal_newlines = True)
 						while True:
 							line = session.stdout.readline()
 							am.ProcessLog(ProcessName, run, line)
 							if not line and session.poll() != None:
 								break
 
-						print(("Looking for file at ",ResultFileLocation))
-						if FileSizeBool(ResultFileLocation,SizeCut) or not am.os.path.exists(ResultFileLocation): BadProcessExec = True                                                                                                                                                                                                                                                     
+						#### then check if file exists in output path
+						OutputRoot = eosBaseDir+"Tracks/RecoData/v1/" +  am.ResultTrackFileNameBeforeRunNumber + str(run) + am.ResultTrackFileNameAfterRunNumberFast
+		
+						if not CheckExistsEOSfromDaq(OutputRoot, 2000): BadProcessExec = True                                                                                                                                                                                                                                                     
 						if BadProcessExec:                                                                                                                                                                                                                               
 							if pf.QueryGreenSignal(True): pf.UpdateAttributeStatus(str(FieldID), ProcessName, am.StatusDict[2], False, MyKey)  
 							print(('Bad %s execution for run %d. Either the CMD format is wrong or somwthing else was wrong while execution. Please check the ProcessLog to know more.\n' % (ProcessName, run)))

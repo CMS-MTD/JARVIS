@@ -30,7 +30,7 @@ if isLPC:
 
 ################### Run Table Information #################
 MyKey = '' #Read MyKey from key file in RecoProcesses
-BaseID = 'appEpGbWvvHCRClB3'
+BaseID = 'appNqeAN28zTs2JLJ'
 RunTableName = 'tbl5V5QTHVk5YEBhK'
 SensorTableName = 'tbl3L7HhQ6G3fSvRh'
 ConfigTableName = 'tbliBCnhoZXPQPYXw'
@@ -39,6 +39,8 @@ LecroyScopeConfigTableName = 'tblQwkypkREsLoJQf'
 TOFHIRConfigTableName = 'tblh3QkfVUF9YvYwf'
 CAENConfigTableName = 'tblmuNDqvbXc81mJ9'
 VMEConfigTableName = 'tblH3jbEEPg1QVSAR'
+
+
 
 CurlBaseCommandWithoutTable = 'https://api.airtable.com/v0/%s' % (BaseID)
 CurlBaseCommand = 'https://api.airtable.com/v0/%s/%s' % (BaseID, RunTableName)
@@ -63,9 +65,10 @@ ResultTrackFileNameBeforeRunNumber = 'Run' ###########'Run%d_CMSTiming_converted
 ResultTrackFileNameAfterRunNumber = '_CMSTiming_converted.root' 
 ResultTrackFileNameAfterRunNumberSlow = '_CMSTiming_SlowTriggerStream_converted.root'
 ResultTrackFileNameAfterRunNumberFast = '_CMSTiming_FastTriggerStream_converted.root'
-
+CorryvreckanPath = "/uscms_data/d3/christiw/testbeam/track_reconstruction/corryvreckan/"
+CorryvreckanScript = "script.sh"
 ############## For timingdaq02 ############
-BaseDirName = '2025_07_FCFD'
+BaseDirName = '2025_08_SNSPD'
 BaseTestbeamDir = '/home/daq/{}/'.format(BaseDirName) 
 if isLPC:
     if 'rheller' in user:

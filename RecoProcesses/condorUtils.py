@@ -15,7 +15,7 @@ def xrdcpTracks(run,Version):
 		# am.ProcessLog(ProcessName, run, line)
 		if not line and session.poll() != None:
 			break
-def xrdcpTracks(run,Version): 
+def xrdcpTracksCERN(run,Version): 
 	mountDir = am.BaseTrackDirLocal #am.TwoStageRecoDigitizers[Digitizer]['RawTimingDAQLocalPath']
 	destination = am.eosBaseDir+"Tracks/RawData/"
 	success=True
@@ -265,17 +265,17 @@ def CheckExistsEOSfromDaq(ResultFileLocation,sizecut):
 	principal = get_kerberos_principal()
 	if principal: username = principal.split('@')[0]
 	else: 
-		print("KERBEROS NOT FOUND!!")
-		return False
+	        print("KERBEROS NOT FOUND!!")
+        	return False
 	print(username)
 	session = am.subprocess.Popen(["ssh", "%s@cmslpc-el9.fnal.gov" % username, " ".join(cmd)],stdout=am.subprocess.PIPE,stderr=am.subprocess.STDOUT, universal_newlines = True)
 
 	line = session.stdout.readline()
 	while True:
-                line = session.stdout.readline()
-		if "size=" in line: break
-                if not line and session3.poll() != None:
-                        break
+        	line = session.stdout.readline()
+        	if "size=" in line: break
+        	if not line and session3.poll() != None:
+            		break
 	
 	if "size=" not in line: return False
 	#print("size", int(line.split("size=")[1].strip()) , sizecut)
