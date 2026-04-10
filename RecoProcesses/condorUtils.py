@@ -269,10 +269,9 @@ def CheckExistsEOSfromDaq(ResultFileLocation,sizecut):
 
 	line = session.stdout.readline()
 	while True:
-                line = session.stdout.readline()
+		line = session.stdout.readline()
 		if "size=" in line: break
-                if not line and session.poll() != None:
-                        break
+		if not line and session.poll() != None:break
 	print(line)
 	if "size=" not in line: return False
 	#print("size", int(line.split("size=")[1].strip()) , sizecut)
