@@ -4,7 +4,7 @@ import GetTemp as gt
 
 runtable = pf.DownloadRuntable(True,'key6YLnKb2sY2XnR7')
 
-print len(runtable['records'])
+print(len(runtable['records']))
 
 # data = {"Run number": 10000,"Start time": "2021-11-23 17:18:09", "Duration": "1000"}
 # gt.GetTemperaturesSimple(data)

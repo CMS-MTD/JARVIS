@@ -26,8 +26,8 @@ def getResourceDMM(debug=False):
 
     # Print stuff for debugging if needed
     if debug:
-        print(rm.list_resources())
-        print(my_instrument.query('*IDN?'))
+        print((rm.list_resources()))
+        print((my_instrument.query('*IDN?')))
 
     return my_instrument
 
@@ -115,12 +115,12 @@ def main():
     try:
         while True:
             fileName = "tempLogs/lab_meas_unsync_{:.3f}.txt".format((datetime.now() - datetime.strptime("2000-01-01 00:00:00", "%Y-%m-%d %H:%M:%S")).total_seconds())
-            print("-"*50)
-            print("Sending measured temperature to: {}".format(fileName))
+            print(("-"*50))
+            print(("Sending measured temperature to: {}".format(fileName)))
             
     
             lineCounter = 0
-            for lineCounter in progressbar(range(entriesPerLogFile), "  Filling log file: ", 40):
+            for lineCounter in progressbar(list(range(entriesPerLogFile)), "  Filling log file: ", 40):
             #for lineCounter in range(entriesPerLogFile):
                 #queryVal(my_instrument, 'MEAS:TEMP? (@112)','temp')
                 #my_instrument.write("TEMP:TRAN FRTD")

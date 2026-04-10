@@ -47,12 +47,12 @@ while True:
 		   	############### checking the status for the next runs #################  
 		    with open(AutoPilotStatusFile,'w') as file:
 		        file.write(str(0))
-		    print "\n ####################### Running the scope acquisition ##################################\n"
+		    print("\n ####################### Running the scope acquisition ##################################\n")
 		    
 		    #### Reading run number ####
 		    #RunNumber = tp.GetRunNumber()
 	            AgilentScopeCommand = 'python %sAcquisition/acquisition.py --runNum %s --numEvents %d --sampleRate %d --horizontalWindow %d --trigCh %s --trig %f --vScale1 %f --vScale2 %f --vScale3 %f --vScale4 %f --timeoffset %i --trigSlope POS' % (ScopeControlDir,runNumber, numEvents, sampleRate, horizontalWindow, trigCh, trig, vScale1, vScale2, vScale3, vScale4, timeoffset) 
-	            print AgilentScopeCommand
+	            print(AgilentScopeCommand)
 		    #### Starting the acquisition script ####
 		    os.system(AgilentScopeCommand)
 
@@ -61,26 +61,26 @@ while True:
 		    #FieldID = pf.GetFieldID(QueryFieldsDict[0], RunNumber, False, key)
 		    #pf.UpdateAttributeStatus(FieldID[0], "ConversionKeySightScope", "Not Started", False, key)
 		    
-		    print "\n ####################### Done with the scope acquisition ##################################\n"
+		    print("\n ####################### Done with the scope acquisition ##################################\n")
 
 		    if not UsingAutoPilot:
-		    	print "Updating the run table from the scope listener script"
+		    	print("Updating the run table from the scope listener script")
 		    	Command = "python ../AutoPilot/RunTableWithoutAutopilot.py %s %d" % (runNumber, Configuration)
-		    	print Command
+		    	print(Command)
 		    	os.system(Command)
-		    	print "\n Updated the run table"
+		    	print("\n Updated the run table")
 		elif UsingAutoPilot:
 
 		   	############### checking the status for the next runs #################  
 		    with open(AutoPilotStatusFile,'w') as file:
 		        file.write(str(0))
-		    print "\n ####################### Running the scope acquisition ##################################\n"
+		    print("\n ####################### Running the scope acquisition ##################################\n")
 		    
 		    #### Reading run number ####
 		    #RunNumber = tp.GetRunNumber()
 	            # AgilentScopeCommand = 'python %sAcquisition/acquisition.py --timeout %i --runNum %s --numEvents %d --sampleRate %d --horizontalWindow %d --trigCh %s --trig %f --vScale1 %f --vScale2 %f --vScale3 %f --vScale4 %f --timeoffset %i --trigSlope POS' % (ScopeControlDir,TimeOut,runNumber, numEvents, sampleRate, horizontalWindow, trigCh, trig, vScale1, vScale2, vScale3, vScale4, timeoffset) 
 	            AgilentScopeCommand = 'python %sAcquisition/acquisition.py --timeout %i --runNum %s --numEvents %d --sampleRate %d --horizontalWindow %d --trigCh %s --trig %f --vScale1 %f --vScale2 %f --vScale3 %f --vScale4 %f --timeoffset %i --trigSlope POS' % (ScopeControlDir,TimeOut,runNumber, numEvents, sampleRate, horizontalWindow, trigCh, trig, vScale1, vScale2, vScale3, vScale4, timeoffset) 
-	            print AgilentScopeCommand
+	            print(AgilentScopeCommand)
 		    #### Starting the acquisition script ####
 		    os.system(AgilentScopeCommand)
 
@@ -89,14 +89,14 @@ while True:
 		    #FieldID = pf.GetFieldID(QueryFieldsDict[0], RunNumber, False, key)
 		    #pf.UpdateAttributeStatus(FieldID[0], "ConversionKeySightScope", "Not Started", False, key)
 		    
-		    print "\n ####################### Done with the scope acquisition ##################################\n"
+		    print("\n ####################### Done with the scope acquisition ##################################\n")
 
 		    if not UsingAutoPilot:
-		    	print "Updating the run table from the scope listener script"
+		    	print("Updating the run table from the scope listener script")
 		    	Command = "python ../AutoPilot/RunTableWithoutAutopilot.py %s %d" % (runNumber, Configuration)
-		    	print Command
+		    	print(Command)
 		    	os.system(Command)
-		    	print "\n Updated the run table"
+		    	print("\n Updated the run table")
 
 		elif ScopeState == "ready":
-			print 'Change the RunLog.txt file to ready'		
+			print('Change the RunLog.txt file to ready')		

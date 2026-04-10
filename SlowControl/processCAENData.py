@@ -43,8 +43,8 @@ def to_seconds(date):
     return t.mktime(date.timetuple())
 
 def dict_merge(y, x):
-    for k, v in x.items(): 
-        if k in y.keys(): 
+    for k, v in list(x.items()): 
+        if k in list(y.keys()): 
             y[k] += v 
         else: 
             y[k] = v 
@@ -115,9 +115,9 @@ def drawTimeHisto(Ymax, Yname, time, plotLog, pdfName, startTime,endTime):
         try:
             g = ROOT.TGraph(len(time), array('d', time), array('d', plotLog[channel]))
         except:
-            print "-------------------------"
-            print "Warning: No Data for ", channel, plotLog[channel]
-            print "-------------------------"
+            print("-------------------------")
+            print("Warning: No Data for ", channel, plotLog[channel])
+            print("-------------------------")
             continue
         #g.SetLineStyle(ROOT.kDashed)
         g.SetLineColor(colors[i])
@@ -177,9 +177,9 @@ def drawIV(Xmax, Ymax, Xname, Yname, V, I, pdfName):
         try:
             g = ROOT.TGraph(len(V[channel]), array('d', V[channel]), array('d', I[channel]))
         except:
-            print "-------------------------"
-            print "Warning: No Data for ", channel, V[channel], I[channel]
-            print "-------------------------"
+            print("-------------------------")
+            print("Warning: No Data for ", channel, V[channel], I[channel])
+            print("-------------------------")
             continue
         #g.SetLineStyle(ROOT.kDashed)
         g.SetLineColor(colors[i])
@@ -236,7 +236,7 @@ def main():
     for i, name in enumerate(files):
         f = open(name, 'r')
         rl = f.readlines()
-        print("Open file {} {} of {} with {} lines".format(name, i, len(files), len(rl)))
+        print(("Open file {} {} of {} with {} lines".format(name, i, len(files), len(rl))))
         for line in rl:
             l = line.strip()
             d = parseCAENline(l)

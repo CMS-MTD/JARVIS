@@ -1,5 +1,5 @@
 import argparse
-import commands
+import subprocess
 import time
 import os
 
@@ -16,21 +16,21 @@ size_dic = {'P': 1024**5, 'T': 1024**4, 'G':1024**3, 'M':1024**2, 'K': 1024}
 Nlim =  float(args.limit[:-1])*size_dic[args.limit[-1]]
 
 while(True):
-	_, out = commands.getstatusoutput('df -h | grep \"' + args.disk + '\"')
+	_, out = subprocess.getstatusoutput('df -h | grep \"' + args.disk + '\"')
 	out = [x for x in out.split(' ') if x]
 
 	sfree = out[3]
 	Nfree = float(sfree[:-1])*size_dic[sfree[-1]]
 
 	if Nfree <= Nlim:
-		print time.ctime(time.time())
-		print 'Limit memory reached!'
-		print '[WARNING]: Only {} free left on disk {} ({})\n\n'.format(sfree, out[0], out[-1])
+		print(time.ctime(time.time()))
+		print('Limit memory reached!')
+		print('[WARNING]: Only {} free left on disk {} ({})\n\n'.format(sfree, out[0], out[-1]))
 	
 		subject = 'Limit memory reached!'
-		print subject
+		print(subject)
 		warning = '[WARNING]: Only {} free left on disk {} ({})\n\n'.format(sfree, out[0], out[-1])
-		print warning
+		print(warning)
 		if args.email():
 			cmd = 'echo \"'+warning+'\" | mail -s \"'+subject+'\" ' + args.email
 			os.system(cmd)

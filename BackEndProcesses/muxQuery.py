@@ -28,7 +28,7 @@ def GetMuxStringConf(GlobalConfNum):
 
 	# mux4 = 'k7'
 	mux_setting =  "%s %s %s %s" %(mux1,mux2,mux3,mux4)
-	print mux_setting
+	print(mux_setting)
 	return mux_setting
 
 

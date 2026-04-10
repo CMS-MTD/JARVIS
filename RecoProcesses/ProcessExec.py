@@ -206,7 +206,7 @@ def ProcessExec(OrderOfExecution, PID, SaveWaveformBool = None, Version = None, 
 							print(('Bad %s execution for run %d. Either the CMD format is wrong or somwthing else was wrong while execution. Please check the ProcessLog to know more.\n' % (ProcessName, run)))
 						else:
 							if pf.QueryGreenSignal(True): pf.UpdateAttributeStatus(str(FieldID), ProcessName, am.StatusDict[0], False, MyKey)
-						print('Finished process %s for run %d' % (ProcessName, run))		
+						print(('Finished process %s for run %d' % (ProcessName, run)))		
 						print('###############################\n')
 
 					else:
@@ -259,13 +259,13 @@ def ProcessExec(OrderOfExecution, PID, SaveWaveformBool = None, Version = None, 
 						
 						ResultFileLocation = ResultFileLocation.replace(am.BaseTestbeamDir,am.eosBaseDir.replace('root://cmseos.fnal.gov//','/eos/uscms/'))
 						ResultFileLocation = ResultFileLocation.replace('.root', '_info.root')
-						print("Check output file size > {}: {}".format(SizeCut, ResultFileLocation))
+						print(("Check output file size > {}: {}".format(SizeCut, ResultFileLocation)))
 						if FileSizeBool(ResultFileLocation,SizeCut) or not am.os.path.exists(ResultFileLocation): BadProcessExec = True                                                                                                                                                                                                                                                     
 						if BadProcessExec:   
-							print(FileSizeBool(ResultFileLocation,SizeCut), am.os.path.exists(ResultFileLocation)) 
+							print((FileSizeBool(ResultFileLocation,SizeCut), am.os.path.exists(ResultFileLocation))) 
 							print(ResultFileLocation)                                                                                                                                                                                                                           
 							if pf.QueryGreenSignal(True): pf.UpdateAttributeStatus(str(FieldID), ProcessName, am.StatusDict[2], False, MyKey)  
-							print('Bad %s execution for run %d. Either the CMD format is wrong or somwthing else was wrong while execution. Please check the ProcessLog to know more.\n' % (ProcessName, run))
+							print(('Bad %s execution for run %d. Either the CMD format is wrong or somwthing else was wrong while execution. Please check the ProcessLog to know more.\n' % (ProcessName, run)))
 						else:
 							if pf.QueryGreenSignal(True): pf.UpdateAttributeStatus(str(FieldID), ProcessName, am.StatusDict[0], False, MyKey)
 							if PID == 2 and DigitizerKey == 3:
@@ -282,7 +282,7 @@ def ProcessExec(OrderOfExecution, PID, SaveWaveformBool = None, Version = None, 
 								if pf.QueryGreenSignal(True): 
 									pf.UpdateAttributeStatus2(str(FieldID), "EntriesWithTrackWithoutNplanesScope", int(EntriesWithTrackWithoutNplanes), False, MyKey)
 
-						print('Finished process %s for run %d' % (ProcessName, run))		
+						print(('Finished process %s for run %d' % (ProcessName, run)))		
 						print('###############################\n')
 
 					elif condor:
@@ -490,7 +490,7 @@ def ProcessExecBTLForTOFHIRTracks(OrderOfExecution, PID, SaveWaveformBool = None
 				am.ProcessLog(ProcessName, run, CMD2)
 				
 				print('\n###############################')
-				print('Starting process %s for run %d\n' % (ProcessName, run))
+				print(('Starting process %s for run %d\n' % (ProcessName, run)))
 								
 				if DigitizerKey == 5:
 						print('Sleeping for 1 sec')
@@ -537,7 +537,7 @@ def ProcessExecBTLForTOFHIRTracks(OrderOfExecution, PID, SaveWaveformBool = None
 				if FileSizeBool(ResultFileLocation,SizeCut) or not am.os.path.exists(ResultFileLocation): BadProcessExec = True                                                                                                                                                                                                                                                     
 				if BadProcessExec:                                                                                                                                                                                                                               
 					if pf.QueryGreenSignal(True): pf.UpdateAttributeStatus(str(FieldID), ProcessName, am.StatusDict[2], False, MyKey)  
-					print('Bad %s execution for run %d. Either the CMD format is wrong or somwthing else was wrong while execution. Please check the ProcessLog to know more.\n' % (ProcessName, run))
+					print(('Bad %s execution for run %d. Either the CMD format is wrong or somwthing else was wrong while execution. Please check the ProcessLog to know more.\n' % (ProcessName, run)))
 				else:
 					if pf.QueryGreenSignal(True): pf.UpdateAttributeStatus(str(FieldID), ProcessName, am.StatusDict[0], False, MyKey)
 					if PID == 2 and DigitizerKey == 3:
@@ -554,7 +554,7 @@ def ProcessExecBTLForTOFHIRTracks(OrderOfExecution, PID, SaveWaveformBool = None
 						if pf.QueryGreenSignal(True): 
 							pf.UpdateAttributeStatus2(str(FieldID), "EntriesWithTrackWithoutNplanesScope", int(EntriesWithTrackWithoutNplanes), False, MyKey)
 
-				print('Finished process %s for run %d' % (ProcessName, run))		
+				print(('Finished process %s for run %d' % (ProcessName, run)))		
 				print('###############################\n')
 			
 			if RunNumber != -1:
@@ -625,7 +625,7 @@ def ProcessExecBTL(OrderOfExecution, PID, SaveWaveformBool = None, Version = Non
 				am.ProcessLog(ProcessName, run, CMD)
 				
 				print('\n###############################')
-				print('Starting process %s for run %d\n' % (ProcessName, run))
+				print(('Starting process %s for run %d\n' % (ProcessName, run)))
 								
 				if DigitizerKey == 5:
 						print('Sleeping for 60 sec')
@@ -671,7 +671,7 @@ def ProcessExecBTL(OrderOfExecution, PID, SaveWaveformBool = None, Version = Non
 				if FileSizeBool(ResultFileLocation,SizeCut) or not am.os.path.exists(ResultFileLocation): BadProcessExec = True                                                                                                                                                                                                                                                     
 				if BadProcessExec:                                                                                                                                                                                                                               
 					if pf.QueryGreenSignal(True): pf.UpdateAttributeStatus(str(FieldID), ProcessName, am.StatusDict[2], False, MyKey)  
-					print('Bad %s execution for run %d. Either the CMD format is wrong or somwthing else was wrong while execution. Please check the ProcessLog to know more.\n' % (ProcessName, run))
+					print(('Bad %s execution for run %d. Either the CMD format is wrong or somwthing else was wrong while execution. Please check the ProcessLog to know more.\n' % (ProcessName, run)))
 				else:
 					if pf.QueryGreenSignal(True): pf.UpdateAttributeStatus(str(FieldID), ProcessName, am.StatusDict[0], False, MyKey)
 					if PID == 2 and DigitizerKey == 3:
@@ -700,7 +700,7 @@ def ProcessExecBTL(OrderOfExecution, PID, SaveWaveformBool = None, Version = Non
 							pf.UpdateAttributeStatus2(str(FieldID), "HitsCh4", int(hits_ch4), False, MyKey)
 							am.time.sleep(0.3)
 
-				print('Finished process %s for run %d' % (ProcessName, run))		
+				print(('Finished process %s for run %d' % (ProcessName, run)))		
 				print('###############################\n')
 			
 			if RunNumber != -1:
@@ -766,7 +766,7 @@ def ProcessExecApril(OrderOfExecution, PID, SaveWaveformBool = None, Version1 = 
 				am.ProcessLog(ProcessName, run, CMD1)
 				
 				print('\n###############################')
-				print('Starting process %s for run %d\n' % (ProcessName, run))
+				print(('Starting process %s for run %d\n' % (ProcessName, run)))
 								
 				if PID == 2 or PID == 3:
 					if pf.QueryGreenSignal(True): pf.UpdateAttributeStatus(str(FieldID), ProcessName, am.StatusDict[1], False, MyKey)
@@ -791,11 +791,11 @@ def ProcessExecApril(OrderOfExecution, PID, SaveWaveformBool = None, Version1 = 
 				if FileSizeBool(ResultFileLocation1,SizeCut) or FileSizeBool(ResultFileLocation2,SizeCut) or not am.os.path.exists(ResultFileLocation1) or not am.os.path.exists(ResultFileLocation2): BadProcessExec = True                                                                                                                                                                                                                                                     
 				if BadProcessExec:                                                                                                                                                                                                                               
 					if pf.QueryGreenSignal(True): pf.UpdateAttributeStatus(str(FieldID), ProcessName, am.StatusDict[2], False, MyKey)  
-					print('Bad %s execution for run %d. Either the CMD format is wrong or somwthing else was wrong while execution. Please check the ProcessLog to know more.\n' % (ProcessName, run))
+					print(('Bad %s execution for run %d. Either the CMD format is wrong or somwthing else was wrong while execution. Please check the ProcessLog to know more.\n' % (ProcessName, run)))
 				else:
 					if pf.QueryGreenSignal(True): pf.UpdateAttributeStatus(str(FieldID), ProcessName, am.StatusDict[0], False, MyKey)
 				
-				print('Finished process %s for run %d' % (ProcessName, run))		
+				print(('Finished process %s for run %d' % (ProcessName, run)))		
 				print('###############################\n')
 			
 			if RunNumber != -1:

@@ -139,7 +139,7 @@ def TimingDAQCMDs(RunNumber, SaveWaveformBool, Version, DoTracking, Digitizer, M
 
         #Remove the runs which were not present
         for run in RunsNotPresent:
-            print('Run %d not present in the raw files' % run)
+            print(('Run %d not present in the raw files' % run))
             del FieldIDList[RunList.index(run)]
             RunList.remove(run)
 
@@ -175,7 +175,7 @@ def WatchCondorCMDs(RunNumber, SaveWaveformBool, Version, DoTracking, Digitizer,
     ConvertedBaseLocalPath = am.TwoStageRecoDigitizers[Digitizer]['RawTimingDAQLocalPath']
 
     for i,run in enumerate(RunList):
-        print(ProcessList[i])
+        print((ProcessList[i]))
 
         if(ProcessList[i]==2):
             if Digitizer == "KeySightScope":
@@ -274,7 +274,7 @@ def TimingDAQCMDsBTLApril(RunNumber, SaveWaveformBool, Version1, Version2, DoTra
 
         #Remove the runs which were not present
         for run in RunsNotPresent:
-            print('Run %d not present in the raw files' % run)
+            print(('Run %d not present in the raw files' % run))
             del FieldIDList[RunList.index(run)]
             RunList.remove(run)
 
@@ -385,7 +385,7 @@ def TimingDAQCMDsBTL(RunNumber, SaveWaveformBool, Version, DoTracking, Digitizer
 
         #Remove the runs which were not present
         for run in RunsNotPresent:
-            print('Run %d not present in the raw files' % run)
+            print(('Run %d not present in the raw files' % run))
             del FieldIDList[RunList.index(run)]
             RunList.remove(run)
 
@@ -498,7 +498,7 @@ def TimingDAQCMDsBTLForTOFHIRTracks(RunNumber, SaveWaveformBool, Version, DoTrac
 
         #Remove the runs which were not present
         for run in RunsNotPresent:
-            print('Run %d not present in the raw files' % run)
+            print(('Run %d not present in the raw files' % run))
             del FieldIDList[RunList.index(run)]
             RunList.remove(run)
 

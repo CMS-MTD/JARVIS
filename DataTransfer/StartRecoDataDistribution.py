@@ -7,9 +7,9 @@ import subprocess
 import glob
 import TransferUtils
 
-print "\n##########################################"
-print   "## Starting RECO Data Distribution      ##"
-print   "##########################################\n"
+print("\n##########################################")
+print("## Starting RECO Data Distribution      ##")
+print("##########################################\n")
 
 #You need to change this the kerberos principal being used
 user = "sxie"
@@ -33,10 +33,10 @@ TOFHIRRecoVersion = "v1"
 continueLoop = True
 while continueLoop : 
 
-    print "\n##########################################"
-    print   "## Starting a new data transfer cycle   ##"
-    print   "Time: ", str(datetime.datetime.now())
-    print   "##########################################\n"
+    print("\n##########################################")
+    print("## Starting a new data transfer cycle   ##")
+    print("Time: ", str(datetime.datetime.now()))
+    print("##########################################\n")
 
 
     
@@ -47,7 +47,7 @@ while continueLoop :
     # print   "###################################################\n"
 
     command = "rsync -uv --progress "+LocalDir+"/VME/RecoData/RecoWithTracks/"+ VMERecoVersion + "/* sxie@cmslpc-sl6.fnal.gov:" + LPCRemoteDir + "/VME/RecoData/RecoWithTracks/"+ VMERecoVersion + "/"
-    print command
+    print(command)
     os.system(command)
 
     # TransferUtils.XrdCopyLocalToRemote("cmseos.fnal.gov", 
@@ -89,12 +89,12 @@ while continueLoop :
 
  
     #Copy TOFHIR RECO Data to CMSLPC EOS
-    print "\n\n"
-    print "\n######################################################"
-    print   "Transferring TOFHIR RECO Data to CMSLPC EOS & CERN EOS"
-    print   "######################################################\n"
+    print("\n\n")
+    print("\n######################################################")
+    print("Transferring TOFHIR RECO Data to CMSLPC EOS & CERN EOS")
+    print("######################################################\n")
     command = "rsync -uv --progress "+LocalDir+"/TOFHIR/RecoData/"+ TOFHIRRecoVersion + "/RecoWithoutTracks/* sxie@cmslpc-sl6.fnal.gov:" + LPCRemoteDir + "/TOFHIR/RecoData/RecoWithoutTracks/"+ TOFHIRRecoVersion + "/"
-    print command
+    print(command)
     os.system(command)
     # command = "rsync -uv --progress "+LocalDir+"/TOFHIR/RecoData/RecoWithTracks/"+ TOFHIRRecoVersion + "/* sxie@cmslpc-sl6.fnal.gov:" + LPCRemoteDir + "/TOFHIR/RecoData/RecoWithTracks/"+ TOFHIRRecoVersion + "/"
     # print command

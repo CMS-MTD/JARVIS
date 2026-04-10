@@ -4,11 +4,11 @@ import ROOT as rt
 def MakeXYEffPlots(mytree, ChannelAmpThresholdDict, outputDir, Label):
     
     if mytree is None:
-        print "tree not found"
+        print("tree not found")
     else :
         for channel in ChannelAmpThresholdDict :
 
-            print "Channel " + str(channel)
+            print("Channel " + str(channel))
 
             #make canvas
             mycanvas = rt.TCanvas("cv","cv",800,600)

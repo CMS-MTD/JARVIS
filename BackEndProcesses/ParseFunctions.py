@@ -118,10 +118,10 @@ def DownloadConfigs(Debug, MyKey):
 
     KeySightResponse = am.requests.get(am.CurlBaseCommandKeySight, headers=headers)
     KeySightDict = am.ast.literal_eval(KeySightResponse.text)
-    print(KeySightResponse.text)
+    print((KeySightResponse.text))
 
     TOFHIRResponse = am.requests.get(am.CurlBaseCommandTOFHIR, headers=headers)
-    print(am.CurlBaseCommandTOFHIR, TOFHIRResponse.text)
+    print((am.CurlBaseCommandTOFHIR, TOFHIRResponse.text))
     TOFHIRDict = am.ast.literal_eval(TOFHIRResponse.text)
     CAENResponse = am.requests.get(am.CurlBaseCommandCAEN, headers=headers)
     CAENDict = am.ast.literal_eval(CAENResponse.text)

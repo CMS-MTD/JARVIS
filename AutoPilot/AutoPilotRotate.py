@@ -41,7 +41,7 @@ Debug=False
 ########### Get Key ###########
 key = GetKey()
 
-print "Stopping after %i runs." % maxRuns
+print("Stopping after %i runs." % maxRuns)
 ############ Getting the digitizer list from the configuration table #############
 DigitizerList = pf.GetDigiFromConfig(Configuration, False, key)
 
@@ -154,31 +154,31 @@ statusFile.write("START")
 statusFile.close() 
 AutoPilotStatus = 1
 
-print "*********************************************************************"
-print "Starting AutoPilot"
-print "*********************************************************************"
-print ""
-print "Using Configuration : ", Configuration
+print("*********************************************************************")
+print("Starting AutoPilot")
+print("*********************************************************************")
+print("")
+print("Using Configuration : ", Configuration)
 
 if IsTelescope:
-	print "Tracking Telescope Included"
+	print("Tracking Telescope Included")
 if IncludesSampic:
-	print "SAMPIC readout Included"
+	print("SAMPIC readout Included")
 if IncludesVME:
-	print "VME readout Included" 
+	print("VME readout Included") 
 if IncludesTOFHIR:
-	print "TOFHIR readout Included" 
+	print("TOFHIR readout Included") 
 if (IncludesDT5742):
-	print "DT5742 DRS Desktop Digitizer readout Included"
+	print("DT5742 DRS Desktop Digitizer readout Included")
 if (IncludesTekScope):
-	print "Tektronix Scope readout Included"
+	print("Tektronix Scope readout Included")
 if (IncludesKeySightScope):
-	print "Keysight Scope readout Included"
-print ""
-print ""
-print "*********************************************************************"
-print ""
-print ""
+	print("Keysight Scope readout Included")
+print("")
+print("")
+print("*********************************************************************")
+print("")
+print("")
 
 ETROC_config = "N/A"
 ETROC_baseline = "N/A"
@@ -189,7 +189,7 @@ while (AutoPilotStatus == 1 and iteration < maxRuns):
 
 	if iteration % 20 == 0:
 		StartSeconds,StopSeconds = GetStartAndStopSeconds(25, 15)
-		print StartSeconds, StopSeconds
+		print(StartSeconds, StopSeconds)
 
 	## Refresh this
 	DigitizerList = pf.GetDigiFromConfig(Configuration, False, key)
@@ -198,19 +198,19 @@ while (AutoPilotStatus == 1 and iteration < maxRuns):
 	tp.GetRunFile()
 	time.sleep(5)
 	RunNumber = tp.GetRunNumber()
-	print "Next Run %i " % (RunNumber)
-	print ""
+	print("Next Run %i " % (RunNumber))
+	print("")
 	
-	print "Configuration multiplexer for configuration %i"%Configuration
+	print("Configuration multiplexer for configuration %i"%Configuration)
 	if SetMux: ConfigureMux(Configuration)
 
 	if ETROC:
 		ETROC_baseline_file =  open(ETROC_baseline_filename, "r")
 		ETROC_baseline = str(ETROC_baseline_file.read().strip())
-		print "ETROC0 baseline: %s"%ETROC_baseline
+		print("ETROC0 baseline: %s"%ETROC_baseline)
 		ETROC_config_file =  open(ETROC_config_filename, "r")
 		ETROC_config = str(ETROC_config_file.read().strip())
-		print "ETROC0 configuration: %s"%ETROC_config
+		print("ETROC0 configuration: %s"%ETROC_config)
 
 	############ Wait for safe time to start run ##########
 	wait_until(StartSeconds)
@@ -220,7 +220,7 @@ while (AutoPilotStatus == 1 and iteration < maxRuns):
 	if IsScope:
 		currentScopeState = ScopeState()
 		if currentScopeState == 'busy':
-			print "[WARNING] : Scope is still acquiring events, but autopilot is ready to start a new run. Likely someone killed a run prematurely. Tracking for scope in previous run is screwed up." 
+			print("[WARNING] : Scope is still acquiring events, but autopilot is ready to start a new run. Likely someone killed a run prematurely. Tracking for scope in previous run is screwed up.") 
 
 		if currentScopeState == 'ready': 
 			print("\n Sending start command to scope.\n")
@@ -234,12 +234,12 @@ while (AutoPilotStatus == 1 and iteration < maxRuns):
 
 	tp.UpdateRunNumber(RunNumber+1) ##must be called after scope start.
 	tp.SendRunFile()
-	print "Is Scope ",IsScope
-	print "Scope included ",ScopeIncludedThisRun
+	print("Is Scope ",IsScope)
+	print("Scope included ",ScopeIncludedThisRun)
 	################### Starting the run ###################
 	StartTime = datetime.now()  
-	print "\nRun %i started at %s" % (RunNumber,StartTime)
-	print ""
+	print("\nRun %i started at %s" % (RunNumber,StartTime))
+	print("")
 	if RP: tp.RPComm(RunNumber, "start") 
 
 	#Start the run here
@@ -249,13 +249,13 @@ while (AutoPilotStatus == 1 and iteration < maxRuns):
         #Archive the Config for the TOFHIR if it's a new configuration
         ###############################################################
 		if (not os.path.exists(BaseTestbeamDir+"/TOFHIR/Config/config.ini")):
-			print ("TOFHIR Config directory at " + BaseTestbeamDir+"/TOFHIR/Config/ has not been properly mounted. Please mount it.")
+			print(("TOFHIR Config directory at " + BaseTestbeamDir+"/TOFHIR/Config/ has not been properly mounted. Please mount it."))
 			sys.exit(0)
 		if (not os.path.exists(BaseTestbeamDir+"/TOFHIR/ConfigArchive/Config_v" + str(Configuration))):
-			print ("Current Configuration is v" + str(Configuration) + ". TOFHIR Config directory for this configuration has not been archived. Archiving it now.")
+			print(("Current Configuration is v" + str(Configuration) + ". TOFHIR Config directory for this configuration has not been archived. Archiving it now."))
 			os.system("cp -rv "+BaseTestbeamDir+"/TOFHIR/Config/ "+BaseTestbeamDir+"/TOFHIR/ConfigArchive/Config_v"+str(Configuration))
 		else :
-			print ("Current Configuration is v" + str(Configuration) + ". TOFHIR Config directory for this configuration is already archived")
+			print(("Current Configuration is v" + str(Configuration) + ". TOFHIR Config directory for this configuration is already archived"))
 
 	## Minimum run duration
 	time.sleep(60*(NumSpillsPerRun-1))
@@ -264,9 +264,9 @@ while (AutoPilotStatus == 1 and iteration < maxRuns):
 
 	if IsScope and ScopeIncludedThisRun:
 		time.sleep(25)
-		print "Waiting for scope to finish"
+		print("Waiting for scope to finish")
 		WaitForScopeFinishAcquisition()
-		print "Waiting for TClock stop time"
+		print("Waiting for TClock stop time")
 	wait_until(StopSeconds)
 
 	if not Debug: tp.stop_ots(False)
@@ -274,10 +274,10 @@ while (AutoPilotStatus == 1 and iteration < maxRuns):
 	if RP: tp.RPComm(RunNumber, "stop")
 
 	StopTime = datetime.now()
-	print "\nRun %i stopped at %s" % (RunNumber,StopTime)
-	print ""
-	print "*********************************************************************"
-	print ""
+	print("\nRun %i stopped at %s" % (RunNumber,StopTime))
+	print("")
+	print("*********************************************************************")
+	print("")
 
 	Duration = int((StopTime - StartTime).total_seconds())
 
@@ -314,14 +314,14 @@ while (AutoPilotStatus == 1 and iteration < maxRuns):
 		if ETLTemp:
 			# Get ETL environment data
 			ETLTimestamp = (datetime.now() - datetime.strptime("2000-01-01 00:00:00", "%Y-%m-%d %H:%M:%S")).total_seconds() #- 3600 ### For daylight saving time 
-			print 'Getting ETL environmental data'
+			print('Getting ETL environmental data')
 			if ETLTemp: Temp13ETL, Temp14ETL, Temp15ETL, Temp16ETL, Temp17ETL, Temp18ETL, Temp19ETL, Temp20ETL, LowVoltage1ETL, Current1ETL, LowVoltage2ETL, Current2ETL, LowVoltage3ETL, Current3ETL = gt.ConvertEnv(ETLTimestamp)
-			print 'Updating the run table'
-			print Temp13ETL, Temp14ETL, Temp15ETL, Temp16ETL, Temp17ETL, Temp18ETL, Temp19ETL, Temp20ETL, LowVoltage1ETL, Current1ETL, LowVoltage2ETL, Current2ETL, LowVoltage3ETL, Current3ETL
+			print('Updating the run table')
+			print(Temp13ETL, Temp14ETL, Temp15ETL, Temp16ETL, Temp17ETL, Temp18ETL, Temp19ETL, Temp20ETL, LowVoltage1ETL, Current1ETL, LowVoltage2ETL, Current2ETL, LowVoltage3ETL, Current3ETL)
 			pf.NewRunRecord4(RunNumber, StartTime, str(Duration), DigiListThisRun, Tracking, ConversionSampic, ConversionTekScope,ETROC_baseline,ETROC_config, xrdcpRawKeySightScope,ConversionKeySightScope, TimingDAQVME, TimingDAQSampic, TimingDAQTekScope, TimingDAQKeySightScope, TimingDAQDT5742, TimingDAQNoTracksVME, TimingDAQNoTracksSampic, TimingDAQNoTracksTekScope, TimingDAQNoTracksKeySightScope, TimingDAQNoTracksDT5742, LabviewRecoVME, LabviewRecoDT5742, LabviewRecoKeySightScope, LabviewRecoSampic, LabviewRecoTekScope, BoxTemp, x_stage, y_stage, BoxVoltage, BarCurrent, z_rotation, BoxHum, BoxCurrent, BarVoltage, str(Temp13ETL), str(Temp14ETL), str(Temp15ETL), str(Temp16ETL), str(Temp17ETL), str(Temp18ETL), str(Temp19ETL), str(Temp20ETL), str(LowVoltage1ETL), str(Current1ETL), str(LowVoltage2ETL), str(Current2ETL), str(LowVoltage3ETL), str(Current3ETL), ConfigID, False, key)
 			
 		else:
-			print 'Updating the run table'
+			print('Updating the run table')
 			#print RunNumber, StartTime, str(Duration), DigiListThisRun, Tracking, ConversionSampic, ConversionTekScope, ConversionKeySightScope, TimingDAQVME, TimingDAQSampic, TimingDAQTekScope, TimingDAQKeySightScope, TimingDAQDT5742, TimingDAQTOFHIR, TimingDAQNoTracksVME, TimingDAQNoTracksSampic, TimingDAQNoTracksTekScope, TimingDAQNoTracksKeySightScope, TimingDAQNoTracksDT5742, TimingDAQNoTracksTOFHIR, LabviewRecoVME, LabviewRecoDT5742, LabviewRecoKeySightScope, LabviewRecoSampic, LabviewRecoTekScope, BoxTemp, x_stage, y_stage, BoxVoltage, BarCurrent, z_rotation, BoxHum, BoxCurrent, BarVoltage, ConfigID, key
 			pf.NewRunRecord2(RunNumber, StartTime, str(Duration), DigiListThisRun, Tracking, ConversionSampic, ConversionTekScope, ConversionKeySightScope, TimingDAQVME, TimingDAQSampic, TimingDAQTekScope, TimingDAQKeySightScope, TimingDAQDT5742, TimingDAQTOFHIR, TimingDAQNoTracksVME, TimingDAQNoTracksSampic, TimingDAQNoTracksTekScope, TimingDAQNoTracksKeySightScope, TimingDAQNoTracksDT5742, TimingDAQNoTracksTOFHIR, LabviewRecoVME, LabviewRecoDT5742, LabviewRecoKeySightScope, LabviewRecoSampic, LabviewRecoTekScope, BoxTemp, x_stage, y_stage, BoxVoltage, BarCurrent, z_rotation, BoxHum, BoxCurrent, BarVoltage, OverVoltageBTL, VTHBTL, ConfigID, True, key)
 
@@ -333,7 +333,7 @@ while (AutoPilotStatus == 1 and iteration < maxRuns):
 		tmpStatusFile = open("AutoPilot.status","r") 
 		tmpString = (tmpStatusFile.read().split())[0]
 		if (tmpString == "STOP" or tmpString == "stop"):
-			print "Detected stop signal.\nStopping AutoPilot...\n\n"
+			print("Detected stop signal.\nStopping AutoPilot...\n\n")
 			AutoPilotStatus = 0
 			if RP: tp.RPGlobalComm("GlobalStop")
 		tmpStatusFile.close()

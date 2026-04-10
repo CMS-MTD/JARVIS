@@ -20,13 +20,13 @@ ApplyFilter=True
 ########### Get Key ###########
 key = am.GetKey()
 
-print "\n##############################"
-print "## Starting Data processing ##"
-print "##############################\n"
+print("\n##############################")
+print("## Starting Data processing ##")
+print("##############################\n")
 for run in range (StartRunNumber, StopRunNumber + 1):	
 	ProcessExec(ExecutionOrder,PID, SaveWaveForms, ConfigVersion,run,DigitizerKey,key,GetRunListEachTime, True, ApplyFilter)
 	time.sleep(0.25)
 
-print "\n##############################"
-print "## Completed Data processing ##"
-print "##############################\n"
+print("\n##############################")
+print("## Completed Data processing ##")
+print("##############################\n")

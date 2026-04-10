@@ -21,10 +21,10 @@ while continueLoop :
 
 
     #Copy All Data from timingdaq02
-    print "\n\n"
-    print "\n##########################################"
-    print   "Synchronization all data from timingdaq02"
-    print   "##########################################\n"
+    print("\n\n")
+    print("\n##########################################")
+    print("Synchronization all data from timingdaq02")
+    print("##########################################\n")
 
     command = "rsync -artuv --progress daq@timingdaq02:/home/daq/"+CampaignDirectoryName+"/VME/RecoData/RecoWithTracks/v3/* " + LocalDataLocation+CampaignDirectoryName+"/VME/RecoData/RecoWithTracks/v3/"
     os.system(command)
