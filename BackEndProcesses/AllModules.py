@@ -26,11 +26,11 @@ try:
 except:
     print("Failed to find environment")
 if isLPC:
-    print("Found user: {} Running on LPC: {}".format(user, isLPC))
+    print(("Found user: {} Running on LPC: {}".format(user, isLPC)))
 
 ################### Run Table Information #################
 MyKey = '' #Read MyKey from key file in RecoProcesses
-BaseID = 'appNqeAN28zTs2JLJ'
+BaseID = 'app5Fr5LXG9qF7ISP'
 RunTableName = 'tbl5V5QTHVk5YEBhK'
 SensorTableName = 'tbl3L7HhQ6G3fSvRh'
 ConfigTableName = 'tbliBCnhoZXPQPYXw'
@@ -57,8 +57,9 @@ QueryFilePath ="../QueryLog.txt" # Don't care about this
 #############################################################
 
 ############## For timingdaq02 ############
-BaseDirName = '2025_08_SNSPD'
-BaseTestbeamDir = '/home/daq/{}/'.format(BaseDirName) 
+BaseDirName = '2026_05_SNSPD'
+#BaseTestbeamDir = '/home/daq/{}/'.format(BaseDirName) 
+BaseTestbeamDir = '/home/snspd/{}/'.format(BaseDirName) 
 if isLPC:
     if 'rheller' in user:
         BaseTestbeamDir = '/uscms/home/rheller/nobackup/{}/'.format(BaseDirName)
@@ -189,7 +190,8 @@ TwoStageRecoDigitizers = {
                                            'ConfigFileBasePath'     : '%sLecroyScope_' % (ConfigFileBasePath),
                                            'DatToROOTExec'          : 'NetScopeStandaloneDat2Root', 
                                            'ConversionCMD'          : 'source %s/Conversion/conversion_script.sh ' % (LecroyScopeControlDir), 
-                                           'RawConversionLocalPath' : '/home/daq/LecroyMount/',
+                                           #'RawConversionLocalPath' : '/home/daq/LecroyMount/',
+                                           'RawConversionLocalPath' : '/home/snspd/LecroyMount1/',
                                            'RawTimingDAQLocalPath'  : '%sLecroyScope/RecoData/ConversionRECO/'  % (BaseTestbeamDir),
                                            'RecoTimingDAQLocalPath' : '%sLecroyScope/RecoData/TimingDAQRECO/' % (BaseTestbeamDir),
                                            'RecoTimingDAQFastLocalPath' : '%sLecroyScope/RecoData/TimingDAQFastRECO/' % (BaseTestbeamDir),
@@ -337,7 +339,7 @@ def LecroyScopeStatusAutoPilot(runNumber):
     return
 
 def WaitForLecroyScopeStart():
-    print("Looking for ",LecroyScopeCommFileName)
+    print(("Looking for ",LecroyScopeCommFileName))
     while True:
         LecroyScopeStateHandle = open(LecroyScopeCommFileName, "r")
         LecroyScopeState = str(LecroyScopeStateHandle.read().strip())
@@ -430,15 +432,15 @@ def GetTClockTime():
 
 def GetStartAndStopSeconds(TClockStartSeconds, TClockStopSeconds):
     LocalMachineTime = GetTClockTime()
-    print(" Local machine time is ", LocalMachineTime)
+    print((" Local machine time is ", LocalMachineTime))
     TClockFile = open(TClockFilePath, "r")
     TClockTime = float(TClockFile.read().strip())
     TClockFile.close()  
-    print(" TClock time is ", TClockTime)
+    print((" TClock time is ", TClockTime))
     deltaTwrtTClock = LocalMachineTime - TClockTime
-    print(" Local machine time is ", LocalMachineTime)
+    print((" Local machine time is ", LocalMachineTime))
     LocalMachineStartSeconds = (TClockStartSeconds + deltaTwrtTClock) % 60
     LocalMachineStopSeconds = (TClockStopSeconds + deltaTwrtTClock) % 60
-    print(cred+"Beam should arrive at %0.1f seconds after minute." % ((deltaTwrtTClock+4)%60)+cend)
+    print((cred+"Beam should arrive at %0.1f seconds after minute." % ((deltaTwrtTClock+4)%60)+cend))
     return int(LocalMachineStartSeconds), int(LocalMachineStopSeconds)
 

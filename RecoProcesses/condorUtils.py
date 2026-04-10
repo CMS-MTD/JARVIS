@@ -64,7 +64,7 @@ def xrdcpRaw(run,Digitizer):
 def xrdcpTOFHIR(run):
     mountDir = "/home/daq/TOFHIRMount/"
     #am.BaseTestbeamDir + "/T"
-    print("Looking for files at ",mountDir)
+    print(("Looking for files at ",mountDir))
     LocalDir = am.BaseTestbeamDir + "TOFHIR"+"/RawData/" 	
     destination = am.eosBaseDir+"TOFHIR"+"/RawData/" 
 
@@ -148,7 +148,7 @@ def xrdcpTOFHIR(run):
 
 def xrdcpRaw2(run,Digitizer):
 	mountDir = am.TwoStageRecoDigitizers[Digitizer]['RawConversionLocalPath']
-	print("Looking for files at ",mountDir)
+	print(("Looking for files at ",mountDir))
 	success = True
 	LocalDir = am.BaseTestbeamDir+ Digitizer+"/RawData/" #am.TwoStageRecoDigitizers[Digitizer]['RawConversionLocalPath']
 	destination = am.eosBaseDir+Digitizer+"/RawData/"
@@ -166,7 +166,7 @@ def xrdcpRaw2(run,Digitizer):
 		#while not os.path.exists(raw_filename) and not os.path.exists(LocalDir+("C%i--Trace%i.trc" %(i,run))) and counter<15:
 		while pe.FileSizeBool(raw_filename, 10**6) and not os.path.exists(LocalDir+("C%i--Trace%i.trc" %(i,run))) and counter<15:
 			counter =counter+1
-			print("Sleeping 2 sec, counter: {} for file: {}".format(counter, raw_filename))
+			print(("Sleeping 2 sec, counter: {} for file: {}".format(counter, raw_filename)))
 			time.sleep(2)
 		cmd = ["cp",raw_filename,LocalDir]
 		print(cmd)
@@ -177,7 +177,7 @@ def xrdcpRaw2(run,Digitizer):
 			if not line and session.poll() != None:
 				break
 		if pe.FileSizeBool(LocalDir + "C%i--Trace%i.trc" %(i,run), 10**6): 
-			print("Copied to local directory failed for", "C%i--Trace%i.trc" %(i,run))
+			print(("Copied to local directory failed for", "C%i--Trace%i.trc" %(i,run)))
 			success = False
 			return success 
 		cmd = ["mv",raw_filename,mountDir+"/to_delete"]
@@ -191,7 +191,7 @@ def xrdcpRaw2(run,Digitizer):
 		if Digitizer == "KeySightScope": 
 			cmd = ["xrdcp", "-f",LocalDir+"Wavenewscope_CH%i_%i.bin" %(i,run),destination]
 		elif Digitizer == "LecroyScope":
-			cmd = ["xrdcp", "-f",LocalDir+"C%i--Trace%i.trc" %(i,run),destination]
+			cmd = ["xrdcp", "-f",LocalDir+"C%i--Trace%i.trc" %(i,run),destination+"/C%i--Trace%i.trc" %(i,run)]
 		print(cmd)
 		session2 = am.subprocess.Popen(cmd,stdout=am.subprocess.PIPE,stderr=am.subprocess.STDOUT)
 		while True:
@@ -250,7 +250,7 @@ def get_kerberos_principal():
 
 def CheckExistsEOSfromDaq(ResultFileLocation,sizecut):
 	if "store" not in ResultFileLocation:
-		print("Error, this path is not in EOS:",ResultFileLocation)
+		print(("Error, this path is not in EOS:",ResultFileLocation))
 
 	if "cmseos.fnal.gov/" in ResultFileLocation:
 		#cmd = ["eos", "root://cmseos.fnal.gov", "find", "--size",ResultFileLocation.split("cmseos.fnal.gov/")[1]]
@@ -264,15 +264,15 @@ def CheckExistsEOSfromDaq(ResultFileLocation,sizecut):
 	else: 
 		print("KERBEROS NOT FOUND!!")
 		return False
-	print("Found cmslpc user:", username)
+	print(("Found cmslpc user:", username))
 	session = am.subprocess.Popen(["ssh", "%s@cmslpc-el9.fnal.gov" % username, " ".join(cmd)],stdout=am.subprocess.PIPE,stderr=am.subprocess.STDOUT, universal_newlines = True)
 
 	line = session.stdout.readline()
 	while True:
-                line = session.stdout.readline()
-		if "size=" in line: break
-                if not line and session.poll() != None:
-                        break
+	    line = session.stdout.readline()
+	    if "size=" in line: break
+	    if not line and session.poll() != None:
+	        break
 	print(line)
 	if "size=" not in line: return False
 	#print("size", int(line.split("size=")[1].strip()) , sizecut)
@@ -280,7 +280,7 @@ def CheckExistsEOSfromDaq(ResultFileLocation,sizecut):
 	else: return False
 def CheckExistsEOS(ResultFileLocation,sizecut):
 	if "store" not in ResultFileLocation:
-		print("Error, this path is not in EOS:",ResultFileLocation)
+		print(("Error, this path is not in EOS:",ResultFileLocation))
 
 	if "cmseos.fnal.gov/" in ResultFileLocation:
 		#cmd = ["eos", "root://cmseos.fnal.gov", "find", "--size",ResultFileLocation.split("cmseos.fnal.gov/")[1]]
@@ -293,7 +293,7 @@ def CheckExistsEOS(ResultFileLocation,sizecut):
 	line = session.stdout.readline()
 	print(line)
 	if "size=" not in line: return False
-	print("size", int(line.split("size=")[1].strip()) , sizecut)
+	print(("size", int(line.split("size=")[1].strip()) , sizecut))
 	if int(line.split("size=")[1].strip()) > sizecut:return True
 	else: return False
 

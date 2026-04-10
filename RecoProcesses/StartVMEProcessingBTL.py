@@ -14,12 +14,12 @@ DigitizerKey = 0 #key=0 for VME, Refer Allmodules
 ########### Get Key ###########
 key = am.GetKey()
 
-print "\n##############################"
-print "## Starting Data processing ##"
-print "##############################\n"
+print("\n##############################")
+print("## Starting Data processing ##")
+print("##############################\n")
 
 ProcessExecBTL(ExecutionOrder,PID, SaveWaveForms, ConfigVersion1, ConfigVersion2, -1,DigitizerKey,key,GetRunListEachTime)
 
-print "\n##############################"
-print "## Completed Data processing ##"
-print "##############################\n"
+print("\n##############################")
+print("## Completed Data processing ##")
+print("##############################\n")

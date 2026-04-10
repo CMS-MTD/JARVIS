@@ -1,7 +1,5 @@
 from AllModules import *
 import ParseFunctions as pf
-import TCP_com as tp
-
 #### Look at these parameters before running the listener
 UsingAutoPilot = True
 Configuration = 122   ##not used except in BTL mode
@@ -15,14 +13,14 @@ sampleRate = 10 #GSa/s
 horizontalWindow = 500 #ns, full window, 10 divisions
 
 ### if sample rate or horizontal window is changed, TimingDAQ must be recompiled to account for new npoints.
-trigCh = "C8"
-trig   = -0.05
+trigCh = "C1"
+trig   = -0.5
 slope = "NEG"
 
 
 #trigCh = "EX"
-trigCh = "C2" 
-trig = -0.030 #units of V
+trigCh = "C1" 
+trig = -0.5 #units of V
 slope = "NEG" #for positive: POS
 
 vScale1 = 0.05  
@@ -47,9 +45,9 @@ auxOutPulseWidth = 400
 AutoPilotStatusFile = LecroyScopeCommFileName
 #AgilentScopeCommand = 'python %sAcquisition/acquisition.py --numEvents %d --sampleRate %d --horizontalWindow %d --trigCh %s --trig %f --vScale1 %f --vScale2 %f --vScale3 %f --vScale4 %f --timeoffset %i --trigSlope POS' % (ScopeControlDir, numEvents, sampleRate, horizontalWindow, trigCh, trig, vScale1, vScale2, vScale3, vScale4, timeoffset) 
 #print AgilentScopeCommand
-print "####################################"
-print "## Starting Loop: Waiting for run ##"
-print "####################################"
+print("####################################")
+print("## Starting Loop: Waiting for run ##")
+print("####################################")
 while True:
 
     inFile = open(AutoPilotStatusFile,"r")
@@ -66,12 +64,11 @@ while True:
             ############### checking the status for the next runs #################  
             with open(AutoPilotStatusFile,'w') as file:
                 file.write(str(0))
-            print "\n ####################### Running the scope acquisition ##################################\n"
-            
+            print("\n ####################### Running the scope acquisition ##################################\n")
             #### Reading run number ####
             #RunNumber = tp.GetRunNumber()
-            ScopeCommand = 'python %s/Acquisition/acquisition.py --runNum %s --numEvents %d --sampleRate %d --horizontalWindow %d --trigCh %s --trig %f --vScale1 %f --vScale2 %f --vScale3 %f --vScale4 %f --timeoffset %i --trigSlope %s --vPos1 %f --vPos2 %f --vPos3 %f ' % (LecroyScopeControlDir,runNumber, numEvents, sampleRate, horizontalWindow, trigCh, trig, vScale1, vScale2, vScale3, vScale4, timeoffset, slope, vPos1, vPos2, vPos3) 
-            print ScopeCommand
+            ScopeCommand = 'python3 %s/Acquisition/acquisition.py --runNum %s --numEvents %d --sampleRate %d --horizontalWindow %d --trigCh %s --trig %f --vScale1 %f --vScale2 %f --vScale3 %f --vScale4 %f --timeoffset %i --trigSlope %s --vPos1 %f --vPos2 %f --vPos3 %f ' % (LecroyScopeControlDir,runNumber, numEvents, sampleRate, horizontalWindow, trigCh, trig, vScale1, vScale2, vScale3, vScale4, timeoffset, slope, vPos1, vPos2, vPos3) 
+            print(ScopeCommand)
             #### Starting the acquisition script ####
             os.system(ScopeCommand)
 
@@ -80,38 +77,38 @@ while True:
             #FieldID = pf.GetFieldID(QueryFieldsDict[0], RunNumber, False, key)
             #pf.UpdateAttributeStatus(FieldID[0], "ConversionKeySightScope", "Not Started", False, key)
             
-            print "\n ####################### Done with the scope acquisition ##################################\n"
+            print("\n ####################### Done with the scope acquisition ##################################\n")
 
             if not UsingAutoPilot:
-                print "Updating the run table from the scope listener script"
-                Command = "python ../AutoPilot/RunTableWithoutAutopilot.py %s %d" % (runNumber, Configuration)
-                print Command
+                print("Updating the run table from the scope listener script")
+                Command = "python3 ../AutoPilot/RunTableWithoutAutopilot.py %s %d" % (runNumber, Configuration)
+                print(Command)
                 os.system(Command)
-                print "\n Updated the run table"
+                print("\n Updated the run table")
         elif UsingAutoPilot:
 
             ############### checking the status for the next runs #################  
             with open(AutoPilotStatusFile,'w') as file:
                 file.write(str(0))
-            print "\n ####################### Running the scope acquisition ##################################\n"
+            print("\n ####################### Running the scope acquisition ##################################\n")
             
             if not LongAcquisitionMode: 
-                ScopeCommand = 'python %s/Acquisition/acquisition.py --runNum %s --numEvents %d --sampleRate %d --horizontalWindow %d --trigCh %s --trig %f --vScale1 %f --vScale2 %f --vScale3 %f --vScale4 %f --vScale5 %f --vScale6 %f --vScale7 %f --vScale8 %f --timeoffset %i --trigSlope %s --holdoff %f --auxOutPulseWidth %f' % (LecroyScopeControlDir,runNumber, numEvents, sampleRate, horizontalWindow, trigCh, trig, vScale1, vScale2, vScale3, vScale4,vScale5, vScale6, vScale7, vScale8, timeoffset, slope, holdoff, auxOutPulseWidth) 
+                ScopeCommand = 'python3 %s/Acquisition/acquisition.py --runNum %s --numEvents %d --sampleRate %d --horizontalWindow %d --trigCh %s --trig %f --vScale1 %f --vScale2 %f --vScale3 %f --vScale4 %f --vScale5 %f --vScale6 %f --vScale7 %f --vScale8 %f --timeoffset %i --trigSlope %s --holdoff %f --auxOutPulseWidth %f' % (LecroyScopeControlDir,runNumber, numEvents, sampleRate, horizontalWindow, trigCh, trig, vScale1, vScale2, vScale3, vScale4,vScale5, vScale6, vScale7, vScale8, timeoffset, slope, holdoff, auxOutPulseWidth) 
             else: 
                 newtimeoffset = -0.5*(int(runNumber) % 8)-0.25
-                ScopeCommand = 'python %s/Acquisition/acquisition_one_event.py --display 1 --runNum %s --numPoints %d --sampleRate %d --trigCh %s --trig %f --vScale1 %f --vScale2 %f --vScale3 %f --vScale4 %f --vScale5 %f --vScale6 %f --vScale7 %f --vScale8 %f --timeoffset %0.2f --trigSlope NEG' % (LecroyScopeControlDir,runNumber, numPoints, sampleRate, trigCh, trig, vScale1, vScale2, vScale3, vScale4,vScale5, vScale6, vScale7, vScale8, newtimeoffset) 
-            print ScopeCommand
+                ScopeCommand = 'python3 %s/Acquisition/acquisition_one_event.py --display 1 --runNum %s --numPoints %d --sampleRate %d --trigCh %s --trig %f --vScale1 %f --vScale2 %f --vScale3 %f --vScale4 %f --vScale5 %f --vScale6 %f --vScale7 %f --vScale8 %f --timeoffset %0.2f --trigSlope NEG' % (LecroyScopeControlDir,runNumber, numPoints, sampleRate, trigCh, trig, vScale1, vScale2, vScale3, vScale4,vScale5, vScale6, vScale7, vScale8, newtimeoffset) 
+            print(ScopeCommand)
             #### Starting the acquisition script ####
             os.system(ScopeCommand)
             
-            print "\n ####################### Done with the scope acquisition ##################################\n"
+            print("\n ####################### Done with the scope acquisition ##################################\n")
 
             if not UsingAutoPilot:
-                print "Updating the run table from the scope listener script"
-                Command = "python ../AutoPilot/RunTableWithoutAutopilot.py %s %d" % (runNumber, Configuration)
-                print Command
+                print("Updating the run table from the scope listener script")
+                Command = "python3 ../AutoPilot/RunTableWithoutAutopilot.py %s %d" % (runNumber, Configuration)
+                print(Command)
                 os.system(Command)
-                print "\n Updated the run table"
+                print("\n Updated the run table")
 
         elif ScopeState == "ready":
-            print 'Change the RunLog.txt file to ready'     
+            print('Change the RunLog.txt file to ready')     

@@ -17,13 +17,13 @@ DigitizerKey = 3 #key=0 for VME, Refer Allmodules
 ########### Get Key ###########
 key = am.GetKey()
 
-print "\n##############################"
-print "## Starting Data processing ##"
-print "##############################\n"
+print("\n##############################")
+print("## Starting Data processing ##")
+print("##############################\n")
 
 for run in range (StartRunNumber, StopRunNumber + 1):	
         ProcessExec(ExecutionOrder,PID, SaveWaveForms, ConfigVersion,run,DigitizerKey,key,GetRunListEachTime)
 
-print "\n##############################"
-print "## Completed Data processing ##"
-print "##############################\n"
+print("\n##############################")
+print("## Completed Data processing ##")
+print("##############################\n")

@@ -19,9 +19,9 @@ keyFile = open("key", "r")
 key = str(keyFile.read().strip())
 keyFile.close()
 
-print "\n##############################"
-print "## Starting Data processing ##"
-print "##############################\n"
+print("\n##############################")
+print("## Starting Data processing ##")
+print("##############################\n")
 
 if RunNumber != -1:
 	for run in range (StartRunNumber, StopRunNumber + 1):	
@@ -29,6 +29,6 @@ if RunNumber != -1:
 else:
 	ProcessExec(ExecutionOrder,TimingPID, SaveWaveForms, ConfigVersion,RunNumber,DigitizerKey,key)
 
-print "\n##############################"
-print "## Completed Data processing ##"
-print "##############################\n"
+print("\n##############################")
+print("## Completed Data processing ##")
+print("##############################\n")

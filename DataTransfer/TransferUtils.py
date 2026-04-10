@@ -29,16 +29,16 @@ def XrdCopyLocalToRemote(remoteSite, remoteDir, localDir):
     
     for f in LocalFileDict:        
         doCopy = False
-        if f in RemoteFileDict.keys():
-            print f, " : Already present at Remote site " + remoteSite
-            print LocalFileDict[f] , RemoteFileDict[f]
+        if f in list(RemoteFileDict.keys()):
+            print(f, " : Already present at Remote site " + remoteSite)
+            print(LocalFileDict[f] , RemoteFileDict[f])
             if not (str(LocalFileDict[f]).strip() == str(RemoteFileDict[f]).strip()):
                 doCopy = True
-                print "Remote file size does not match. Remove Remote Copy, and Copy Again"
+                print("Remote file size does not match. Remove Remote Copy, and Copy Again")
                 command = "xrdfs root://" + remoteSite + " rm " + remoteDir + "/" + f
                 os.system(command)
         else:
-            print f, " : Not present at Remote site " + remoteSite
+            print(f, " : Not present at Remote site " + remoteSite)
             doCopy = True
 
         if doCopy:            

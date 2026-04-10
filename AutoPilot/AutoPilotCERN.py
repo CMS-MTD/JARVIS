@@ -44,10 +44,10 @@ else:
 # Write the run number+1 back to the file regardless how the Run number was received
 with open('runNum.txt', 'w') as file:
     file.write(str(RunNumber+1))
-print("Current Run is: ", RunNumber)
+print(("Current Run is: ", RunNumber))
 
 
-print "Stopping after %i runs." % maxRuns
+print(("Stopping after %i runs." % maxRuns))
 
 
 
@@ -88,7 +88,7 @@ default_run_info["BTLRecoNoScopeTOFHIR"] = not_applicable
 
 
 ############ Initialize progress fields on run table ################
-if IsTelescope: default_run_info["Tracking"] = not_started
+if IsTelescope: default_run_info["Tudo ip addr add 169.254.179.100/16 dev enp128s31f6racking"] = not_started
 
 IncludesKeySightScope=False
 IncludesLecroyScope = False
@@ -125,27 +125,27 @@ if 'TOFHIR' in DigitizerList:
 	tofhirConfID = pf.getConfigsByGConfTOFHIR(ConfigDict,Configuration)
 	TOFHIRConfigDict = pf.getSimpleLecroyDict(TOFHIRDict,SensorDict,tofhirConfID)
 
-print "*********************************************************************"
-print "Starting AutoPilot"
-print "*********************************************************************"
-print ""
-print "Using Configuration : ", Configuration
+print("*********************************************************************")
+print("Starting AutoPilot")
+print("*********************************************************************")
+print("")
+print(("Using Configuration : ", Configuration))
 
 if IsTelescope:
-	print "Tracking Telescope Included"
+	print("Tracking Telescope Included")
 if IncludesKeySightScope:
-	print "Keysight Scope readout Included"
+	print("Keysight Scope readout Included")
 if IncludesLecroyScope:
-	print "Lecroy Scope readout Included"
+	print("Lecroy Scope readout Included")
 if IncludesVME:
-	print "VME readout Included, but is controlled by OTSDAQ"
+	print("VME readout Included, but is controlled by OTSDAQ")
 if IncludesTOFHIR:
-	print "TOFHIR readout Included, but is controlled by OTSDAQ"
-print ""
-print ""
-print "*********************************************************************"
-print ""
-print ""
+	print("TOFHIR readout Included, but is controlled by OTSDAQ")
+print("")
+print("")
+print("*********************************************************************")
+print("")
+print("")
 
 
 
@@ -167,15 +167,15 @@ while (AutoPilotStatus == 1 and iteration < maxRuns):
 	## Refresh this in case a digitizer was removed last run.
 	DigitizerList = pf.GetDigiFromConfig(Configuration, False, key)
 	
-	print "Next Run %i " % (RunNumber)
-	print ""
+	print(("Next Run %i " % (RunNumber)))
+	print("")
 	
 	
 	KeySightScopeIncludedThisRun = False
 	if IncludesKeySightScope:
 		currentKeySightScopeState = ScopeState()
 		if currentKeySightScopeState == 'busy':
-			print "[WARNING] : Scope is still acquiring events, but autopilot is ready to start a new run. Likely someone killed a run prematurely. Tracking for scope in previous run is screwed up." 
+			print("[WARNING] : Scope is still acquiring events, but autopilot is ready to start a new run. Likely someone killed a run prematurely. Tracking for scope in previous run is screwed up.") 
 	
 		if currentKeySightScopeState == 'ready': 
 			print("\n Sending start command to scope.\n")
@@ -195,7 +195,7 @@ while (AutoPilotStatus == 1 and iteration < maxRuns):
 	if IncludesLecroyScope:	
 		currentLecroyScopeState = LecroyScopeState()
 		if currentLecroyScopeState == 'busy':
-			print "[WARNING] : Lecroy Scope is still acquiring events, but autopilot is ready to start a new run. Likely someone killed a run prematurely. Tracking for scope in previous run is screwed up." 
+			print("[WARNING] : Lecroy Scope is still acquiring events, but autopilot is ready to start a new run. Likely someone killed a run prematurely. Tracking for scope in previous run is screwed up.") 
 	
 		if currentLecroyScopeState == 'ready': 
 			print("\n Sending start command to Lecroy scope.\n")
@@ -210,12 +210,12 @@ while (AutoPilotStatus == 1 and iteration < maxRuns):
 			continue
 	
 	### Preparing to start run
-	print "Keysight Scope included ",KeySightScopeIncludedThisRun
-	print "Lecroy Scope included ",LecroyScopeIncludedThisRun
+	print(("Keysight Scope included ",KeySightScopeIncludedThisRun))
+	print(("Lecroy Scope included ",LecroyScopeIncludedThisRun))
 	################### Starting the run ###################
 	StartTime = datetime.now()  
-	print "\nRun %i started at %s" % (RunNumber,StartTime)
-	print ""
+	print(("\nRun %i started at %s" % (RunNumber,StartTime)))
+	print("")
 	
 	# Get desired TOFHIR configuration from AirTable and construct corresponding config file, copy into TOFHIR PC via the TOFHIRMount directory
 	if IncludesTOFHIR:
@@ -227,13 +227,13 @@ while (AutoPilotStatus == 1 and iteration < maxRuns):
 							 + str(TOFHIRConfigDict["DELAYE"])
 							)
 		TOFHIRConfigFile.close()
-		print("Writing TOFHIR Config to : " + "/home/daq/TOFHIRMount/raw/runSettingConfig_run" + str(RunNumber) + ".txt")
-		print("Settings: ith1 = " + str(TOFHIRConfigDict["VTH1"]) 
+		print(("Writing TOFHIR Config to : " + "/home/daq/TOFHIRMount/raw/runSettingConfig_run" + str(RunNumber) + ".txt"))
+		print(("Settings: ith1 = " + str(TOFHIRConfigDict["VTH1"]) 
 			+ " ith2 = "          + str(TOFHIRConfigDict["VTH2"])
 			+ " ithe = "          + str(TOFHIRConfigDict["VTHE"])
 			+ " ov = "            + str(TOFHIRConfigDict["OV"])
 			+ " delaE = "         + str(TOFHIRConfigDict["DELAYE"])
-			)
+			))
 	
 	
 	#####Initialize run info dictionary to save to AirTable ####
@@ -270,32 +270,32 @@ while (AutoPilotStatus == 1 and iteration < maxRuns):
 		time.sleep(15)
 				
 	if IncludesKeySightScope and KeySightScopeIncludedThisRun:		
-		print "Waiting for Keysight scope to finish"
+		print("Waiting for Keysight scope to finish")
 		WaitForScopeFinishAcquisition()
 		scope_finished=time.time()
-		print "Keysight scope finished"
+		print("Keysight scope finished")
 		
 	if IncludesLecroyScope and LecroyScopeIncludedThisRun:		
-		print "Waiting for Lecroy scope to finish"
+		print("Waiting for Lecroy scope to finish")
 		WaitForLecroyScopeFinishAcquisition()
 		scope_finished=time.time()
-		print "Lecroy scope finished"
+		print("Lecroy scope finished")
 	
 		
 	if IncludesKeySightScope: 
-		print "Waiting for TClock stop time (%0.1f)"%StopSeconds
+		print(("Waiting for TClock stop time (%0.1f)"%StopSeconds))
 		wait_until(StopSeconds)
 	
 	tclock_finished=time.time()
 	
 	
 	
-	print ("%0.1f seconds between scope finish and TClock time" % (tclock_finished-scope_finished))
+	print(("%0.1f seconds between scope finish and TClock time" % (tclock_finished-scope_finished)))
 	StopTime = datetime.now()
-	print "\nRun %i stopped at %s" % (RunNumber,StopTime)
-	print ""
-	print "*********************************************************************"
-	print ""
+	print(("\nRun %i stopped at %s" % (RunNumber,StopTime)))
+	print("")
+	print("*********************************************************************")
+	print("")
 	
 	Duration = int((StopTime - StartTime).total_seconds())
 	
@@ -304,7 +304,7 @@ while (AutoPilotStatus == 1 and iteration < maxRuns):
 		SpillTime = (StartTime+timedelta(0,27)).strftime("%Y-%m-%d %H:%M:%S")
 		
 		ETLTimestamp = (datetime.now() - datetime.strptime("2000-01-01 00:00:00", "%Y-%m-%d %H:%M:%S")).total_seconds() #- 3600 ### For daylight saving time 
-		print 'Getting ETL environmental data'
+		print('Getting ETL environmental data')
 		# Temp13ETL, Temp14ETL, Temp15ETL, Temp16ETL, Temp17ETL, Temp18ETL, Temp19ETL, Temp20ETL, LowVoltage1ETL, Current1ETL, LowVoltage2ETL, Current2ETL, LowVoltage3ETL, Current3ETL = gt.ConvertEnv(ETLTimestamp)
 	
 		##### These fields are uploaded to AirTable. The field names and types must match exactly the names in the table. 
@@ -342,7 +342,7 @@ while (AutoPilotStatus == 1 and iteration < maxRuns):
 		tmpStatusFile = open("AutoPilot.status","r") 
 		tmpString = (tmpStatusFile.read().split())[0]
 		if (tmpString == "STOP" or tmpString == "stop"):
-			print "Detected stop signal.\nStopping AutoPilot...\n\n"
+			print("Detected stop signal.\nStopping AutoPilot...\n\n")
 			AutoPilotStatus = 0
 		tmpStatusFile.close()
 	iteration += 1
@@ -355,5 +355,5 @@ while (AutoPilotStatus == 1 and iteration < maxRuns):
 		# Write the run number+1 back to the file regardless how the Run number was received
 		with open('runNum.txt', 'w') as file:
     			file.write(str(RunNumber+1))
-		print("Current Run is: ", RunNumber)
+		print(("Current Run is: ", RunNumber))
 

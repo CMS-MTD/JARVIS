@@ -27,6 +27,6 @@ while AutoPilotStatus:
 	tmpStatusFile = open("AutoPilot.status","r") 
 	tmpString = (tmpStatusFile.read().split())[0]
 	if (tmpString == "STOP" or tmpString == "stop"):
-		print "Detected stop signal.\nStopping AutoPilot...\n\n"
+		print("Detected stop signal.\nStopping AutoPilot...\n\n")
 		AutoPilotStatus = 0
 	tmpStatusFile.close()

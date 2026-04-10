@@ -37,12 +37,12 @@ def DumpConfiguration(RunNumber, DigitizerKey, Debug):
 	CMD = am.CurlBaseCommandConfig + '/' + GlobalConfigID
 	response = am.requests.get(CMD, headers=headers)
 	ResponseDict = am.ast.literal_eval(response.text)
-	if Debug: print ResponseDict, CMD
+	if Debug: print(ResponseDict, CMD)
 
 
 	QueryName = 'Configuration' + Digitizer
 	HVName = 'ConfigurationCAENHV'
-	for ColumnNames,ColumnEntries in  ResponseDict["fields"].items():
+	for ColumnNames,ColumnEntries in  list(ResponseDict["fields"].items()):
 		ColumnNamesList.append(ColumnNames)
 		ColumnEntriesList.append(ColumnEntries)
 
@@ -54,9 +54,9 @@ def DumpConfiguration(RunNumber, DigitizerKey, Debug):
 		DigiCMD =am.CurlBaseCommandWithoutTable + '/' + TableName + '/' + DigiConfigID
 		response = am.requests.get(DigiCMD, headers=headers)
 		DigiResponseDict = am.ast.literal_eval(response.text)
-		if Debug: print DigiResponseDict, DigiCMD
+		if Debug: print(DigiResponseDict, DigiCMD)
 
-		for ColumnNames,ColumnEntries in DigiResponseDict["fields"].items():
+		for ColumnNames,ColumnEntries in list(DigiResponseDict["fields"].items()):
 			#print ColumnNames, ColumnEntries
 			if 'Ch ' in ColumnNames:
 				DigitizerChannelList.append(ColumnNames.split("Ch ")[1])
@@ -69,30 +69,30 @@ def DumpConfiguration(RunNumber, DigitizerKey, Debug):
 				response = am.requests.get(SensorCMD, headers=headers)
 				ResponseDict = am.ast.literal_eval(response.text)
 				
-				for ColumnNames,ColumnEntries in ResponseDict["fields"].items():
+				for ColumnNames,ColumnEntries in list(ResponseDict["fields"].items()):
 					if ColumnNames == 'Name':
 						SensorNameList.append(ColumnEntries)
 					if ColumnNames == 'Number of channels':
 						NumberofChannelsList.append(ColumnEntries)
 
-		DigitizerChannelListInt = map(int,DigitizerChannelList)
-		ChannelForSensorListInt = map(int,ChannelForSensorList)
+		DigitizerChannelListInt = list(map(int,DigitizerChannelList))
+		ChannelForSensorListInt = list(map(int,ChannelForSensorList))
 
-		zipped_pair1 = zip(ChannelForSensorListInt, SensorNameList)
+		zipped_pair1 = list(zip(ChannelForSensorListInt, SensorNameList))
 		zipped_pair2 = sorted(zipped_pair1, key=lambda x: x[0])
 
-		zipped_pair3 = zip(DigitizerChannelListInt, SensorChannelList)
+		zipped_pair3 = list(zip(DigitizerChannelListInt, SensorChannelList))
 		zipped_pair4 = sorted(zipped_pair3, key=lambda x: x[0])
 
-		flatlist1 = zip(*zipped_pair2)
-		flatlist2 = zip(*zipped_pair4)
+		flatlist1 = list(zip(*zipped_pair2))
+		flatlist2 = list(zip(*zipped_pair4))
 
-		ziplist = zip(flatlist2[0], flatlist1[1], flatlist2[1])
+		ziplist = list(zip(flatlist2[0], flatlist1[1], flatlist2[1]))
 		
 		#return ziplist
 
 	else:
-		print '%s was not present in this run' % Digitizer
+		print('%s was not present in this run' % Digitizer)
 
 
 	##### FOR HV 
@@ -110,22 +110,22 @@ def DumpConfiguration(RunNumber, DigitizerKey, Debug):
 			response = am.requests.get(SensorCMD, headers=headers)
 			ResponseDict = am.ast.literal_eval(response.text)
 
-			for ColumnNames,ColumnEntries in ResponseDict["fields"].items():
-				print ColumnNames, ColumnEntries
+			for ColumnNames,ColumnEntries in list(ResponseDict["fields"].items()):
+				print(ColumnNames, ColumnEntries)
 				if ColumnNames == 'Name':
 					SensorNameListHV.append(ColumnEntries)
 
 		if 'HV' in ColumnNames:
-			print ColumnNames, ColumnEntries
+			print(ColumnNames, ColumnEntries)
 			HVChannelList.append(ColumnNames.split("HV")[1])
 			HVList.append(ColumnEntries)
 	
-		ChannelForSensorListHVInt = map(int,ChannelForSensorListHV)
-		HVChannelListInt = map(int, HVChannelList)
-		print ChannelForSensorListHV, HVChannelList, HVList, SensorNameList
+		ChannelForSensorListHVInt = list(map(int,ChannelForSensorListHV))
+		HVChannelListInt = list(map(int, HVChannelList))
+		print(ChannelForSensorListHV, HVChannelList, HVList, SensorNameList)
 
 	else:
-		print 'No HV Configuration'
+		print('No HV Configuration')
 
 def GetRunNumbersFromConfig(ConfigNumber, DigitizerKey): # DigitizerKey = 0 for VME, 1 for DT5742, 3 for KeySightScope
 	##### This function gives you the list of run numbers which have
@@ -154,11 +154,11 @@ def GetRunNumbersForConditions(QueryItem, QueryItemBoundsList, DigitizerKey, Con
 	else:
 		OutputDict = pf.ParsingQuery3(1, ["TimingDAQKeySightScope"], ["Complete"], ["Run number", QueryItem], False, key)		
 	RunNumberList = OutputDict[0]
-	QueryItemListFloat = map(float,OutputDict[1])
-	print 
+	QueryItemListFloat = list(map(float,OutputDict[1]))
+	print() 
 	for item in QueryItemListFloat:
-		print item
+		print(item)
 		if item >= QueryItemBoundsList[0] and item <= QueryItemBoundsList[1]:
 			ModifiedRunList.append(RunNumberList[QueryItemListFloat.index(item)])
-			print ModifiedRunList
+			print(ModifiedRunList)
 	return RunNumberList

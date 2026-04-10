@@ -96,7 +96,7 @@ while continueLoop :
 
             outputDir = WebServerDirectory+"/DQM/Run"+str(run)
             if os.path.exists(outputDir+"/DQMDone_VME.txt"):
-                print "DQM (VME) for Run " + str(run) + " already done"
+                print("DQM (VME) for Run " + str(run) + " already done")
             else :
                 myfile = rt.TFile(LocalDataLocation+CampaignDirectoryName+"/VME/RecoData/RecoWithTracks/"+VME_RECO_Version+"/RawDataSaver0CMSVMETiming_Run"+str(run)+"_0_Raw.root")
                 # retrieve the tree
@@ -110,14 +110,14 @@ while continueLoop :
                 if myfile.GetListOfKeys().Contains('pulse')==True:
                     dqm.MakeXYEffPlots(mytree, VMEChannelAmpThresholdDict, outputDir, "VME")
                 else:
-                    print "Run "+str(run)+" missing pulse tree. Skipping DQM"
+                    print("Run "+str(run)+" missing pulse tree. Skipping DQM")
 
                 f = open(outputDir+"/DQMDone_VME.txt", "w")
                 f.write("DONE")
                 f.close()
 
         else :
-            print "Data File " + LocalDataLocation+CampaignDirectoryName+"/VME/RecoData/RecoWithTracks/"+VME_RECO_Version+"/RawDataSaver0CMSVMETiming_Run"+str(run)+"_0_Raw.root " + "not found."
+            print("Data File " + LocalDataLocation+CampaignDirectoryName+"/VME/RecoData/RecoWithTracks/"+VME_RECO_Version+"/RawDataSaver0CMSVMETiming_Run"+str(run)+"_0_Raw.root " + "not found.")
 
 
     #########################################
@@ -130,7 +130,7 @@ while continueLoop :
 
             outputDir = WebServerDirectory+"/DQM/Run"+str(run)
             if os.path.exists(outputDir+"/DQMDone_KeySightScope.txt"):
-                print "DQM (KeySightScope) for Run " + str(run) + " already done"
+                print("DQM (KeySightScope) for Run " + str(run) + " already done")
             else :
                 myfile = rt.TFile(LocalDataLocation+CampaignDirectoryName+"/KeySightScope/RecoData/RecoWithTracks/"+KeySightScope_RECO_Version+"/run_scope"+str(run)+"_converted.root")
                 # retrieve the tree
@@ -144,14 +144,14 @@ while continueLoop :
                 if myfile.GetListOfKeys().Contains('pulse')==True:
                     dqm.MakeXYEffPlots(mytree, KeySightScopeChannelAmpThresholdDict, outputDir, "KeySightScope")
                 else:
-                    print "Run "+str(run)+" missing pulse tree. Skipping DQM"
+                    print("Run "+str(run)+" missing pulse tree. Skipping DQM")
 
                 f = open(outputDir+"/DQMDone_KeySightScope.txt", "w")
                 f.write("DONE")
                 f.close()
 
         else :
-            print "Data File " + LocalDataLocation+CampaignDirectoryName+"/KeySightScope/RecoData/RecoWithTracks/"+KeySightScope_RECO_Version+"/run_scope"+str(run)+"_converted.root " + "not found."
+            print("Data File " + LocalDataLocation+CampaignDirectoryName+"/KeySightScope/RecoData/RecoWithTracks/"+KeySightScope_RECO_Version+"/run_scope"+str(run)+"_converted.root " + "not found.")
 
     
     #########################################
@@ -165,7 +165,7 @@ while continueLoop :
             outputDir = WebServerDirectory+"/DQM/Run"+str(run)
 
             if os.path.exists(outputDir+"/DQMDone_DT.txt"):
-                print "DQM (DT5742 )for Run " + str(run) + " already done"
+                print("DQM (DT5742 )for Run " + str(run) + " already done")
             else :
             
                 myfile = rt.TFile(LocalDataLocation+CampaignDirectoryName+"/DT5742/RecoData/RecoWithTracks/"+DT_RECO_Version+"/DT5742_RAW_Run"+str(run)+".root")
@@ -178,17 +178,17 @@ while continueLoop :
 
                 #Make XYEff Plots
                 if myfile.GetListOfKeys().Contains('pulse')==True:
-                    print str(run)
+                    print(str(run))
                     dqm.MakeXYEffPlots(mytree, DTChannelAmpThresholdDict, outputDir, "DT5742")
                 else:
-                    print "input file from Run {0} DOES NOT HAVE pulse tree. Skipping file".format(str(run))
+                    print("input file from Run {0} DOES NOT HAVE pulse tree. Skipping file".format(str(run)))
                 f = open(outputDir+"/DQMDone_DT.txt", "w")
                 f.write("DONE")
                 f.close()
             
             
         else :
-            print "Data File " + LocalDataLocation+CampaignDirectoryName+"/DT5742/RecoData/RecoWithTracks/"+DT_RECO_Version+"/DT5742_RAW_Run"+str(run)+".root " + "not found."
+            print("Data File " + LocalDataLocation+CampaignDirectoryName+"/DT5742/RecoData/RecoWithTracks/"+DT_RECO_Version+"/DT5742_RAW_Run"+str(run)+".root " + "not found.")
     
     #copy the index.php into all new subdirectories
     os.system("cd " + WebServerDirectory+ "/DQM/; ./distributeIndexPHP.sh;")

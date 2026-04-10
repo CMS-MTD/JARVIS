@@ -1,5 +1,5 @@
-import urllib2 as url #python2
-#import urllib.request as url #python3
+#import urllib2 as url #python2
+import urllib.request as url #python3
 # import numpy as np
 import sys
 import AllModules as am

@@ -26,8 +26,8 @@ def to_seconds(date):
     return t.mktime(date.timetuple())
 
 def dict_merge(y, x):
-    for k, v in x.items(): 
-        if k in y.keys(): 
+    for k, v in list(x.items()): 
+        if k in list(y.keys()): 
             y[k] += v 
         else: 
             y[k] = v 
@@ -116,14 +116,14 @@ def drawTimeHisto(Ymax, Yname, plotLog, pdfName, startTime, endTime, plotDict=No
             g = plotTGraph(len(plotLog[channel]['x']), array('d', plotLog[channel]['x']), array('d', plotLog[channel]['y']), plotLog[channel]["color"])
         except:
             print("-------------------------")
-            print("Warning: No Data for ", channel, plotLog[channel])
+            print(("Warning: No Data for ", channel, plotLog[channel]))
             print("-------------------------")
             continue
         g.Draw("P same")
         history.append(g)
         legend.AddEntry(g, channel, "l")
 
-    for channel in plotDict.keys():
+    for channel in list(plotDict.keys()):
         g1 = None
         try:
             #for i in range(len(plotDict[channel])):
