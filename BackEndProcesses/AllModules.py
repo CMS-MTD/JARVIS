@@ -186,18 +186,30 @@ TwoStageRecoDigitizers = {
                          #                    'FinalFileNameFormat' : 'hitTree_run', ##### run_scope<run>.root 
                          #                    # 'RawTimingDAQFileNameFormat' : 'run_scope', ##### run_scope<run>.root 
                          #                    },
+                                          
+                        #'LecroyScope2'      :  {
+                        #                   'ConfigFileBasePath'     : '%sLecroyScope_' % (ConfigFileBasePath),
+                        #                   'DatToROOTExec'          : 'NetScopeStandaloneDat2Root', 
+                        #                   'ConversionCMD'          : 'source %s/Conversion/conversion_script.sh ' % (LecroyScopeControlDir), 
+                        #                   #'RawConversionLocalPath' : '/home/daq/LecroyMount/',
+                        #                   'RawConversionLocalPath' : '/home/snspd/LecroyMount1/',
+                        #                   'RawTimingDAQLocalPath'  : '%sLecroyScope/RecoData/ConversionRECO/'  % (BaseTestbeamDir),
+                        #                   'RecoTimingDAQLocalPath' : '%sLecroyScope/RecoData/TimingDAQRECO/' % (BaseTestbeamDir),
+                        #                   'RecoTimingDAQFastLocalPath' : '%sLecroyScope/RecoData/TimingDAQFastRECO/' % (BaseTestbeamDir),
+                        #                   'RawTimingDAQFileNameFormat' : 'converted_run', ##### run_scope<run>.root 
+                        #                   'FinalFileNameFormat' : 'run',
+                        #                   },
                         'LecroyScope'      :  {
                                            'ConfigFileBasePath'     : '%sLecroyScope_' % (ConfigFileBasePath),
                                            'DatToROOTExec'          : 'NetScopeStandaloneDat2Root', 
                                            'ConversionCMD'          : 'source %s/Conversion/conversion_script.sh ' % (LecroyScopeControlDir), 
                                            #'RawConversionLocalPath' : '/home/daq/LecroyMount/',
                                            'RawConversionLocalPath' : '/home/snspd/LecroyMount1/',
-                                           'RawTimingDAQLocalPath'  : '%sLecroyScope/RecoData/ConversionRECO/'  % (BaseTestbeamDir),
+                                           'RawTimingDAQLocalPath'  : '%sLecroyScope/RecoData/ConversionRECO/Scope1'  % (BaseTestbeamDir),
                                            'RecoTimingDAQLocalPath' : '%sLecroyScope/RecoData/TimingDAQRECO/' % (BaseTestbeamDir),
                                            'RecoTimingDAQFastLocalPath' : '%sLecroyScope/RecoData/TimingDAQFastRECO/' % (BaseTestbeamDir),
                                            'RawTimingDAQFileNameFormat' : 'converted_run', ##### run_scope<run>.root 
                                            'FinalFileNameFormat' : 'run',
-                                          
                                            },
                          'TOFHIR'     :  {  'ConfigFileBasePath'     : '%sConfig_v' % (TOFHIRConfigFileBasePath), ### Set this
                                             'DatToROOTExec'          : 'convert_raw_to_trigger', ### Set this
