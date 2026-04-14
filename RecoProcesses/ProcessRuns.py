@@ -241,21 +241,18 @@ def WatchCondorRuns(RunNumber, DoTracking, Digitizer, MyKey, op= False):
     # print RunList,ProcessList,FieldIDList
     return RunList, FieldIDList, ProcessList    
 
-def xrdcpRawRuns(RunNumber, Digitizer, MyKey, op=False):
+def xrdcpRawRuns(RunNumber, Digitizer, MyKey, op=False, ScopeNum=1):
     RunNumber = RunNumber
     Digitizer = Digitizer                                                                                                                                                                                                                                           
     RunList = []                                                                                                                                                                                                                                                                         
     FieldIDList = []                                                                                                                                                                                                                                                                     
     DigitizerList = []   
     MyKey = MyKey     
-    ProcessName = list(am.ProcessDict[6].keys())[0]+ Digitizer
+    if ScopeNum==1:ProcessName = list(am.ProcessDict[6].keys())[0]+ Digitizer
+    else: ProcessName = list(am.ProcessDict[10].keys())[0]+ Digitizer
     Condition = pf.EqualToFunc(pf.Curly(ProcessName), pf.DoubleQuotes(am.StatusDict[3]))
     
-    # conversion_done = pf.EqualToFunc(pf.Curly(am.ProcessDict[1].keys()[0]+ Digitizer), pf.DoubleQuotes(am.StatusDict[0]))
     needsxrdcp = pf.ORFunc([ProcessName, ProcessName],[am.StatusDict[3], am.StatusDict[5]])  
-    # FilterByFormula = FilterByFormula = 'AND(' + needsxrdp + ',' + conversion_done + ')'
-
-    # FilterByFormula = pf.ORFunc([ProcessName, ProcessName],[am.StatusDict[3], am.StatusDict[5]])  
     headers = {'Authorization': 'Bearer %s' % MyKey, }                                                                                                                                                                                                                                
     if pf.QueryGreenSignal(True): response = am.requests.get(am.CurlBaseCommand  + '?filterByFormula=' + needsxrdcp, headers=headers)                                                                                                                                                                               
     ResponseDict = am.ast.literal_eval(response.text) 

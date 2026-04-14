@@ -187,13 +187,13 @@ TwoStageRecoDigitizers = {
                          #                    # 'RawTimingDAQFileNameFormat' : 'run_scope', ##### run_scope<run>.root 
                          #                    },
                                           
-                        #'LecroyScope2'      :  {
+                        #'LecroyScope'      :  {
                         #                   'ConfigFileBasePath'     : '%sLecroyScope_' % (ConfigFileBasePath),
                         #                   'DatToROOTExec'          : 'NetScopeStandaloneDat2Root', 
                         #                   'ConversionCMD'          : 'source %s/Conversion/conversion_script.sh ' % (LecroyScopeControlDir), 
                         #                   #'RawConversionLocalPath' : '/home/daq/LecroyMount/',
                         #                   'RawConversionLocalPath' : '/home/snspd/LecroyMount1/',
-                        #                   'RawTimingDAQLocalPath'  : '%sLecroyScope/RecoData/ConversionRECO/'  % (BaseTestbeamDir),
+                        #                   'RawTimingDAQLocalPath'  : '%sLecroyScope/RecoData/ConversionRECO/Scope1'  % (BaseTestbeamDir),
                         #                   'RecoTimingDAQLocalPath' : '%sLecroyScope/RecoData/TimingDAQRECO/' % (BaseTestbeamDir),
                         #                   'RecoTimingDAQFastLocalPath' : '%sLecroyScope/RecoData/TimingDAQFastRECO/' % (BaseTestbeamDir),
                         #                   'RawTimingDAQFileNameFormat' : 'converted_run', ##### run_scope<run>.root 
@@ -204,8 +204,10 @@ TwoStageRecoDigitizers = {
                                            'DatToROOTExec'          : 'NetScopeStandaloneDat2Root', 
                                            'ConversionCMD'          : 'source %s/Conversion/conversion_script.sh ' % (LecroyScopeControlDir), 
                                            #'RawConversionLocalPath' : '/home/daq/LecroyMount/',
-                                           'RawConversionLocalPath' : '/home/snspd/LecroyMount1/',
-                                           'RawTimingDAQLocalPath'  : '%sLecroyScope/RecoData/ConversionRECO/Scope1'  % (BaseTestbeamDir),
+                                           'RawConversionLocalPath1' : '/home/snspd/LecroyMount1/',
+                                           'RawConversionLocalPath2' : '/home/snspd/LecroyMount2/',
+                                           'RawTimingDAQLocalPath1'  : '%sLecroyScope/RecoData/ConversionRECO/Scope1'  % (BaseTestbeamDir),
+                                           'RawTimingDAQLocalPath2'  : '%sLecroyScope/RecoData/ConversionRECO/Scope2'  % (BaseTestbeamDir),
                                            'RecoTimingDAQLocalPath' : '%sLecroyScope/RecoData/TimingDAQRECO/' % (BaseTestbeamDir),
                                            'RecoTimingDAQFastLocalPath' : '%sLecroyScope/RecoData/TimingDAQFastRECO/' % (BaseTestbeamDir),
                                            'RawTimingDAQFileNameFormat' : 'converted_run', ##### run_scope<run>.root 
@@ -273,7 +275,9 @@ ProcessDict = {
                     6 : {'xrdcpRaw' : {'SizeCut' : 20000}},
                     7 : {'BTLReco' : {'SizeCut' : 20000}},
                     8 : {'BTLRecoNoScope' : {'SizeCut' : 20000}},
-                    9 : {'TimingDAQFast' : {'SizeCut' : 20000}}
+                    9 : {'TimingDAQFast' : {'SizeCut' : 20000}},
+                    10 : {'xrdcpRaw2' : {'SizeCut' : 20000}},
+                    11 : {'Conversion2' : {'SizeCut' : 20}},
                 }
 StatusDict = {
                     0 : 'Complete',

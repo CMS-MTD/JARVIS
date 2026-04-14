@@ -7,24 +7,21 @@ Configuration = 122   ##not used except in BTL mode
 LongAcquisitionMode = False #True
 
 
-numEvents = 30000 #28000 ## not used in Long mode #Max with math mode off is 32000 for Lecroy
+numEvents = 10000 #28000 ## not used in Long mode #Max with math mode off is 32000 for Lecroy
 numPoints = 25 ##MSa, only used in Long mode
 sampleRate = 10 #GSa/s
-horizontalWindow = 500 #ns, full window, 10 divisions
+horizontalWindow = 200 #ns, full window, 10 divisions
 
 ### if sample rate or horizontal window is changed, TimingDAQ must be recompiled to account for new npoints.
-trigCh = "C1"
-trig   = -0.5
-slope = "NEG"
 
 
 #trigCh = "EX"
 trigCh = "C1" 
-trig = -0.5 #units of V
-slope = "NEG" #for positive: POS
+trig = 0.05 #units of V
+slope = "POS" #for positive: POS
 
-vScale1 = 0.05  
-vScale2 = 0.05
+vScale1 = 0.1  
+vScale2 = 0.5
 vScale3 = 0.05 
 vScale4 = 0.05
 vScale5 = 0.05  
@@ -32,8 +29,8 @@ vScale6 = 0.05
 vScale7 = 0.05 
 vScale8 = 0.10
 
-vPos1 = 3
-vPos2 = 3
+vPos1 = 0
+vPos2 = 0
 vPos3 = 3
 
 timeoffset = 0 #100 ##75 scintillator trigger

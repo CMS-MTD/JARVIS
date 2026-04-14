@@ -34,7 +34,7 @@ def FileSizeBool(FilePath, SizeCut):
 		return am.os.stat(FilePath).st_size < SizeCut
 	else: return True
 
-def ProcessExec(OrderOfExecution, PID, SaveWaveformBool = None, Version = None, RunNumber = -1, DigitizerKey = -1 , MyKey = None, GetRunListEachTime = True, condor = False, ApplyFilter = False, FNALTelescope = True):
+def ProcessExec(OrderOfExecution, PID, SaveWaveformBool = None, Version = None, RunNumber = -1, DigitizerKey = -1 , MyKey = None, GetRunListEachTime = True, condor = False, ApplyFilter = False, FNALTelescope = True, ScopeNum = 1):
 	
 	if not DigitizerKey == -1: Digitizer = am.DigitizerDict[DigitizerKey]
 	SaveWaveformBool = SaveWaveformBool
@@ -72,10 +72,11 @@ def ProcessExec(OrderOfExecution, PID, SaveWaveformBool = None, Version = None, 
 			CMDList, ResultFileLocationList, RunList, FieldIDList = pc.WatchCondorCMDs(RunNumber, SaveWaveformBool, Version, DoTracking, Digitizer, MyKey, False)
 			SizeCut = am.ProcessDict[2][list(am.ProcessDict[2].keys())[0]]['SizeCut']		
 			print((ResultFileLocationList, RunList))
-		elif PID == 6:
+		elif PID == 6 or PID == 10:
 			ProcessName = list(am.ProcessDict[PID].keys())[0] + Digitizer	
 			DoTracking = True
-			CMDList, ResultFileLocationList, RunList, FieldIDList = pc.xrdcpRawCMDs(RunNumber, SaveWaveformBool, Version, DoTracking, Digitizer, MyKey, False)
+			if PID==6:CMDList, ResultFileLocationList, RunList, FieldIDList = pc.xrdcpRawCMDs(RunNumber, SaveWaveformBool, Version, DoTracking, Digitizer, MyKey, False)
+			else:CMDList, ResultFileLocationList, RunList, FieldIDList = pc.xrdcpRawCMDs(RunNumber, SaveWaveformBool, Version, DoTracking, Digitizer, MyKey, False, 2)
 			SizeCut = am.ProcessDict[PID][list(am.ProcessDict[PID].keys())[0]]['SizeCut']		
 			#print ResultFileLocationList, RunList
 		elif PID == 7:
@@ -390,7 +391,8 @@ def ProcessExec(OrderOfExecution, PID, SaveWaveformBool = None, Version = None, 
 						#call special TOFHIR xrdcp function for TOFHIR
 						cpstatus = cu.xrdcpTOFHIR(run)
 					else :
-						cpstatus = cu.xrdcpRaw2(run,Digitizer)
+						#cpstatus = cu.xrdcpRaw2(run,Digitizer)
+						cpstatus = cu.xrdcpRawTwoScope(run,Digitizer, ScopeNum)
 
 					am.time.sleep(0.5)
 					if cpstatus and pf.QueryGreenSignal(True): pf.UpdateAttributeStatus(str(FieldID), ProcessName, am.StatusDict[0], False, MyKey) 
