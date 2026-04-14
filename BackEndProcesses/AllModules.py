@@ -205,7 +205,7 @@ TwoStageRecoDigitizers = {
                                            'ConversionCMD'          : 'source %s/Conversion/conversion_script.sh ' % (LecroyScopeControlDir), 
                                            #'RawConversionLocalPath' : '/home/daq/LecroyMount/',
                                            'RawConversionLocalPath' : '/home/snspd/LecroyMount1/',
-                                           'RawTimingDAQLocalPath'  : '%sLecroyScope/RecoData/ConversionRECO/Scope1'  % (BaseTestbeamDir),
+                                           'RawTimingDAQLocalPath'  : '%sLecroyScope/RecoData/ConversionRECO/Scope1/'  % (BaseTestbeamDir),
                                            'RecoTimingDAQLocalPath' : '%sLecroyScope/RecoData/TimingDAQRECO/' % (BaseTestbeamDir),
                                            'RecoTimingDAQFastLocalPath' : '%sLecroyScope/RecoData/TimingDAQFastRECO/' % (BaseTestbeamDir),
                                            'RawTimingDAQFileNameFormat' : 'converted_run', ##### run_scope<run>.root 
