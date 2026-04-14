@@ -208,7 +208,7 @@ def xrdcpRaw2(run,Digitizer):
 	#### Copy configuration info.
 	configFileName = am.LocalConfigPath +"/Runs/info_%i.json"%run
 	configDestination = am.eosBaseDir + "/ConfigInfo/Runs/"
-	cmd = ["xrdcp","-f",configFileName,configDestination]
+	cmd = ["xrdcp","-f",configFileName,configDestination + "/" + configFileName]
 	print(cmd)
 	session3 = am.subprocess.Popen(cmd,stdout=am.subprocess.PIPE,stderr=am.subprocess.STDOUT)
 	while True:
@@ -220,6 +220,82 @@ def xrdcpRaw2(run,Digitizer):
 	return success
 	#return True
  
+def xrdcpRawTwoScope(run,Digitizer,scope_num=1):
+	mountDir = am.TwoStageRecoDigitizers[Digitizer][f'RawConversionLocalPath{scope_num}']
+	print(("Looking for files at ",mountDir))
+	success = True
+	LocalDir = am.BaseTestbeamDir+ Digitizer+f"/RawData/Scope{scope_num}/"
+	destination = am.eosBaseDir+Digitizer+f"/RawData/Scope{scope_num}/"
+	time.sleep(36)
+	print(destination)
+	nchan = 4
+	if Digitizer == "LecroyScope":
+		nchan=8
+	for i in range(1,nchan+1):
+		if Digitizer == "KeySightScope":
+			raw_filename =  mountDir+"Wavenewscope_CH%i_%i.bin" %(i,run)
+		elif Digitizer == "LecroyScope":
+			raw_filename =  mountDir+"C%i--Trace%i.trc" %(i,run)
+		counter=0
+		#while not os.path.exists(raw_filename) and not os.path.exists(LocalDir+("C%i--Trace%i.trc" %(i,run))) and counter<15:
+		while pe.FileSizeBool(raw_filename, 10**6) and not os.path.exists(LocalDir+("C%i--Trace%i.trc" %(i,run))) and counter<15:
+			counter =counter+1
+			print(("Sleeping 2 sec, counter: {} for file: {}".format(counter, raw_filename)))
+			time.sleep(2)
+		cmd = ["cp",raw_filename,LocalDir]
+		print(cmd)
+		session = am.subprocess.Popen(cmd,stdout=am.subprocess.PIPE,stderr=am.subprocess.STDOUT)
+		while True:
+			line = session.stdout.readline()
+			# am.ProcessLog(ProcessName, run, line)
+			if not line and session.poll() != None:
+				break
+		if pe.FileSizeBool(LocalDir + "C%i--Trace%i.trc" %(i,run), 10**6): 
+			print(("Copied to local directory failed for", "C%i--Trace%i.trc" %(i,run)))
+			success = False
+			return success 
+		cmd = ["mv",raw_filename,mountDir+"/to_delete"]
+		print(cmd)
+		session3 = am.subprocess.Popen(cmd,stdout=am.subprocess.PIPE,stderr=am.subprocess.STDOUT)
+		while True:
+			line = session3.stdout.readline()
+			# am.ProcessLog(ProcessName, run, line)
+			if not line and session3.poll() != None:
+				break
+		if Digitizer == "KeySightScope": 
+			cmd = ["xrdcp", "-f",LocalDir+"Wavenewscope_CH%i_%i.bin" %(i,run),destination]
+		elif Digitizer == "LecroyScope":
+			cmd = ["xrdcp", "-f",LocalDir+"C%i--Trace%i.trc" %(i,run),destination+"/C%i--Trace%i.trc" %(i,run)]
+		print(cmd)
+		session2 = am.subprocess.Popen(cmd,stdout=am.subprocess.PIPE,stderr=am.subprocess.STDOUT)
+		while True:
+			line = session2.stdout.readline()
+			# am.ProcessLog(ProcessName, run, line)
+			if not line and session2.poll() != None:
+				break
+		if Digitizer == "KeySightScope": 
+			success = success and CheckExistsEOSfromDaq(destination+"Wavenewscope_CH%i_%i.bin" %(i,run),2000)
+		elif Digitizer == "LecroyScope":
+			success = success and CheckExistsEOSfromDaq(destination+"C%i--Trace%i.trc" %(i,run),2000)
+		if not success: return False # make job fail early 
+
+	#### Copy configuration info.
+	configFileName = am.LocalConfigPath +"/Runs/info_%i.json"%run
+	configDestination = am.eosBaseDir + "/ConfigInfo/Runs/"
+	cmd = ["xrdcp","-f",configFileName,configDestination + "/info_%i.json"%run ]
+	print(cmd)
+	session3 = am.subprocess.Popen(cmd,stdout=am.subprocess.PIPE,stderr=am.subprocess.STDOUT)
+	while True:
+		line = session3.stdout.readline()
+		# am.ProcessLog(ProcessName, run, line)
+		if not line and session3.poll() != None:
+			break
+
+	return success
+	#return True
+ 
+
+
 
 
 def prepareDirs():

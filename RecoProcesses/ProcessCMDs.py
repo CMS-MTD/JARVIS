@@ -28,8 +28,8 @@ def TrackingCMDs(RunNumber, MyKey, Debug):
         return None,None,None,None   
 
 
-def xrdcpRawCMDs(RunNumber, SaveWaveformBool, Version, DoTracking, Digitizer, MyKey, op=False):
-    RunList, FieldIDList = pr.xrdcpRawRuns(RunNumber, Digitizer, MyKey, False)
+def xrdcpRawCMDs(RunNumber, SaveWaveformBool, Version, DoTracking, Digitizer, MyKey, op=False, ScopeNum=1):
+    RunList, FieldIDList = pr.xrdcpRawRuns(RunNumber, Digitizer, MyKey, False, ScopeNum)
     cpCMDList = []
     ResultFileLocationList = []
 
