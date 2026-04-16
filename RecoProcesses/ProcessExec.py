@@ -50,14 +50,15 @@ def ProcessExec(OrderOfExecution, PID, SaveWaveformBool = None, Version = None, 
 			CMDList, ResultFileLocationList, RunList, FieldIDList = pc.TrackingCMDs(RunNumber, MyKey, False)
 			SizeCut = am.ProcessDict[PID][list(am.ProcessDict[PID].keys())[0]]['SizeCut']
 			print(ResultFileLocationList)
-		elif PID == 1:
+		elif PID == 1 or PID == 11:
+			print("scope", ScopeNum)
 			ProcessName = list(am.ProcessDict[PID].keys())[0] + Digitizer
-			CMDList, ResultFileLocationList, RunList, FieldIDList = pc.ConversionCMDs(RunNumber, Digitizer, MyKey, False, condor)
+			CMDList, ResultFileLocationList, RunList, FieldIDList = pc.ConversionCMDs(RunNumber, Digitizer, MyKey, False, condor,ScopeNum)
 			SizeCut = am.ProcessDict[PID][list(am.ProcessDict[PID].keys())[0]]['SizeCut']
-		elif PID == 2:
+		elif PID == 2 or PID == 12:
 			ProcessName = list(am.ProcessDict[PID].keys())[0] + Digitizer	
 			DoTracking = True
-			CMDList, ResultFileLocationList, RunList, FieldIDList = pc.TimingDAQCMDs(RunNumber, SaveWaveformBool, Version, DoTracking, Digitizer, MyKey, False, condor)
+			CMDList, ResultFileLocationList, RunList, FieldIDList = pc.TimingDAQCMDs(RunNumber, SaveWaveformBool, Version, DoTracking, Digitizer, MyKey, False, condor, ScopeNum)
 			
 			SizeCut = am.ProcessDict[PID][list(am.ProcessDict[PID].keys())[0]]['SizeCut']
 		elif PID == 3:
@@ -92,6 +93,12 @@ def ProcessExec(OrderOfExecution, PID, SaveWaveformBool = None, Version = None, 
 			print(ResultFileLocationList)
 			print(RunList)
 			print(FieldIDList)
+			SizeCut = am.ProcessDict[PID][list(am.ProcessDict[PID].keys())[0]]['SizeCut']
+		elif PID == 13:
+			ProcessName = list(am.ProcessDict[PID].keys())[0] + Digitizer
+			print(ProcessName)
+			DoTracking = True
+			CMDList, ResultFileLocationList, RunList, FieldIDList = pc.MergeCMDs(RunNumber, SaveWaveformBool, Version, DoTracking, Digitizer, MyKey, False, condor)
 			SizeCut = am.ProcessDict[PID][list(am.ProcessDict[PID].keys())[0]]['SizeCut']
 
 
@@ -184,7 +191,7 @@ def ProcessExec(OrderOfExecution, PID, SaveWaveformBool = None, Version = None, 
 							if pf.QueryGreenSignal(True): pf.UpdateAttributeStatus(str(FieldID), ProcessName, am.StatusDict[0], False, MyKey)
 						
 
-				elif PID == 1:
+				elif PID == 1 or PID == 11:
 					if not condor:
 						if pf.QueryGreenSignal(True):
 							pf.UpdateAttributeStatus(str(FieldID), ProcessName, am.StatusDict[1], False, MyKey)
@@ -230,7 +237,7 @@ def ProcessExec(OrderOfExecution, PID, SaveWaveformBool = None, Version = None, 
 							if not line and session.poll() != None:
 								break
 
-				elif PID == 2 or PID == 3:
+				elif PID == 2 or PID == 3 or PID == 12:
 					######## For TimingDAQ02 
 					# print CMD
 					if not condor: 
@@ -241,7 +248,7 @@ def ProcessExec(OrderOfExecution, PID, SaveWaveformBool = None, Version = None, 
 						# print(am.TimingDAQDir)
 						# CMD = CMD.replace(am.BaseTestbeamDir,am.eosBaseDir.replace('root://cmseos.fnal.gov//','/eos/uscms/'))
 
-						CMD = './script.sh %s %s' %(str(run), str(Version))
+						CMD = './script.sh %s %s %s' %(str(run), str(Version), str(ScopeNum))
 						print((am.TimingDAQDir))
 						print(CMD)
 						session = am.subprocess.Popen('cd %s; %s;cd -' % (am.TimingDAQDir, str(CMD)),stdout=am.subprocess.PIPE,stderr=am.subprocess.STDOUT, shell=True, universal_newlines=True)                                                                                                                                                                                   			
@@ -422,6 +429,64 @@ def ProcessExec(OrderOfExecution, PID, SaveWaveformBool = None, Version = None, 
 						if not line and session.poll() != None:
 							break
 
+
+				elif PID == 13: 
+					######## For Merging 
+					# print CMD
+					if not condor: 
+						if pf.QueryGreenSignal(True): pf.UpdateAttributeStatus(str(FieldID), ProcessName, am.StatusDict[1], False, MyKey)
+
+						CMD = './merge_script.sh %s %s ' %(str(run), str(Version))
+						print((am.TimingDAQDir))
+						print(CMD)
+						session = am.subprocess.Popen('cd %s; %s;cd -' % (am.TimingDAQDir, str(CMD)),stdout=am.subprocess.PIPE,stderr=am.subprocess.STDOUT, shell=True, universal_newlines=True)                                                                                                                                                                                   			
+						######## For Caltech CMS Timing computer uncomment this and comment out the above line 
+						#session = am.subprocess.Popen('cd %s; %s;cd -' % (am.TimingDAQDir, str(CMD)),stdout=am.subprocess.PIPE, shell=True)  
+						while True:
+							line = session.stdout.readline()
+							am.ProcessLog(ProcessName, run, line)
+							if not line and session.poll() != None:
+								break
+								
+						
+						ResultFileLocation = ResultFileLocation.replace(am.BaseTestbeamDir,am.eosBaseDir.replace('root://cmseos.fnal.gov//','/eos/uscms/'))
+						ResultFileLocation = ResultFileLocation.replace('.root', '_info.root')
+						print(("Check output file size > {}: {}".format(SizeCut, ResultFileLocation)))
+						if FileSizeBool(ResultFileLocation,SizeCut) or not am.os.path.exists(ResultFileLocation): BadProcessExec = True                                                                                                                                                                                                                                                     
+						if BadProcessExec:   
+							print((FileSizeBool(ResultFileLocation,SizeCut), am.os.path.exists(ResultFileLocation))) 
+							print(ResultFileLocation)                                                                                                                                                                                                                           
+							if pf.QueryGreenSignal(True): pf.UpdateAttributeStatus(str(FieldID), ProcessName, am.StatusDict[2], False, MyKey)  
+							print(('Bad %s execution for run %d. Either the CMD format is wrong or somwthing else was wrong while execution. Please check the ProcessLog to know more.\n' % (ProcessName, run)))
+						else:
+							if pf.QueryGreenSignal(True): pf.UpdateAttributeStatus(str(FieldID), ProcessName, am.StatusDict[0], False, MyKey)
+
+						print(('Finished process %s for run %d' % (ProcessName, run)))		
+						print('###############################\n')
+
+					elif condor:
+						if pf.QueryGreenSignal(True) and not ApplyFilter: pf.UpdateAttributeStatus(str(FieldID), ProcessName, am.StatusDict[8], False, MyKey)
+						## generate condor jdl and executable
+						cu.prepareDirs()
+						filterList = [0]
+						if ApplyFilter: filterList = am.FrequencyList 
+						for freq in filterList: 
+							jdlname = cu.prepareJDL(PID,DigitizerKey,run,CMD,freq)
+							cu.prepareExecutable(PID,DigitizerKey,run,CMD,freq)
+							## cd and submit to condor
+							print (CMD)
+							print (run)
+							print(jdlname)
+							session = am.subprocess.Popen('cd %s; condor_submit %s; cd -' % (am.CondorDir,jdlname),stdout=am.subprocess.PIPE,stderr=am.subprocess.STDOUT, shell=True, universal_newlines=True)                                                                                                                                                                                   			
+
+							# print 'condor_submit %s; cd -' % (jdlname)
+							# print am.CondorDir
+							## wait for submission
+							line = session.stdout.readline()
+							am.ProcessLog(ProcessName, run, line)
+							if not line and session.poll() != None:
+								break
+						
 
 			if RunNumber != -1:
 				break
