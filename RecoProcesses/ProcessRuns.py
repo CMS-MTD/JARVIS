@@ -88,6 +88,77 @@ def LabviewRuns(RunNumber, Digitizer, MyKey, Debug):
 
     return RunList, FieldIDList                                                                                                                                                                                                               
 
+def MergeRuns(RunNumber, DoTracking, Digitizer, MyKey, Debug, condor):
+    RunNumber = RunNumber
+    DoTracking = DoTracking
+    Digitizer = Digitizer
+    RunList = []
+    FieldIDList = []
+    DigitizerList = []
+    MyKey = MyKey
+    ProcessName = list(am.ProcessDict[13].keys())[0] + Digitizer
+
+    if RunNumber == -1:
+        xrdcp1 = pf.ORFunc([list(am.ProcessDict[6].keys())[0] + Digitizer], [am.StatusDict[0]])
+        xrdcp2 = pf.ORFunc([list(am.ProcessDict[10].keys())[0] + Digitizer], [am.StatusDict[0]])
+        conversion1 = pf.ORFunc(
+            [list(am.ProcessDict[1].keys())[0] + Digitizer,
+             list(am.ProcessDict[1].keys())[0] + Digitizer],
+            [am.StatusDict[0], am.StatusDict[7]],
+        )
+        conversion2 = pf.ORFunc(
+            [list(am.ProcessDict[11].keys())[0] + Digitizer,
+             list(am.ProcessDict[1].keys())[0] + Digitizer],
+            [am.StatusDict[0], am.StatusDict[7]],
+        )
+        tracking = pf.ORFunc(
+            [list(am.ProcessDict[0].keys())[0], list(am.ProcessDict[0].keys())[0]],
+            [am.StatusDict[0], am.StatusDict[7]],
+        )
+        timingdaq1 = pf.ORFunc(
+            [list(am.ProcessDict[2].keys())[0] + Digitizer,
+             list(am.ProcessDict[1].keys())[0] + Digitizer],
+            [am.StatusDict[0], am.StatusDict[7]],
+        )
+        timingdaq2 = pf.ORFunc(
+            [list(am.ProcessDict[12].keys())[0] + Digitizer,
+             list(am.ProcessDict[1].keys())[0] + Digitizer],
+            [am.StatusDict[0], am.StatusDict[7]],
+        )
+        merge = pf.ORFunc([ProcessName, ProcessName],[am.StatusDict[3], am.StatusDict[5]]) ## merge not started or on retry
+        if Digitizer == am.DigitizerDict[6]:
+            FilterByFormula = (
+                "AND(" + xrdcp1 + "," + xrdcp2 + "," + conversion1 + "," +
+                conversion2 + "," + timingdaq1 + "," + timingdaq2 + "," + merge
+            )
+            if DoTracking:
+                FilterByFormula = FilterByFormula + "," + tracking
+            FilterByFormula = FilterByFormula + ")"
+
+        headers = {"Authorization": "Bearer %s" % MyKey}
+        if pf.QueryGreenSignal(True):
+            response = am.requests.get(
+                am.CurlBaseCommand + "?filterByFormula=" + FilterByFormula,
+                headers=headers,
+            )
+        ResponseDict = am.ast.literal_eval(response.text)
+        if Debug:
+            return ResponseDict, FilterByFormula
+        for i in ResponseDict["records"]:
+            RunList.append(i["fields"][am.QueryFieldsDict[0]])
+            FieldIDList.append(i["id"])
+    else:
+        RunList.append(RunNumber)
+        FieldIDList.append(
+            pf.GetFieldID(am.QueryFieldsDict[0], RunNumber, False, MyKey)
+        )
+
+    print("MergeRuns wants to reco these runs:")
+    print(RunList)
+    print(FieldIDList)
+    return RunList, FieldIDList
+
+
 def TimingDAQRuns(RunNumber, DoTracking, Digitizer, MyKey, Debug, condor=False, ScopeNum = 1):  
     RunNumber = RunNumber
     DoTracking = DoTracking
