@@ -206,9 +206,11 @@ TwoStageRecoDigitizers = {
                                            #'RawConversionLocalPath' : '/home/daq/LecroyMount/',
                                            'RawConversionLocalPath1' : '/home/snspd/LecroyMount1/',
                                            'RawConversionLocalPath2' : '/home/snspd/LecroyMount2/',
-                                           'RawTimingDAQLocalPath1'  : '%sLecroyScope/RecoData/ConversionRECO/Scope1'  % (BaseTestbeamDir),
-                                           'RawTimingDAQLocalPath2'  : '%sLecroyScope/RecoData/ConversionRECO/Scope2'  % (BaseTestbeamDir),
+                                           'RawTimingDAQLocalPath1'  : '%sLecroyScope/RecoData/ConversionRECO/Scope1/'  % (BaseTestbeamDir),
+                                           'RawTimingDAQLocalPath2'  : '%sLecroyScope/RecoData/ConversionRECO/Scope2/'  % (BaseTestbeamDir),
                                            'RecoTimingDAQLocalPath' : '%sLecroyScope/RecoData/TimingDAQRECO/' % (BaseTestbeamDir),
+                                           'RecoTimingDAQLocalPath1' : '%sLecroyScope/RecoData/TimingDAQRECO/Scope1/' % (BaseTestbeamDir),
+                                           'RecoTimingDAQLocalPath2' : '%sLecroyScope/RecoData/TimingDAQRECO/Scope2/' % (BaseTestbeamDir),
                                            'RecoTimingDAQFastLocalPath' : '%sLecroyScope/RecoData/TimingDAQFastRECO/' % (BaseTestbeamDir),
                                            'RawTimingDAQFileNameFormat' : 'converted_run', ##### run_scope<run>.root 
                                            'FinalFileNameFormat' : 'run',
@@ -278,6 +280,8 @@ ProcessDict = {
                     9 : {'TimingDAQFast' : {'SizeCut' : 20000}},
                     10 : {'xrdcpRaw2' : {'SizeCut' : 20000}},
                     11 : {'Conversion2' : {'SizeCut' : 20}},
+                    12 : {'TimingDAQ2' : {'SizeCut' : 20000}},
+                    13 : {'Merge' : {'SizeCut' : 20000}},
                 }
 StatusDict = {
                     0 : 'Complete',

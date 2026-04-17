@@ -43,21 +43,20 @@ def xrdcpRawCMDs(RunNumber, SaveWaveformBool, Version, DoTracking, Digitizer, My
     else:
         return None,None,None,None 
 
-def ConversionCMDs(RunNumber, Digitizer, MyKey, Debug, condor):
+def ConversionCMDs(RunNumber, Digitizer, MyKey, Debug, condor, ScopeNum):
     MyKey = MyKey
     RunNumber = RunNumber
     Digitizer = Digitizer
 
-    RunList, FieldIDList = pr.ConversionRuns(RunNumber, Digitizer, MyKey, False,condor)
+    RunList, FieldIDList = pr.ConversionRuns(RunNumber, Digitizer, MyKey, False,condor, ScopeNum)
     ConversionCMDList = []
     ResultFileLocationList = []
-
+    print("in conversion")
+    print(RunList)
     if RunList != None:
-        
         for run in RunList: 
-
-            ConversionCMDList.append(am.TwoStageRecoDigitizers[Digitizer]['ConversionCMD'] + str(run))
-            ResultFileLocationList.append(am.TwoStageRecoDigitizers[Digitizer]['RawTimingDAQLocalPath'] + am.TwoStageRecoDigitizers[Digitizer]['RawTimingDAQFileNameFormat'] + str(run) + '.root')
+            ConversionCMDList.append(am.TwoStageRecoDigitizers[Digitizer]['ConversionCMD'] + f"{run} {ScopeNum}")
+            ResultFileLocationList.append(am.TwoStageRecoDigitizers[Digitizer][f'RawTimingDAQLocalPath{ScopeNum}'] + am.TwoStageRecoDigitizers[Digitizer]['RawTimingDAQFileNameFormat'] + str(run) + '.root')
         return ConversionCMDList, ResultFileLocationList, RunList, FieldIDList
 
     else:
@@ -65,13 +64,13 @@ def ConversionCMDs(RunNumber, Digitizer, MyKey, Debug, condor):
 
 
 
-def TimingDAQCMDs(RunNumber, SaveWaveformBool, Version, DoTracking, Digitizer, MyKey, Debug, condor=False):
+def TimingDAQCMDs(RunNumber, SaveWaveformBool, Version, DoTracking, Digitizer, MyKey, Debug, condor=False, ScopeNum = 1):
     DoTracking = DoTracking 
     MyKey = MyKey
     Digitizer = Digitizer
     RunNumber = RunNumber
 
-    RunList, FieldIDList = pr.TimingDAQRuns(RunNumber, DoTracking, Digitizer, MyKey, False, condor)
+    RunList, FieldIDList = pr.TimingDAQRuns(RunNumber, DoTracking, Digitizer, MyKey, False, condor, ScopeNum)
     DatToRootCMDList = []
     ResultFileLocationList = []
     RunsNotPresent = []
@@ -92,8 +91,8 @@ def TimingDAQCMDs(RunNumber, SaveWaveformBool, Version, DoTracking, Digitizer, M
                 DatToROOTExec = am.OneStageRecoDigitizers[Digitizer]['DatToROOTExec']
                 ResultTrackFileNameAfterRunNumber = am.ResultTrackFileNameAfterRunNumberSlow
             else:
-                RecoBaseLocalPath = am.TwoStageRecoDigitizers[Digitizer]['RecoTimingDAQLocalPath']
-                RawBaseLocalPath = am.TwoStageRecoDigitizers[Digitizer]['RawTimingDAQLocalPath']
+                RecoBaseLocalPath = am.TwoStageRecoDigitizers[Digitizer][f'RecoTimingDAQLocalPath']
+                RawBaseLocalPath = am.TwoStageRecoDigitizers[Digitizer][f'RawTimingDAQLocalPath{ScopeNum}']
                 ConfigFilePath = am.TwoStageRecoDigitizers[Digitizer]['ConfigFileBasePath'] + '%s.config' % Version
                 DatToROOTExec = am.TwoStageRecoDigitizers[Digitizer]['DatToROOTExec']
                 ResultTrackFileNameAfterRunNumber = am.ResultTrackFileNameAfterRunNumberFast
@@ -103,7 +102,7 @@ def TimingDAQCMDs(RunNumber, SaveWaveformBool, Version, DoTracking, Digitizer, M
             else:
                 RecoBaseLocalPath = RecoBaseLocalPath + 'RecoWithTracks/'
 
-            RecoBaseLocalPath = RecoBaseLocalPath + Version + '/'
+            RecoBaseLocalPath = RecoBaseLocalPath + Version + f'/Scope{ScopeNum}/'
 
             if not am.os.path.exists(RecoBaseLocalPath): am.os.system('mkdir -p %s' % RecoBaseLocalPath)
             if Digitizer == am.DigitizerDict[0] or Digitizer == am.DigitizerDict[1]:
@@ -148,6 +147,59 @@ def TimingDAQCMDs(RunNumber, SaveWaveformBool, Version, DoTracking, Digitizer, M
     else:
         return None,None,None,None   
 
+def MergeCMDs(RunNumber, SaveWaveformBool, Version, DoTracking, Digitizer, MyKey, Debug, condor=False):
+    DoTracking = DoTracking 
+    MyKey = MyKey
+    Digitizer = Digitizer
+    RunNumber = RunNumber
+
+    RunList, FieldIDList = pr.MergeRuns(RunNumber, DoTracking, Digitizer, MyKey, False, condor)
+    DatToRootCMDList = []
+    ResultFileLocationList = []
+    RunsNotPresent = []
+
+    if RunList != None:
+
+        for run in RunList: 
+            print(run)
+            RecoLocalPath = None
+            RunNotPresent = False
+            RawLocalPath = None
+            Index = RunList.index(run)
+
+            if Digitizer == am.DigitizerDict[6]: 
+                RecoBaseLocalPath = am.TwoStageRecoDigitizers[Digitizer][f'RecoTimingDAQLocalPath']
+                RawBaseLocalPath = am.TwoStageRecoDigitizers[Digitizer][f'RawTimingDAQLocalPath1']
+                ConfigFilePath = am.TwoStageRecoDigitizers[Digitizer]['ConfigFileBasePath'] + '%s.config' % Version
+                DatToROOTExec = am.TwoStageRecoDigitizers[Digitizer]['DatToROOTExec']
+                ResultTrackFileNameAfterRunNumber = am.ResultTrackFileNameAfterRunNumberFast
+
+            if not DoTracking: 
+                RecoBaseLocalPath = RecoBaseLocalPath + 'RecoWithoutTracks/'
+            else:
+                RecoBaseLocalPath = RecoBaseLocalPath + 'RecoWithTracks/'
+
+            RecoBaseLocalPath = RecoBaseLocalPath + Version + f'/Merge/'
+
+            if not am.os.path.exists(RecoBaseLocalPath): am.os.system('mkdir -p %s' % RecoBaseLocalPath)
+            RawLocalPath =  RawBaseLocalPath + am.TwoStageRecoDigitizers[Digitizer]['RawTimingDAQFileNameFormat'] + str(run) + '.root'                                      
+            RecoLocalPath = RecoBaseLocalPath + '/' + am.TwoStageRecoDigitizers[Digitizer]['FinalFileNameFormat']+ str(run) + '.root' 
+
+            if not RunNotPresent:
+                ResultFileLocationList.append(RecoLocalPath)
+                DatToRootCMD = './' + DatToROOTExec + ' --config_file=' + ConfigFilePath + ' --input_file=' + RawLocalPath + ' --output_file=' + RecoLocalPath
+                DatToRootCMDList.append(DatToRootCMD)
+
+        #Remove the runs which were not present
+        for run in RunsNotPresent:
+            print(('Run %d not present in the raw files' % run))
+            del FieldIDList[RunList.index(run)]
+            RunList.remove(run)
+
+        return DatToRootCMDList, ResultFileLocationList, RunList, FieldIDList
+
+    else:
+        return None,None,None,None   
 def RecoTOFHIRCMDs(RunNumber, Version, doScope, Digitizer, MyKey):
     
     #MyKey = MyKey

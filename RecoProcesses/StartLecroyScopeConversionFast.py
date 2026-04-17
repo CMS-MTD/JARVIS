@@ -17,7 +17,7 @@ print("\n##############################")
 print("## Starting Data processing ##")
 print("##############################\n")
 
-ProcessExec(ExecutionOrder,PID, SaveWaveForms, ConfigVersion,-1,DigitizerKey,key,GetRunListEachTime,False)
+ProcessExec(ExecutionOrder,PID, SaveWaveForms, ConfigVersion,-1,DigitizerKey,key,GetRunListEachTime,False, ScopeNum = 1)
 
 print("\n##############################")
 print("## Completed Data processing ##")

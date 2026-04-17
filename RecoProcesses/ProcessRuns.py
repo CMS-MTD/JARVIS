@@ -28,20 +28,24 @@ def TrackingRuns(RunNumber, MyKey, Debug):
 
     return RunList, FieldIDList 
 
-def ConversionRuns(RunNumber, Digitizer, MyKey, Debug, condor):
+def ConversionRuns(RunNumber, Digitizer, MyKey, Debug, condor, ScopeNum):
     RunList = []                                                                                                                                                                                                                                                                         
     FieldIDList = []   
     MyKey = MyKey
     if RunNumber == -1:                                                                                                                                                                                                                                                                  
 
-        ProcessName = list(am.ProcessDict[1].keys())[0] + Digitizer
         #if not condor: 
         #    FilterByFormula = pf.ORFunc([ProcessName, ProcessName],[am.StatusDict[3], am.StatusDict[5]])                                                                 
         #else:   
         #    OR1 = pf.ORFunc([list(am.ProcessDict[6].keys())[0] + Digitizer],[am.StatusDict[0]]) ## xrd raw files is complete
         #    OR2 = pf.ORFunc([ProcessName, ProcessName],[am.StatusDict[3], am.StatusDict[5]]) ## conversion not started or on retry
         #    FilterByFormula = 'AND(' + OR1 + ',' + OR2 + ')'
-        OR1 = pf.ORFunc([list(am.ProcessDict[6].keys())[0] + Digitizer],[am.StatusDict[0]]) ## xrd raw files is complete
+        if ScopeNum == 1: 
+            ProcessName = list(am.ProcessDict[1].keys())[0] + Digitizer
+            OR1 = pf.ORFunc([list(am.ProcessDict[6].keys())[0] + Digitizer],[am.StatusDict[0]]) ## xrd raw files is complete
+        else: 
+            ProcessName = list(am.ProcessDict[11].keys())[0] + Digitizer
+            OR1 = pf.ORFunc([list(am.ProcessDict[10].keys())[0] + Digitizer],[am.StatusDict[0]]) ## xrd 2 raw files is complete
         OR2 = pf.ORFunc([ProcessName, ProcessName],[am.StatusDict[3], am.StatusDict[5]]) ## conversion not started or on retry
         FilterByFormula = 'AND(' + OR1 + ',' + OR2 + ')'
             
@@ -49,15 +53,15 @@ def ConversionRuns(RunNumber, Digitizer, MyKey, Debug, condor):
         if pf.QueryGreenSignal(True): response = am.requests.get(am.CurlBaseCommand  + '?filterByFormula=' + FilterByFormula, headers=headers)                                                                                                                                                                                
         ResponseDict = am.ast.literal_eval(response.text)                                                                                                                                                                                                                                       
         if Debug: return ResponseDict, FilterByFormula
-
-        for i in ResponseDict["records"]:                                                                                                                                                                                                                                                    
-            RunList.append(i['fields'][am.QueryFieldsDict[0]])                                                                                                                                                                                                                                        
-            FieldIDList.append(i['id'])                                                                                                                                                                                                                                                      
+ 
+        for i in ResponseDict["records"]:
+            RunList.append(i['fields'][am.QueryFieldsDict[0]])
+            FieldIDList.append(i['id'])
     else:
-        RunList.append(RunNumber)
-        FieldIDList.append(pf.GetFieldID(am.QueryFieldsDict[0], RunNumber, False, MyKey))
-
-    return RunList, FieldIDList      
+         RunList.append(RunNumber)
+         FieldIDList.append(pf.GetFieldID(am.QueryFieldsDict[0], RunNumber, False, MyKey))
+ 
+    return RunList, FieldIDList     
 
 def LabviewRuns(RunNumber, Digitizer, MyKey, Debug):
     RunList = []                                                                                                                                                                                                                                                                         
@@ -84,7 +88,78 @@ def LabviewRuns(RunNumber, Digitizer, MyKey, Debug):
 
     return RunList, FieldIDList                                                                                                                                                                                                               
 
-def TimingDAQRuns(RunNumber, DoTracking, Digitizer, MyKey, Debug, condor=False):  
+def MergeRuns(RunNumber, DoTracking, Digitizer, MyKey, Debug, condor):
+    RunNumber = RunNumber
+    DoTracking = DoTracking
+    Digitizer = Digitizer
+    RunList = []
+    FieldIDList = []
+    DigitizerList = []
+    MyKey = MyKey
+    ProcessName = list(am.ProcessDict[13].keys())[0] + Digitizer
+
+    if RunNumber == -1:
+        xrdcp1 = pf.ORFunc([list(am.ProcessDict[6].keys())[0] + Digitizer], [am.StatusDict[0]])
+        xrdcp2 = pf.ORFunc([list(am.ProcessDict[10].keys())[0] + Digitizer], [am.StatusDict[0]])
+        conversion1 = pf.ORFunc(
+            [list(am.ProcessDict[1].keys())[0] + Digitizer,
+             list(am.ProcessDict[1].keys())[0] + Digitizer],
+            [am.StatusDict[0], am.StatusDict[7]],
+        )
+        conversion2 = pf.ORFunc(
+            [list(am.ProcessDict[11].keys())[0] + Digitizer,
+             list(am.ProcessDict[1].keys())[0] + Digitizer],
+            [am.StatusDict[0], am.StatusDict[7]],
+        )
+        tracking = pf.ORFunc(
+            [list(am.ProcessDict[0].keys())[0], list(am.ProcessDict[0].keys())[0]],
+            [am.StatusDict[0], am.StatusDict[7]],
+        )
+        timingdaq1 = pf.ORFunc(
+            [list(am.ProcessDict[2].keys())[0] + Digitizer,
+             list(am.ProcessDict[1].keys())[0] + Digitizer],
+            [am.StatusDict[0], am.StatusDict[7]],
+        )
+        timingdaq2 = pf.ORFunc(
+            [list(am.ProcessDict[12].keys())[0] + Digitizer,
+             list(am.ProcessDict[1].keys())[0] + Digitizer],
+            [am.StatusDict[0], am.StatusDict[7]],
+        )
+        merge = pf.ORFunc([ProcessName, ProcessName],[am.StatusDict[3], am.StatusDict[5]]) ## merge not started or on retry
+        if Digitizer == am.DigitizerDict[6]:
+            FilterByFormula = (
+                "AND(" + xrdcp1 + "," + xrdcp2 + "," + conversion1 + "," +
+                conversion2 + "," + timingdaq1 + "," + timingdaq2 + "," + merge
+            )
+            if DoTracking:
+                FilterByFormula = FilterByFormula + "," + tracking
+            FilterByFormula = FilterByFormula + ")"
+
+        headers = {"Authorization": "Bearer %s" % MyKey}
+        if pf.QueryGreenSignal(True):
+            response = am.requests.get(
+                am.CurlBaseCommand + "?filterByFormula=" + FilterByFormula,
+                headers=headers,
+            )
+        ResponseDict = am.ast.literal_eval(response.text)
+        if Debug:
+            return ResponseDict, FilterByFormula
+        for i in ResponseDict["records"]:
+            RunList.append(i["fields"][am.QueryFieldsDict[0]])
+            FieldIDList.append(i["id"])
+    else:
+        RunList.append(RunNumber)
+        FieldIDList.append(
+            pf.GetFieldID(am.QueryFieldsDict[0], RunNumber, False, MyKey)
+        )
+
+    print("MergeRuns wants to reco these runs:")
+    print(RunList)
+    print(FieldIDList)
+    return RunList, FieldIDList
+
+
+def TimingDAQRuns(RunNumber, DoTracking, Digitizer, MyKey, Debug, condor=False, ScopeNum = 1):  
     RunNumber = RunNumber
     DoTracking = DoTracking
     Digitizer = Digitizer                                                                                                                                                                                                                                           
@@ -94,16 +169,23 @@ def TimingDAQRuns(RunNumber, DoTracking, Digitizer, MyKey, Debug, condor=False):
     MyKey = MyKey                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
 
     if DoTracking: 
-        ProcessName = list(am.ProcessDict[2].keys())[0] + Digitizer
+        if ScopeNum == 1:ProcessName = list(am.ProcessDict[2].keys())[0] + Digitizer
+        else:ProcessName = list(am.ProcessDict[12].keys())[0] + Digitizer
     else:
         ProcessName = list(am.ProcessDict[3].keys())[0] + Digitizer
 
     if RunNumber == -1:            
-        OR1 = pf.ORFunc([list(am.ProcessDict[1].keys())[0] + Digitizer, list(am.ProcessDict[1].keys())[0] + Digitizer],[am.StatusDict[0], am.StatusDict[7]])                                                                 
-        OR2 = pf.ORFunc([list(am.ProcessDict[0].keys())[0],list(am.ProcessDict[0].keys())[0]],[am.StatusDict[0], am.StatusDict[7]])                                                                                                                                                              
-        OR3 = pf.ORFunc([ProcessName, ProcessName],[am.StatusDict[3], am.StatusDict[5]])
-        OR4 = pf.ORFunc([list(am.ProcessDict[3].keys())[0] + Digitizer],[am.StatusDict[0]])                                                                                                                                                                                                  
-        xrdcpDone = pf.ORFunc([list(am.ProcessDict[6].keys())[0] + Digitizer],[am.StatusDict[0]])                                                                                                                                                                                                  
+        if ScopeNum == 1:
+            xrdcpDone = pf.ORFunc([list(am.ProcessDict[6].keys())[0] + Digitizer],[am.StatusDict[0]]) 
+            OR1 = pf.ORFunc([list(am.ProcessDict[1].keys())[0] + Digitizer, list(am.ProcessDict[1].keys())[0] + Digitizer],[am.StatusDict[0], am.StatusDict[7]])
+        else:
+            xrdcpDone = pf.ORFunc([list(am.ProcessDict[10].keys())[0] + Digitizer],[am.StatusDict[0]]) 
+            OR1 = pf.ORFunc([list(am.ProcessDict[11].keys())[0] + Digitizer, list(am.ProcessDict[1].keys())[0] + Digitizer],[am.StatusDict[0], am.StatusDict[7]])
+
+
+        OR2 = pf.ORFunc([list(am.ProcessDict[0].keys())[0],list(am.ProcessDict[0].keys())[0]],[am.StatusDict[0], am.StatusDict[7]])  #tracking
+        OR3 = pf.ORFunc([ProcessName, ProcessName],[am.StatusDict[3], am.StatusDict[5]]) # current progress not started
+        OR4 = pf.ORFunc([list(am.ProcessDict[3].keys())[0] + Digitizer],[am.StatusDict[0]]) #TimingDAQ without tracking
         AND1 = pf.ANDFunc([list(am.ProcessDict[0].keys())[0], ProcessName],[am.StatusDict[0], am.StatusDict[3]])
         if Digitizer == am.DigitizerDict[0] or Digitizer == am.DigitizerDict[1] or Digitizer == am.DigitizerDict[5]:
             if DoTracking and not Digitizer == am.DigitizerDict[5]: 
@@ -319,3 +401,4 @@ def ConversionRunsMoreQueries():
     FieldIDList = list(set(FieldID1).union(FieldID2))
     
     return RunList, FieldIDList
+

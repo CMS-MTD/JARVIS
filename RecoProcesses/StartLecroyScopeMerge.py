@@ -2,7 +2,7 @@ from ProcessExec import *
 import ProcessRuns as pr
 
 ExecutionOrder = 0 #This is descending Run number order, Refer to the dictionary in all modules
-PID = 2 #9 means TimingdaqFast, without reunning on conor, Refer to the dictionary in all modules
+PID = 13 #13 means merge
 GetRunListEachTime = True 
 
 ############ Doesn't matter for tracking ###########
