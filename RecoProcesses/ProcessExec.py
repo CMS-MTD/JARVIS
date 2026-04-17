@@ -383,7 +383,7 @@ def ProcessExec(OrderOfExecution, PID, SaveWaveformBool = None, Version = None, 
 						## add to list of processes to check on
 						## loop over list of runs to check on, grep condor logs to tell when complete, then proceed with checks.
 					am.time.sleep(1)
-				elif PID == 6:
+				elif PID == 6 or PID == 10:
 					## copy raw scope files
 					if pf.QueryGreenSignal(True): pf.UpdateAttributeStatus(str(FieldID), ProcessName, am.StatusDict[1], False, MyKey)
 					#am.time.sleep(60) ## allow scope to save at least first channel 

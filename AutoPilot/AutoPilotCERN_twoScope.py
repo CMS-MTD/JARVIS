@@ -213,7 +213,7 @@ while (AutoPilotStatus == 1 and iteration < maxRuns):
 			print("Lecroy Scope has started.")
 		else:			
 			print("Lecroy Scope still busy. Sleep for 5 seconds\n")
-			sleep(5)
+			time.sleep(5)
 			continue
 	
 	### Preparing to start run
