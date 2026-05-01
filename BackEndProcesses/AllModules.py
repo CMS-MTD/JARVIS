@@ -96,8 +96,11 @@ ResultTrackFileNameAfterRunNumber = '_CMSTiming_converted.root'
 ResultTrackFileNameAfterRunNumberSlow = '_CMSTiming_SlowTriggerStream_converted.root'
 ResultTrackFileNameAfterRunNumberFast = '_CMSTiming_FastTriggerStream_converted.root'
 
-RulinuxSSH = 'christiw@cmslpc-el9.fnal.gov'#'otsdaq@rulinux04.dhcp.fnal.gov'
+### only for testing, comment out at CERN ###
+RulinuxSSH = 'christiw@cmslpc-el9.fnal.gov'
 BaseTrackDirRulinux = '/uscms/home/christiw/nobackup/testbeam/test/'
+#################################################
+
 #TelescopeSSH = "-J christiw@lxplus.cern.ch aidarc"
 #TelescopeBinary="/home/telescope/snspd/data/"
 TelescopeBinaryLPCPath="%s/Tracks/RawData/" % (eosBaseDir)

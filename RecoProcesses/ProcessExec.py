@@ -170,7 +170,7 @@ def ProcessExec(OrderOfExecution, PID, SaveWaveformBool = None, Version = None, 
 							return False
 						print(username)
 
-						cmd = ["cd %s && ./%s %s" % (am.CorryvreckanPath, am.CorryvreckanScript, run)]
+						cmd = ["cd %s && ./%s %s %s" % (am.CorryvreckanPath, am.CorryvreckanScript, run, Version)]
 						print(cmd)
 						session = am.subprocess.Popen(["ssh", "%s@cmslpc-el9.fnal.gov" % username, " ".join(cmd)],stdout=am.subprocess.PIPE,stderr=am.subprocess.STDOUT, universal_newlines = True)
 						while True:
