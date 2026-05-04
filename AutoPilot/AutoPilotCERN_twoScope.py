@@ -65,7 +65,6 @@ key = GetKey()
 ############ Getting the digitizer list from the configuration table #############
 DigitizerList = pf.GetDigiFromConfig(Configuration, False, key)
 
-print(DigitizerList)
 
 not_applicable = ['N/A']
 not_started = ['Not started']
@@ -172,23 +171,20 @@ AutoPilotStatus = 1
 iteration = 0
 while (AutoPilotStatus == 1 and iteration < maxRuns):
 
-
-
-
     ## Refresh this in case a digitizer was removed last run.
     DigitizerList = pf.GetDigiFromConfig(Configuration, False, key)
     
     print(("Next Run %i " % (RunNumber)))
-    print("")
+    print("Trying to connect to telsecope")
     if IsTelescope:
         try:
-            with socket.create_connection((TELESCOPE_HOST, TELESCOPE_PORT), timeout=3) as s:
+            with socket.create_connection((TELESCOPE_HOST, TELESCOPE_PORT), timeout=10) as s:
                 s.sendall(f"start {RunNumber}\n".encode())
                 response = s.recv(1024).decode().strip()
-                print("Received:", response)
+                print("Telescope connected, Received:", response)
 
         except OSError:
-            print("Connection failed")
+            print("Telescope Connection failed")
             sys.exit(1)
         
         parts = response.split()
@@ -321,6 +317,7 @@ while (AutoPilotStatus == 1 and iteration < maxRuns):
         print(("Waiting for TClock stop time (%0.1f)"%StopSeconds))
         wait_until(StopSeconds)
     if IsTelescope:
+        print("")
         print("Stopping telescope")
         try:
             with socket.create_connection((TELESCOPE_HOST, TELESCOPE_PORT), timeout=3) as s:
@@ -329,7 +326,7 @@ while (AutoPilotStatus == 1 and iteration < maxRuns):
     
                 # Receive response
                 response = s.recv(1024).decode().strip()
-                print("Received:", response)
+                print("Received response from telescope:", response)
     
         except OSError:
             print("Connection failed")
@@ -343,13 +340,14 @@ while (AutoPilotStatus == 1 and iteration < maxRuns):
                     returned_value = int(parts[3])
                     expected_value = RunNumber + 1
     
-                    if returned_value == expected_value: print("Success: next_run value is correct")
+                    if returned_value == expected_value: 
+                        print("Stop telescope success: next_run value is correct")
                     else:print(f"Value mismatch: expected {expected_value}, got {returned_value}")
     
             except ValueError:
                     print("Invalid number in response")
-            else:
-                print("Unexpected response format")
+        else:
+            print("Unexpected response format from telescope")
 
     tclock_finished=time.time()
 
@@ -369,7 +367,6 @@ while (AutoPilotStatus == 1 and iteration < maxRuns):
         
         ETLTimestamp = (datetime.now() - datetime.strptime("2000-01-01 00:00:00", "%Y-%m-%d %H:%M:%S")).total_seconds() #- 3600 ### For daylight saving time 
         print('Getting ETL environmental data')
-        # Temp13ETL, Temp14ETL, Temp15ETL, Temp16ETL, Temp17ETL, Temp18ETL, Temp19ETL, Temp20ETL, LowVoltage1ETL, Current1ETL, LowVoltage2ETL, Current2ETL, LowVoltage3ETL, Current3ETL = gt.ConvertEnv(ETLTimestamp)
     
         ##### These fields are uploaded to AirTable. The field names and types must match exactly the names in the table. 
         this_run_info["Run number"]=RunNumber
@@ -383,7 +380,7 @@ while (AutoPilotStatus == 1 and iteration < maxRuns):
     
         this_run_info["Digitizer"]=DigiListThisRun
     
-        pf.NewRunRecordSimple(this_run_info,ConfigID, False, key)
+        pf.NewRunRecordSimple(this_run_info,ConfigID, False, key) #Debug, key
         
     
         ##### These fields are NOT added to airtable, but saved for post processing

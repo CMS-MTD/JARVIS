@@ -265,7 +265,7 @@ def GetDigiFromConfig(ConfigurationNumber, Debug, MyKey):
     response = am.requests.get(CurlBaseCommand  + '?filterByFormula=' + FilterByFormula, headers=headers)
     ResponseDict = am.ast.literal_eval(response.text)
     if Debug: return ResponseDict, FilterByFormula
-    print(ResponseDict)
+    if Debug: print(ResponseDict)
     ListOfFields = list(ResponseDict["records"][0]['fields'].keys())
     for k , Digitizer in list(am.DigitizerDict.items()):
          if any(Digitizer in fields for fields in ListOfFields):
@@ -431,8 +431,8 @@ def NewRunRecordSimple(run_info,ConfigID,Debug,MyKey):
 
     response = am.requests.post(am.CurlBaseCommand, headers=header_info, data=string_run_info)
     ResponseDict = am.ast.literal_eval(response.text)
-    print(string_run_info)
-    print(ResponseDict)
+    if Debug: print(string_run_info)
+    if Debug: print(ResponseDict)
     if Debug: return ResponseDict, run_info
 
 

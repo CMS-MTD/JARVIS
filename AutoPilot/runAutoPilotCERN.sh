@@ -1,4 +1,4 @@
-IncludeTelescope=0
+IncludeTelescope=1
 
 
 python3 AutoPilotCERN_twoScope.py -scope2 1 -it $IncludeTelescope -conf $1 -nruns $2
