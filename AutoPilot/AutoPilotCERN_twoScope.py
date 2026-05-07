@@ -21,7 +21,7 @@ import json as js
 parser = argparse.ArgumentParser(description='Information for running the AutoPilot program. /n /n General Instructions: Start OTSDAQ and Configure by hand. If using OTSDAQ make sure the start and stop seconds in the beginning of the program are hard coded correctly. /n Make sure to add sensor and configuration after each controlled access and pass it as an argument to this script. /n/n /n TekScope Specific Instructions: /n Make sure you hard code the dpo_fastframe path. /n If using the OTSDAQ with TekScope make sure the Use_otsdaq boolean is True in dpo_fastframe script. /n Make Sure you pass all four Scope trigger and channel settings. /n /n Other Digitizer Specific Instructions: /n If not running the TekScope make sure that the run file name in TCP_com is correct.')
 parser.add_argument('-de', '--Debug', type=int, default = 0, required=False)
 parser.add_argument('-it', '--IsTelescope', type=int,default=0, help = 'Give 1 if using the telescope',required=False)
-parser.add_argument('-scope2', '--EnableScope2', type=int,default=0, help = 'Give 1 if enabling scope2',required=False)
+#parser.add_argument('-scope2', '--EnableScope2', type=int,default=0, help = 'Give 1 if enabling scope2',required=False)
 parser.add_argument('-conf', '--Configuration', type=int, help = 'Make sure to add the configuration in the run table. Give COnfiguration S/N from the run table',required=True)
 parser.add_argument('-run', '--RunNumber', type=int, help = '',required=False)
 parser.add_argument('-nruns', '--maxIterations', nargs="?", type=int,default=1, help = 'Number of runs to take',required=False)
@@ -29,7 +29,7 @@ parser.add_argument('-nruns', '--maxIterations', nargs="?", type=int,default=1, 
 args = parser.parse_args()
 Debug = args.Debug
 IsTelescope = args.IsTelescope
-EnableScope2 = args.EnableScope2
+#EnableScope2 = args.EnableScope2
 #RunNumber = args.RunNumber
 Configuration = args.Configuration
 if args.maxIterations is not None: maxRuns = int(args.maxIterations)
@@ -94,7 +94,9 @@ default_run_info["TimingDAQVME"] = not_applicable
 default_run_info["xrdcpRawTOFHIR"] = not_applicable
 default_run_info["BTLRecoTOFHIR"] = not_applicable
 default_run_info["BTLRecoNoScopeTOFHIR"] = not_applicable
-
+with open(f"{BaseTestbeamDir}/JARVIS/AutoPilot/scope_config.json") as f:
+    config = js.load(f)
+EnableScope2 = config["enable_slave"]
 
 ############ Initialize progress fields on run table ################
 if IsTelescope: default_run_info["Tracking"] = not_started
@@ -141,8 +143,12 @@ print("*********************************************************************")
 print("")
 print(("Using Configuration : ", Configuration))
 
+print("")
+if EnableScope2: print("Slave scope Included")
+else: print("Slave scope Not Included")
 if IsTelescope:
     print("Tracking Telescope Included")
+else: print("Telescope Not Included")
 if IncludesKeySightScope:
     print("Keysight Scope readout Included")
 if IncludesLecroyScope:
@@ -175,8 +181,8 @@ while (AutoPilotStatus == 1 and iteration < maxRuns):
     DigitizerList = pf.GetDigiFromConfig(Configuration, False, key)
     
     print(("Next Run %i " % (RunNumber)))
-    print("Trying to connect to telsecope")
     if IsTelescope:
+        print("Trying to connect to telsecope")
         try:
             with socket.create_connection((TELESCOPE_HOST, TELESCOPE_PORT), timeout=10) as s:
                 s.sendall(f"start {RunNumber}\n".encode())
