@@ -107,7 +107,7 @@ def DownloadRuntable(Debug,MyKey):
     return RunTableDict
 
 
-def DownloadConfigs(Debug, MyKey):
+def DownloadConfigs(Debug, MyKey, scope2=False):
     headers = {'Authorization': 'Bearer %s' % MyKey, }
     
     ConfigResponse = am.requests.get(am.CurlBaseCommandConfig, headers=headers)
@@ -116,6 +116,11 @@ def DownloadConfigs(Debug, MyKey):
     LecroyResponse = am.requests.get(am.CurlBaseCommandLecroy, headers=headers)
     LecroyDict = am.ast.literal_eval(LecroyResponse.text)
 
+    if scope2:
+        Lecroy2Response = am.requests.get(am.CurlBaseCommandLecroy2, headers=headers)
+        Lecroy2Dict = am.ast.literal_eval(Lecroy2Response.text)
+    else:
+        Lecroy2Dict = {}
     KeySightResponse = am.requests.get(am.CurlBaseCommandKeySight, headers=headers)
     KeySightDict = am.ast.literal_eval(KeySightResponse.text)
     if Debug: print((KeySightResponse.text))
@@ -140,6 +145,12 @@ def DownloadConfigs(Debug, MyKey):
     js.dump(LecroyDict, lfile)
     lfile.close()
 
+    if scope2:
+        Lecroy2DictFileName = am.LocalConfigPath+"Lecroy2Configurations.txt"
+        lfile = open(Lecroy2DictFileName, "w")
+        js.dump(Lecroy2Dict, lfile)
+        lfile.close()
+    
     KeySightDictFileName = am.LocalConfigPath+"KeySightConfigurations.txt"
     kfile = open(KeySightDictFileName, "w")
     js.dump(KeySightDict, kfile)
@@ -160,19 +171,21 @@ def DownloadConfigs(Debug, MyKey):
     js.dump(SensorDict, sensorfile)
     sensorfile.close()
 
-    return ConfigDict, LecroyDict,KeySightDict, TOFHIRDict,CAENDict,SensorDict
+    return ConfigDict, LecroyDict, Lecroy2Dict, KeySightDict, TOFHIRDict,CAENDict,SensorDict
 
 def getSensorById(SensorDict,idnum):
     for item in SensorDict['records']: 
         if item['id']==idnum:
             return item['fields']['Name no commas allowed']
 
-def getConfigsByGConf(ConfigDict,gconf):
+def getConfigsByGConf(ConfigDict,gconf,scope2=False):
     for item in ConfigDict['records']:
         if item['fields']['Configuration number']==gconf:
             lecroyConfID = item['fields']['ConfigurationLecroyScope'][0]
-            caenConfID = item['fields']['ConfigurationCAENHV'][0]
-            return lecroyConfID,caenConfID
+            if scope2:lecroy2ConfID = item['fields']['ConfigurationLecroyScope2'][0]
+            else: lecroy2ConfID = None
+            caenConfID = item['fields']['ConfigurationCAENHV'][0] 
+            return lecroyConfID,lecroy2ConfID,caenConfID
 
 def getConfigsByGConfTOFHIR(ConfigDict,gconf):
     for item in ConfigDict['records']:
@@ -180,7 +193,19 @@ def getConfigsByGConfTOFHIR(ConfigDict,gconf):
             tofhirConfID = item['fields']['ConfigurationTOFHIR'][0]
             return tofhirConfID
 
+def getLecroyDictTwoScope(LecroyDict,SensorDict,lecroyConfID):
+    for item in LecroyDict['records']:
+        if item['id']==lecroyConfID:
+            simpleLecroyDict =  item['fields']
+            for key in simpleLecroyDict:
+                if "Sensor" in key:
+                    simpleLecroyDict[key] = getSensorById(SensorDict,simpleLecroyDict[key][0])
+        # print key, test['records'][0]['fields'][key]
+            return simpleLecroyDict
+
+
 def getSimpleLecroyDict(LecroyDict,SensorDict,lecroyConfID):
+    print(LecroyDict)
     for item in LecroyDict['records']: 
         if item['id']==lecroyConfID:
             simpleLecroyDict =  item['fields']

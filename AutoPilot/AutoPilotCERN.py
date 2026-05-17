@@ -114,10 +114,11 @@ if not ConfigID:
 	##### Exit the program ######
 
 ###Update local copy of configurations
-ConfigDict, LecroyDict,KeySightDict, TOFHIRDict,CAENDict,SensorDict = pf.DownloadConfigs(False, key)
+ConfigDict, LecroyDict, Lecroy2Dict, KeySightDict, TOFHIRDict,CAENDict,SensorDict = pf.DownloadConfigs(False, key)
 if IncludesLecroyScope:
-	lecroyConfID,caenConfID = pf.getConfigsByGConf(ConfigDict,Configuration)
+	lecroyConfID,lecroy2ConfId, caenConfID = pf.getConfigsByGConf(ConfigDict,Configuration)
 	simpleLecroyDict= pf.getSimpleLecroyDict(LecroyDict,SensorDict,lecroyConfID)
+	simpleLecroy2Dict= pf.getSimpleLecroyDict(Lecroy2Dict,SensorDict,lecroy2ConfID)
 	simpleCAENDict= pf.getSimpleCAENDict(CAENDict,SensorDict,caenConfID)
 
 TOFHIRConfigDict = None
@@ -155,7 +156,7 @@ if os.path.exists("AutoPilot.status"):
 statusFile = open("AutoPilot.status","w") 
 statusFile.write("START") 
 statusFile.close() 
-AutoPilotStatus = 1
+AutoPilotStatus = 0
 
 # Get Start and stop seconds for the first iteration of the loop
 iteration = 0

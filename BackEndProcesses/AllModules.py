@@ -36,10 +36,11 @@ SensorTableName = 'tbl3L7HhQ6G3fSvRh'
 ConfigTableName = 'tbliBCnhoZXPQPYXw'
 KeySightScopeConfigTableName = 'tblxohrwBBHdUSSN8'
 LecroyScopeConfigTableName = 'tblQwkypkREsLoJQf'
+LecroyScope2ConfigTableName = 'tblhmVFWst1vldRma'
 TOFHIRConfigTableName = 'tblh3QkfVUF9YvYwf'
 CAENConfigTableName = 'tblmuNDqvbXc81mJ9'
 VMEConfigTableName = 'tblH3jbEEPg1QVSAR'
-
+SNSPDConfigTableName = 'tblu4AaS128dhPJFZ'
 
 CurlBaseCommandWithoutTable = 'https://api.airtable.com/v0/%s' % (BaseID)
 CurlBaseCommand = 'https://api.airtable.com/v0/%s/%s' % (BaseID, RunTableName)
@@ -47,6 +48,10 @@ CurlBaseCommandSensor = 'https://api.airtable.com/v0/%s/%s' % (BaseID, SensorTab
 CurlBaseCommandConfig = 'https://api.airtable.com/v0/%s/%s' % (BaseID, ConfigTableName)
 CurlBaseCommandKeySight = 'https://api.airtable.com/v0/%s/%s' % (BaseID, KeySightScopeConfigTableName)
 CurlBaseCommandLecroy = 'https://api.airtable.com/v0/%s/%s' % (BaseID, LecroyScopeConfigTableName)
+CurlBaseCommandLecroy2 = 'https://api.airtable.com/v0/%s/%s' % (BaseID, LecroyScope2ConfigTableName)
+CurlBaseCommandSNSPDBias = 'https://api.airtable.com/v0/%s/%s' % (BaseID, SNSPDConfigTableName)
+
+
 CurlBaseCommandTOFHIR = 'https://api.airtable.com/v0/%s/%s' % (BaseID, TOFHIRConfigTableName)
 CurlBaseCommandCAEN = 'https://api.airtable.com/v0/%s/%s' % (BaseID, CAENConfigTableName)
 CurlBaseCommandRunTable = 'https://api.airtable.com/v0/%s/%s' % (BaseID, RunTableName)

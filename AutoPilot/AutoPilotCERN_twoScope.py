@@ -126,10 +126,11 @@ if not ConfigID:
     ##### Exit the program ######
 
 ###Update local copy of configurations
-ConfigDict, LecroyDict,KeySightDict, TOFHIRDict,CAENDict,SensorDict = pf.DownloadConfigs(False, key)
+ConfigDict, LecroyDict, Lecroy2Dict, KeySightDict, TOFHIRDict,CAENDict,SensorDict = pf.DownloadConfigs(False, key, EnableScope2)
 if IncludesLecroyScope:
-    lecroyConfID,caenConfID = pf.getConfigsByGConf(ConfigDict,Configuration)
+    lecroyConfID,lecroy2ConfID,caenConfID = pf.getConfigsByGConf(ConfigDict,Configuration, EnableScope2)
     simpleLecroyDict= pf.getSimpleLecroyDict(LecroyDict,SensorDict,lecroyConfID)
+    simpleLecroy2Dict= pf.getSimpleLecroyDict(Lecroy2Dict,SensorDict,lecroy2ConfID)
     simpleCAENDict= pf.getSimpleCAENDict(CAENDict,SensorDict,caenConfID)
 
 TOFHIRConfigDict = None
@@ -380,6 +381,7 @@ while (AutoPilotStatus == 1 and iteration < maxRuns):
         this_run_info["Start time"]=str(SpillTime)
         this_run_info["Duration"]=str(Duration)
     
+
         gt.GetTemperaturesSimple(this_run_info)
         gt.GetCAENInfoSimple(this_run_info)
         gt.GetACNetYield(this_run_info)
@@ -387,13 +389,13 @@ while (AutoPilotStatus == 1 and iteration < maxRuns):
         this_run_info["Digitizer"]=DigiListThisRun
     
         pf.NewRunRecordSimple(this_run_info,ConfigID, False, key) #Debug, key
-        
     
         ##### These fields are NOT added to airtable, but saved for post processing
     
         this_run_info["Configuration"]=Configuration
         if IncludesLecroyScope:
             this_run_info.update(simpleLecroyDict)
+            if EnableScope2:this_run_info.update(simpleLecroy2Dict)
             this_run_info.update(simpleCAENDict)
     
             runLogFileName = LocalConfigPath+"/Runs/info_%i.json"%RunNumber
