@@ -71,6 +71,8 @@ if isLPC:
         BaseTestbeamDir = '/uscms/home/christiw/nobackup/testbeam/{}/'.format(BaseDirName)
     elif 'swu' in user:
         BaseTestbeamDir = '/uscms/home/swu1/nobackup/testbeam/{}/'.format(BaseDirName)
+    elif 'amalbert' in user:
+        BaseTestbeamDir = '/uscms/home/amalbert/nobackup/el9_work/CMSSW_14_1_0_pre4/src/{}/'.format(BaseDirName)
     else:
         raise ValueError("\"{}\" please define your code path above for the lpc in JARVIS/BackEndProcesses/AllModules.py".format(user))
 
